@@ -1,0 +1,359 @@
+:root {
+  --verde: #3DBE34;
+  --verde-escuro: #2F8F27;
+  --branco: #ffffff;
+  --cinza-claro: #f5f6fa;
+  --cinza-medio: #dcdde1;
+  --preto: #2f3640;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+
+body {
+  display: flex;
+  background: var(--cinza-claro);
+  height: 100vh;
+}
+
+
+/* MENU LATERAL */
+.sidebar {
+    position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 999;
+    width: 240px;
+  background: var(--verde);
+  color: var(--branco);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+
+.sidebar .logo {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: var(--branco);
+}
+
+
+.sidebar ul {
+  list-style: none;
+}
+
+
+.sidebar ul li {
+  margin: 10px 0;
+  position: relative;
+}
+
+
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 25px;
+  text-decoration: none;
+  color: var(--branco);
+  font-weight: 500;
+  position: relative;
+  transition: 0.3s;
+  z-index: 1;
+}
+
+
+.sidebar ul li.active a {
+  color: var(--verde);
+  font-weight: 600;
+}
+
+
+.sidebar ul li.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 95%;
+  height: 100%;
+  background: var(--branco);
+  border-radius: 0 30px 30px 0;
+  z-index: 0;
+  transition: 0.3s;
+}
+
+
+.sidebar ul li a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 0 30px 30px 0;
+}
+
+
+.sidebar i {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* BOTÃO SAIR */
+.logout {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: transparent;
+  color: var(--branco);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 10px 25px;
+  transition: 0.3s;
+}
+
+
+.logout:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+}
+
+
+/* CONTEÚDO PRINCIPAL */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+    margin-left: 240px; /* espaço para o menu lateral fixo */
+}
+
+
+/* TOPO */
+.topbar {
+  position: fixed;
+    top: 0;
+  left: 240px;
+  width: calc(100% - 240px);
+  z-index: 1000;
+    background: var(--branco);
+  border-bottom: 1px solid var(--cinza-medio);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background: var(--cinza-claro);
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+
+
+.search-container input {
+  border: none;
+  background: none;
+  outline: none;
+  padding: 5px;
+}
+
+
+.search-container button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+
+.notif-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
+.profile-pic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--verde);
+  cursor: pointer;
+}
+/* CONFIRMAÇÃO DE LOGOUT / MODAL */
+.modal {
+  display: none; /* inicialmente oculto */
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  background: rgba(0, 0, 0, 0.6); /* fundo semi-transparente */
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; /* acima do topbar e sidebar */
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.modal.show {
+  display: flex; /* mostra quando a classe "show" é adicionada */
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transform: scale(0.8);
+  opacity: 0;
+  animation: scaleIn 0.3s forwards;
+}
+
+.modal-content p {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+.modal-content button {
+  margin: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s ease;
+}
+
+#confirm-yes { 
+  background: #e53935; 
+  color: #fff; 
+}
+
+#confirm-yes:hover {
+  background: #d32f2f;
+}
+
+#confirm-no { 
+  background: #ccc; 
+  color: #000;
+}
+
+#confirm-no:hover {
+  background: #b3b3b3;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.results-section {
+  margin-top: 80px; /* espaço por causa do topbar */
+  padding: 20px;
+}
+
+.results-section h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: var(--preto);
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--branco);
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: var(--verde-escuro);
+}
+
+.card p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.card button {
+  align-self: flex-end;
+  background: var(--verde);
+  color: var(--branco);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.card button:hover {
+  background: var(--verde-escuro);
+}
+.search-container{
+  display:flex; align-items:center; gap:8px;
+  background: var(--cinza-claro);
+  border-radius: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--cinza-medio);
+}
+.search-container input{
+  flex:1; border:0; outline:0; background:transparent;
+  padding: 6px; min-width: 0;
+}
+.search-container button{
+  background: none; border: 0; cursor: pointer;
+  display:flex; align-items:center; justify-content:center;
+}

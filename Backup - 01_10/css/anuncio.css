@@ -1,0 +1,198 @@
+:root{ --verde:#3DBE34; --verde-esc:#2f9b29; --cinza-1:#f7f7f8; --cinza-2:#e9eaec; --texto:#1d1d1f; }
+#anuncio{width:min(1100px,calc(100% - 64px)); margin:24px auto; color:var(--texto); font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.trilha{font-size:13px; color:#667085; display:flex; gap:8px; align-items:center; margin-bottom:8px}
+.trilha a{color:#667085; text-decoration:none}
+.grid{display:grid; grid-template-columns:1fr 340px; gap:24px}
+@media(max-width:1000px){ .grid{grid-template-columns:1fr} .col-dir{order:-1} }
+.cabeca h1{margin:6px 0 10px; font-size:24px; margin-top: 30px;}
+.badges{display:flex; gap:8px; flex-wrap:wrap}
+.badge{font-size:12px; padding:4px 8px; border-radius:999px; background:var(--cinza-1); border:1px solid var(--cinza-2)}
+
+.galeria{position:relative; background:#fff; border:1px solid var(--cinza-2); border-radius:16px; padding:10px}
+.galeria input{display:none}
+.galeria .viewport{position:relative; height:460px; border-radius:12px; overflow:hidden; background:#f2f3f5}
+.galeria .img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .2s}
+#g1:checked ~ .viewport .i1{opacity:1} #g2:checked ~ .viewport .i2{opacity:1} #g3:checked ~ .viewport .i3{opacity:1}
+.galeria .miniaturas{display:grid; grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); gap:8px; margin-top:10px}
+.galeria .miniaturas img{width:100%; height:72px; object-fit:cover; border-radius:8px; border:2px solid transparent; cursor:pointer}
+#g1:checked ~ .miniaturas label[for="g1"] img,
+#g2:checked ~ .miniaturas label[for="g2"] img,
+#g3:checked ~ .miniaturas label[for="g3"] img{border-color:var(--verde)}
+
+.detalhes{margin-top:16px; background:#fff; border:1px solid var(--cinza-2); border-radius:16px; padding:16px}
+.detalhes h2{margin:0 0 8px; font-size:18px}
+.detalhes p{line-height:1.6}
+.meta{display:flex; flex-wrap:wrap; gap:14px; margin:12px 0 0; padding:0; list-style:none; color:#5b6374}
+.acoes-texto{display:flex; gap:8px; margin-top:12px}
+
+.col-dir .painel{position:sticky; top:88px; background:#fff; border:1px solid var(--cinza-2); border-radius:16px; padding:16px}
+.preco{font-size:28px}
+.linha-preco{display:flex; justify-content:space-between; align-items:center}
+.icon{background:#fff; border:1px solid var(--cinza-2); border-radius:10px; width:40px; height:40px; display:grid; place-items:center; cursor:pointer}
+.parcelas{margin:6px 0 10px; color:#5b6374; font-size:14px}
+
+.btn{display:inline-flex; align-items:center; gap:8px; padding:12px 14px; border-radius:12px; border:1px solid var(--cinza-2); background:#fff; cursor:pointer; font-weight:600; width:100%}
+.btn.primario{background:var(--verde); border-color:var(--verde); color:#fff; margin-bottom: 15px;}
+.btn.primario:hover{background:var(--verde-esc)}
+.btn.secundario{background:#fff}
+hr{border:none; border-top:1px solid var(--cinza-2); margin:14px 0}
+
+.vendedor{display:flex; align-items:center; gap:10px}
+.avatar{width:44px; height:44px; border-radius:50%; object-fit:cover; background:#edf0f2}
+.nome{font-weight:700}
+.link{color:#0c5a09; text-decoration:none; font-size:14px}
+.nota{font-size:12px; color:#667085; margin-top:10px}
+
+.mais-anuncios{margin-top:16px}
+.mais-anuncios .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px}
+.mais-anuncios .card{display:block; background:#fff; border:1px solid var(--cinza-2); border-radius:12px; padding:8px; text-decoration:none; color:inherit}
+.mais-anuncios .card img{width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:6px}
+.mais-anuncios .card h4{margin:0 0 4px; font-size:14px}
+.mais-anuncios .card .preco{font-size:14px}
+/* Voltar */
+.voltar {
+    display: inline-block;
+    margin: 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--verde);
+    text-decoration: none;
+    border: 1px solid var(--verde);
+    transition: all 0.2s ease;
+    height: 40px;
+    line-height: 1.5; /* Ajuste da altura do texto */
+}
+
+.voltar:hover {
+    background: var(--verde);
+    color: #fff;
+}
+/* Estilo para o modal */
+.modal-overlay {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);  /* Fundo escuro */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Estilo do conteúdo do modal */
+.modal-content {
+  min-width: 1200px;
+  background-color: #fff;
+  padding: 60px;              /* mais espaço interno */
+  border-radius: 8px;
+  width: 90%;                   /* ocupa quase toda a largura da viewport */
+  max-width: 1800px;          /* limite horizontal ainda maior */
+  height: 90vh;               /* ocupa quase toda a altura da viewport */
+  max-height: 90vh;           /* garante que não ultrapasse */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* sombra mais intensa */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Estilo do botão padrão */
+button-confirm, button {
+  background-color: #3DBE34; /* Cor do botão */
+  color: white;
+  padding: 40px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+    max-height: 40px;
+
+}
+
+button:hover {
+  background-color: #2f9b29;  /* Cor quando o botão é hoverizado */
+}
+
+/* Estilo do botão de fechar */
+#btnFecharModal {
+  background-color: #f44336;
+  margin-top: 15px;
+  max-height: 40px;
+}
+
+#btnFecharModal:hover {
+  background-color: #d32f2f;
+}
+
+/* Abaixo do modal */
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* Ativando o modal */
+.modal-overlay.active {
+  display: flex;
+}
+
+/* Estilo dos campos de formulário */
+.input {
+  width: 500px;
+  padding: 12px;
+  margin: 10px ;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;  /* Aumenta o tamanho da fonte para melhor legibilidade */
+}
+
+.form-group {
+  margin-bottom: 15px; /* Aumenta o espaçamento entre os campos */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+/* Melhorando a responsividade do modal para telas menores */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    height: auto;
+  }
+}
+
+#campo-adicional {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* duas colunas iguais */
+  gap: 30px; /* espaço entre os campos */
+}
+.data-hora {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* duas colunas iguais */
+  gap: 30px; /* espaço entre os campos */
+
+}
+.botoes-modal {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* duas colunas iguais */
+  gap: 20px; /* espaço entre os campos */
+
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}

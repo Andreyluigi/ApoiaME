@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ApoiaMe - Perfil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/perfilC.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script defer src="../js/perfilC.js"></script>
+  <script defer src="../js/script.js"></script>
+</head>
+<body>
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+        <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
+        <li><a href="../html/buscar.html"><i data-lucide="search"></i> Buscar</a></li>
+        <li><a href="#"><i data-lucide="package"></i> Meus Pedidos</a></li>
+        <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="chat.html"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li class="active"><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+    <!-- CONFIRMAÇÃO DE LOGOUT -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content">
+        <p>Tem certeza que deseja sair?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Cancelar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." id="search">
+        <button><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn"><i data-lucide="bell"></i></button>
+        <img src="../arquivos/user.png" alt="Perfil" class="profile-pic">
+      </div>
+    </header>
+ 
+  <div class="perfil-page">
+
+    <!-- Topo com o pattern -->
+    <div class="topo-pattern"></div>
+
+    <!-- Bloco branco de edição (com foto de perfil) -->
+    <div class="bloco-edicao">
+      <div class="foto-central">
+        <input type="file" id="foto-perfil-input" style="display:none" onchange="previewImage(event)">
+        <label for="foto-perfil-input" class="foto-perfil-label">
+          <div class="foto-container">
+            <img id="foto-perfil" src="../arquivos/perfil.png" alt="Foto de perfil">
+            <span class="editar-icon">✏️</span> <!-- Ícone de edição -->
+          </div>
+        </label>
+      </div>
+      <h2>Editar Perfil</h2>
+      <form class="form-perfil">
+        <div class="campo">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" value="Sabrina Aryan">
+        </div>
+        <div class="campo">
+          <label for="idioma">Idioma</label>
+          <select id="idioma">
+            <option value="pt-BR" selected>Português</option>
+            <option value="en">Inglês</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="genero">Gênero</label>
+          <select id="genero">
+            <option value="Feminino" selected>Feminino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="idade">Idade</label>
+          <input type="number" id="idade" value="30">
+        </div>
+        <button type="submit" class="btn-salvar">Salvar Alterações</button>
+      </form>
+    </div>
+  </div>
+  
+  </body>
+  </html>

@@ -1,0 +1,90 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+    color: #3DBE34;
+}
+
+.notifications-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.notification {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px 0;
+}
+
+.notification:last-child {
+    border-bottom: none;
+}
+
+.notification-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.notification-content p {
+    font-size: 14px;
+    color: #666;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: #999;
+    text-align: right;
+    align-self: flex-start;
+}
+.voltar {
+    display: flex;
+    align-items: center;
+    color: #3DBE34;  /* Cor verde padrão */
+    font-size: 18px;
+    text-decoration: none;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f4f4f9;  /* Fundo suave */
+    border-radius: 5px;
+    width: fit-content;
+}
+
+.voltar i {
+    margin-right: 8px;  /* Espaço entre a seta e o texto */
+}
+
+.voltar:hover {
+    background-color: #e0e0e0;  /* Fundo mais escuro no hover */
+}
+
+.voltar:active {
+    background-color: #ccc;  /* Fundo ainda mais escuro no clique */
+}

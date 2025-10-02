@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EntreGo - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboardC.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+
+</head>
+<body>
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+        <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li class="active"><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
+        <li><a href="../html/buscar.html"><i data-lucide="search"></i>Buscar</a></li>
+        <li><a href="#"><i data-lucide="package"></i> Meus Pedidos</a></li>
+        <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="chat.html"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+   <!-- CONFIRMACAO DE LOGOUT com modal bootstrap-->
+  <div id="logout-modal" class="modal">
+    <div class="modal-content">
+      <p>Tem certeza que deseja sair?</p>
+      <button id="confirm-yes">Sim</button>
+      <button id="confirm-no">Cancelar</button>
+    </div>
+  </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." id="search">
+        <button><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn"><i data-lucide="bell"></i></button>
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+        </div>
+      </div>
+    </header>
+  </main>
+   <!-- ATALHOS RAPIDOS -->  
+    <section class="content">
+      <section class="shortcuts">
+  <h2>Atalhos Rápidos</h2>
+  <div class="shortcut-cards">
+    <a href="#novo-pedido" class="card">Novo Pedido</a>
+    <a href="#historico" class="card">Histórico</a>
+    <a href="#configuracoes" class="card">Configurações</a>
+  </div>
+  
+<!-- CATEGORIAS -->
+<section class="categorias">
+  <div class="categoria-item">
+    <i data-lucide="hamburger"></i>
+    <p>Comida Rápida</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="shopping-cart"></i>
+    <p>Mercados</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="pill"></i>
+    <p>Farmácias</p>
+  </div>
+  <div class="categoria-item novo">
+    <span class="badge">Novo</span>
+    <i data-lucide="beer"></i>
+    <p>Bebidas</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="file-text"></i>
+    <p>Documentos Express</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="truck"></i>
+    <p>Transporte Rápido</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="wrench"></i>
+    <p>Serviços Gerais</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="tag"></i>
+    <p>Promoções</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="dog"></i>
+    <p>Pets</p>
+  </div>
+  <div class="categoria-item">
+    <i data-lucide="tv"></i>
+    <p>Eletrônicos</p>
+  </div>
+</section>
+</section>
+
+<!-- Anuncios em Destaque -->
+<section class="anuncios-destaque">
+  <h2>Anúncios em Destaque</h2>
+  <div id="lista-anuncios" class="anuncios-grid">
+    <!-- Linha 1 (5 cards) -->
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+
+    <!-- Linha 2 (4 cards + Ver mais) -->
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+    <a href="#" class="anuncio-card">
+      <div class="anuncio-img"></div>
+      <div class="anuncio-info"><h3>Carregando...</h3><p>Carregando descrição...</p></div>
+    </a>
+
+    <!-- Card especial Ver mais -->
+    <a href="#" class="anuncio-card ver-mais">
+      <div class="ver-mais-bg">
+        <span class="ver-mais-texto">
+          <span class="label">Ver mais</span>
+          <i class="chevron" data-lucide="chevron-right"></i>
+        </span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ÚLTIMOS PEDIDOS -->
+<section class="ultimos-pedidos">
+  <h2>Últimos Pedidos</h2>
+  <div class="ultimos-lista">
+    <div class="pedido-item">
+      <h3>Entrega de verduras</h3>
+      <p>Data: 30/08/2025</p>
+      <p>Status: <span class="status concluido">Concluído</span></p>
+    </div>
+    <div class="pedido-item">
+      <h3>Compra de padaria</h3>
+      <p>Data: 28/08/2025</p>
+      <p>Status: <span class="status andamento">Em andamento</span></p>
+    </div>
+    <div class="pedido-item">
+      <h3>Troca de botijão</h3>
+      <p>Data: 25/08/2025</p>
+      <p>Status: <span class="status cancelado">Cancelado</span></p>
+    </div>
+  </div>
+  <div class="btn-vermais">
+      <button >Ver Mais</button>
+    </div>
+</section>
+<!-- NA VELOCIDADE -->
+<section class="na-velocidade">
+  <h2>Na Velocidade</h2>
+  <h3>Serviços em até 40 Minutos!</h3>
+  <div class="velocidade-lista">
+    <div class="velocidade-item destaque">
+      <img src="../arquivos/Serviços_Rápidos_em_20_Minutos-removebg-preview.png" alt="Serviços Padrão 40 min">
+    </div>
+    <div class="velocidade-item">Novo Pedido</div>
+    <div class="velocidade-item">Novo Pedido</div>
+    <div class="velocidade-item">Novo Pedido</div>
+    <div class="velocidade-item">Novo Pedido</div>
+    <div class="velocidade-item">Novo Pedido</div>
+    <div class="velocidade-item">Novo Pedido</div>
+  </div>
+</section>
+<!-- STATUS EM TEMPO REAL -->
+<section class="status-tempo-real">
+  <div class="status-header">
+    <span class="live-indicator"></span>
+    <h2>Status em Tempo Real</h2>
+  </div>
+  
+  <div class="status-card">
+    <p><strong>Pedido #12345</strong></p>
+    <p>Seu ajudante está a caminho. Previsão: 15 min.</p>
+  </div>
+</section>
+</section>
+    
+  
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>lucide.createIcons();</script>    
+  <script type="module" src="/firebase-init.js"></script>
+  <script type="module" src="/script-module.js"></script>
+  <script type="module" src="/card.dashboardC.js"></script>
+  <script defer src="../js/dashboardC.js"></script>
+  <script defer src="/js/script.js"></script>
+  
+</body>
+</html>
