@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ApoiaMe - Configurações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/configC.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+        <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
+        <li><a href="../html/buscar.html"><i data-lucide="search"></i> Buscar</a></li>
+        <li><a href="#"><i data-lucide="package"></i> Meus Pedidos</a></li>
+        <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="chat.html"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li class="active"><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+    <!-- CONFIRMAÇÃO DE LOGOUT -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content">
+        <p>Tem certeza que deseja sair?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Cancelar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+  <main class="main-content">
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." id="search">
+        <button><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn"><i data-lucide="bell"></i></button>
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+        </div>
+      </div>
+    </header>
+  </main>
+
+    <section class="content">
+      <h3>Configurações de Conta</h3>
+
+
+  <nav class="tabs">
+    <button class="tab active" data-target="dados">Meus Dados</button>
+    <button class="tab" data-target="senha">Senha</button>
+    <button class="tab" data-target="endereco">Endereços</button>
+    <button class="tab" data-target="pagamentos">Pagamentos</button>
+    <button class="tab" data-target="plano">Plano</button>
+    <button class="tab" data-target="notificacoes">Notificações</button>
+  </nav>
+
+  <main class="content">
+    <!-- Meus Dados -->
+    <section id="dados" class="section active">
+      <h2>Meus Dados</h2>
+      <form>
+        <label>Nome Completo</label>
+        <input type="text" placeholder="Ex: João Silva">
+
+        <label>Como você quer ser chamado?</label>
+        <input type="email" placeholder="Aparecerá em seu perfil, anúncios e chats.">
+
+        <label>Telefone</label>
+        <input type="text" id="telefone" placeholder="(11) 99999-9999" maxlength="15">
+           
+
+      <div class="custom-radio-group">
+        <p>Gênero</p>
+        <label class="custom-radio" >
+         <input type="radio" name="gender" value="female" aria-label="Feminino" class="custom-radio__input">
+           <span class="custom-radio__label">Feminino</span>
+        </label>
+        <label class="custom-radio">
+         <input type="radio" name="gender" value="male" aria-label="Masculino" class="custom-radio__input">
+           <span class="custom-radio__label">Masculino</span>
+        </label>
+        <label class="custom-radio">
+          <input type="radio" name="gender" value="none" aria-label="Outro" class="custom-radio__input" checked>
+           <span class="custom-radio__label">Outro</span>
+        </label>
+      </div>
+
+        <button type="submit" class="btn">Salvar</button>
+      </form>
+    </section>
+</main>
+    <!-- Senha -->
+    <section id="senha" class="section">
+      <h2>Alterar Senha</h2>
+      <form id="senha-form">
+        <label>Senha Atual</label>
+        <input id="senha-atual" type="password" placeholder="••••••••">
+
+        <label>Nova Senha</label>
+        <input id="nova-senha" type="password" placeholder="••••••••">
+
+        <label>Confirmar Nova Senha</label>
+        <input id="confirmar-senha" type="password" placeholder="••••••••">
+
+        <button type="submit" class="btn">Alterar Senha</button>
+      </form>
+    </section>
+
+        <!-- Endereco -->
+<section id="endereco" class="section">
+  <h2>Meus Endereços</h2>
+  <div class="cep-background">
+    <div class="cep-card">
+      <h2>Registre seu Endereço</h2>
+      <p>Digite seu CEP para ver sua localização:</p>
+      <input type="text" id="cep" placeholder="00000-000" maxlength="9" oninput="formatarCep(this)">
+      <button class="btn-endereco" id="buscarCepBtn">Buscar CEP</button>
+
+      <div id="cepInfo" style="display: none;">
+        <p id="rua"></p>
+        <p id="bairro"></p>
+        <p id="cidade"></p>
+        <p id="uf"></p>
+        <p id="ddd"></p>
+        <input type="text" id="numero" placeholder="Número">
+        <input type="text" id="complemento" placeholder="Complemento (opcional)">
+        <input type="text" id="referencia" placeholder="Referência (opcional)">
+        <button class="btn-endereco" id="salvarEnderecoBtn">Salvar Endereço</button>
+      </div>
+    </div>
+  </div>
+
+  <section style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    <h2 style="text-align: center; display: flex; align-items: center;">
+      <i data-lucide="edit" class="lucide-icon" style="margin-right: 10px;"></i> 
+      Endereços Salvos
+      <button id="editarBtn" style="margin-left: 20px;">Editar</button>
+    </h2>
+    <div id="listaEnderecos" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+      <!-- Aqui você vai adicionar os endereços salvos dinamicamente -->
+    </div>
+        <div id="checkboxContainer" style="display: none;">
+      <h3>Selecione os endereços que deseja excluir:</h3>
+      <div id="checkboxList"></div>
+      <div class="btn-container">
+      <button id="cancelarBtn">Cancelar</button>
+      <button id="apagarBtn">Apagar</button>
+      </div>
+    </div>
+  </section>
+</section>
+</div>
+    <!-- Pagamentos -->
+    <section id="pagamentos" class="section">
+  
+
+      <h2>Histórico de Transações</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Fatura</th>
+            <th>Data</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Detalhes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Conta Premium</td>
+            <td>10/08/2025</td>
+            <td>R$ 49,90</td>
+            <td><span class="status pending">Pendente</span></td>
+            <td><a href="#">Ver</a></td>
+          </tr>
+          <tr>
+            <td>Conta Premium</td>
+            <td>10/07/2025</td>
+            <td>R$ 49,90</td>
+            <td><span class="status paid">Pago</span></td>
+            <td><a href="#">Ver</a></td>
+          </tr>
+          <tr>
+            <td>Conta Premium</td>
+            <td>10/06/2025</td>
+            <td>R$ 49,90</td>
+            <td><span class="status refunded">Reembolsado</span></td>
+            <td><a href="#">Ver</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Plano -->
+    <section id="plano" class="section">
+      <h2>Plano</h2>
+      <p> <strong>Em Breve</strong>.<i data-lucide="construction"></i></p>
+     
+      
+    </section>
+
+    <!-- Notificações -->
+<section id="notificacoes" class="section">
+  <h2>Notificações</h2>
+  
+  <div class="option">
+    <div class="container">
+      <input type="checkbox" class="checkbox" id="email">
+      <label class="switch" for="email">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <label for="email" class="component-title">Receber notificações por e-mail</label>
+  </div>
+  
+  <div class="option">
+    <div class="container">
+      <input type="checkbox" class="checkbox" id="sms">
+      <label class="switch" for="sms">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <label for="sms" class="component-title">Receber notificações por SMS</label>
+  </div>
+  
+  <div class="option">
+    <div class="container">
+      <input type="checkbox" class="checkbox" id="push">
+      <label class="switch" for="push">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <label for="push" class="component-title">Receber notificações push</label>
+  </div>
+
+  <button class="btn">Salvar Preferências</button>
+</section>
+  </main>
+  <!-- Scripts -->
+  <script defer src="../js/configC.js"></script>
+  <script defer src="../js/script.js"></script>
+  <script type="module" src="/firebase-init.js"></script>
+  <script type="module" src="/script-module.js"></script>
+  <script type="module" src="/config-module.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/inputmask/dist/inputmask.min.js"></script>
+    <script type="module">
+    import { salvarEndereco, mostrarEnderecos, apagarEnderecos } from '/config-module.js';
+     //ouvintes de evento
+    document.getElementById('salvarEnderecoBtn').addEventListener('click', salvarEndereco);
+    document.getElementById('buscarCepBtn').addEventListener('click', buscarCep);
+
+       window.onload = function () {
+    mostrarEnderecos(); // Exibe os endereços ao carregar a página
+  };
+    // Lógica de exibição do modo de edição
+  document.getElementById('editarBtn').addEventListener('click', function () {
+    document.getElementById('checkboxContainer').style.display = 'block'; // Mostra os checkboxes
+    this.style.display = 'none'; // Esconde o botão de editar
+  });
+
+  // Lógica de cancelar a seleção
+  document.getElementById('cancelarBtn').addEventListener('click', function () {
+    document.getElementById('checkboxContainer').style.display = 'none'; // Esconde os checkboxes
+    document.getElementById('editarBtn').style.display = 'inline-block'; // Mostra novamente o botão de editar
+  });
+  document.getElementById('apagarBtn').addEventListener('click', function () {
+  apagarEnderecos(); // Chama a função para apagar os endereços selecionados
+});
+
+  </script>
+</body>
+</html>

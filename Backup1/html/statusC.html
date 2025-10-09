@@ -1,0 +1,170 @@
+<!-- /html/statusC.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Status do Pedido — ApoiaMe</title>
+
+  <!-- Estilo base do projeto -->
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <!-- Estilos só desta página (sections) -->
+  <link rel="stylesheet" href="../css/statusC.css"/>
+
+  <!-- Fonte + Ícones -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width:180px;height:auto;">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
+        <li><a href="../html/buscar.html"><i data-lucide="search"></i>Buscar</a></li>
+        <li class="active"><a href="#"><i data-lucide="package"></i> Meus Pedidos</a></li>
+        <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="chat.html"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+      </ul>
+    </nav>
+
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+
+    <!-- Modal de confirmação de logout -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content">
+        <p>Tem certeza que deseja sair?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Cancelar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." id="search"/>
+        <button type="button"><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" type="button"><i data-lucide="bell"></i></button>
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name">cliente</span></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- PÁGINA -->
+    <section class="content">
+
+      <!-- Cabeçalho do pedido -->
+      <section class="cartao pedido-cabecalho">
+        <div class="info-primaria">
+          <div class="linha">
+            <span class="lbl">Pedido - Id</span>
+            <span class="val" id="pedido-id">—</span>
+          </div>
+          <div class="linha">
+            <span class="lbl">Anúncio</span>
+            <span class="val" id="pedido-titulo">—</span>
+          </div>
+          <div class="linha">
+            <span class="lbl">Prestador</span>
+            <span class="val" id="pedido-prestador">—</span>
+          </div>
+          <div class="linha pill-line">
+            <span class="lbl">Status</span>
+            <span class="pill" id="status-pill">Pendente</span>
+          </div>
+        </div>
+
+        <div class="info-valor">
+          <div class="linha">
+            <span class="lbl">Valor do serviço</span>
+            <span class="val" id="valor-servico">R$ 0,00</span>
+          </div>
+          <div class="linha">
+            <span class="lbl">Taxa de entrega</span>
+            <span class="val" id="valor-entrega">R$ 0,00</span>
+          </div>
+          <div class="linha total">
+            <span class="lbl">Total</span>
+            <span class="val" id="valor-total">R$ 0,00</span>
+          </div>
+          <div class="acoes-pagamento">
+            <button id="btn-pagar" class="btn primario" type="button">
+              <i data-lucide="credit-card"></i><span>Pagar agora</span>
+            </button>
+            <small id="pagamento-status" class="ajuda">Aguardando pagamento</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- Etapas -->
+      <section class="cartao etapas">
+        <h2><i data-lucide="route"></i><span>Linha do tempo</span></h2>
+        <ol id="status-etapas" class="timeline">
+          <li data-status="pendente"><i data-lucide="timer"></i><span>Pendente</span></li>
+          <li data-status="aceito"><i data-lucide="check-circle"></i><span>Aceito</span></li>
+          <li data-status="pago"><i data-lucide="shield-check"></i><span>Pago</span></li>
+          <li data-status="em_andamento"><i data-lucide="hammer"></i><span>Em andamento</span></li>
+          <li data-status="entrega_aceita"><i data-lucide="truck"></i><span>Entrega aceita</span></li>
+          <li data-status="entregando"><i data-lucide="navigation"></i><span>Entregando</span></li>
+          <li data-status="entregue"><i data-lucide="package-check"></i><span>Entregue</span></li>
+          <li data-status="finalizado"><i data-lucide="check-circle-2"></i><span>Finalizado</span></li>
+        </ol>
+      </section>
+
+      <!-- Locais -->
+      <section class="cartao locais">
+        <h2><i data-lucide="map-pin"></i><span>Locais</span></h2>
+        <div class="grid-2">
+          <div>
+            <p class="lbl">Retirada</p>
+            <p id="retirada-txt" class="val">—</p>
+          </div>
+          <div>
+            <p class="lbl">Entrega</p>
+            <p id="entrega-txt" class="val">—</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Histórico -->
+      <section class="cartao historico">
+        <h2><i data-lucide="clock-3"></i><span>Histórico</span></h2>
+        <ul id="lista-historico" class="lista-historico"></ul>
+      </section>
+
+      <!-- Ações -->
+      <section class="acoes-secundarias">
+        <button id="btn-cancelar" class="btn perigo" type="button">
+          <i data-lucide="x-circle"></i><span>Cancelar pedido</span>
+        </button>
+        <a id="btn-voltar" href="dashboardC.html" class="btn fantasma">
+          <i data-lucide="arrow-left"></i><span>Voltar</span>
+        </a>
+      </section>
+
+    </section>
+  </main>
+    
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>lucide.createIcons();</script>    
+  <script type="module" src="/firebase-init.js"></script>
+  <script type="module" src="/script-module.js"></script>
+  <script type="module" src="/StatusC.firebase.js"></script>
+  <script defer src="../js/statusC.js"></script>
+  <script defer src="../js/script.js"></script>
+    
+</body>
+</html>

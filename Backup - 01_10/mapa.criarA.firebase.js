@@ -50,6 +50,9 @@ document.getElementById("cep").addEventListener("blur", async e=>{
 
   try{
     const {lat,lng,via} = await geocodeCEP(cep);
+    
+    document.getElementById("latBase").value = lat;
+    document.getElementById("lngBase").value = lng;
 
     // preencher inputs usando ViaCEP
     const bairroEl = document.getElementById("bairro");

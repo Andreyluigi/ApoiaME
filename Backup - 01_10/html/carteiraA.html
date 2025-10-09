@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Minha Carteira - ApoiaMe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css"> <link rel="stylesheet" href="../css/carteiraA.css"> <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <aside class="sidebar">
+        </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            </header>
+
+        <section class="content">
+            <h1 class="page-title"><i data-lucide="wallet"></i> Minha Carteira</h1>
+
+            <section class="saldo-card">
+                <div class="saldo-info">
+                    <h2>Saldo a Receber</h2>
+                    <p class="saldo-valor" id="saldo-disponivel">Carregando...</p>
+                    <p class="saldo-bloqueado">Saldo pendente: <span id="saldo-pendente">Carregando...</span></p>
+                </div>
+                <div class="saldo-acoes">
+                    <button class="btn secundario" id="btn-solicitar-saque"><i data-lucide="arrow-down-circle"></i> Solicitar Saque</button>
+                </div>
+            </section>
+
+            <section class="historico">
+                <h2>Histórico de Ganhos</h2>
+                <div class="tabela-wrapper">
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Serviço</th>
+                                <th>Valor Recebido</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-ganhos">
+                            <tr>
+                                <td colspan="4">Carregando histórico...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    </body>
+</html>

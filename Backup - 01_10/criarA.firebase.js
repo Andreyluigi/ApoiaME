@@ -165,6 +165,8 @@ $("form-anuncio").addEventListener("submit", async (e) => {
       entregaOpcional: $("entregaOpcional").checked,
       enderecoBase: $("enderecoBase").value.trim(),
       bairro: $("bairro").value.trim(),
+      latBase: Number($("latBase").value) || null,
+      lngBase: Number($("lngBase").value) || null,
       status: $("publicarAgora").checked ? "publicado" : "inativo",
       prestadorUid: uid,
       prestadorApelido,

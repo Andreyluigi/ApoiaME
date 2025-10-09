@@ -99,29 +99,23 @@
             <span class="lbl">Total</span>
             <span class="val" id="valor-total">R$ 0,00</span>
           </div>
-          <div class="acoes-pagamento">
-            <button id="btn-pagar" class="btn primario" type="button">
-              <i data-lucide="credit-card"></i><span>Pagar agora</span>
-            </button>
-            <small id="pagamento-status" class="ajuda">Aguardando pagamento</small>
-          </div>
         </div>
       </section>
 
       <!-- Etapas -->
-      <section class="cartao etapas">
-        <h2><i data-lucide="route"></i><span>Linha do tempo</span></h2>
-        <ol id="status-etapas" class="timeline">
-          <li data-status="pendente"><i data-lucide="timer"></i><span>Pendente</span></li>
-          <li data-status="aceito"><i data-lucide="check-circle"></i><span>Aceito</span></li>
-          <li data-status="pago"><i data-lucide="shield-check"></i><span>Pago</span></li>
-          <li data-status="em_andamento"><i data-lucide="hammer"></i><span>Em andamento</span></li>
-          <li data-status="entrega_aceita"><i data-lucide="truck"></i><span>Entrega aceita</span></li>
-          <li data-status="entregando"><i data-lucide="navigation"></i><span>Entregando</span></li>
-          <li data-status="entregue"><i data-lucide="package-check"></i><span>Entregue</span></li>
-          <li data-status="finalizado"><i data-lucide="check-circle-2"></i><span>Finalizado</span></li>
-        </ol>
-      </section>
+     <section class="cartao etapas">
+    <h2><i data-lucide="route"></i><span>Linha do tempo</span></h2>
+    <ol id="status-etapas" class="timeline">
+        <li data-status="pendente"><i data-lucide="timer"></i><span>Pendente</span></li>
+        <li data-status="aceito"><i data-lucide="wallet"></i><span>Aceito</span></li>
+        <li data-status="pago"><i data-lucide="shield-check"></i><span>Pago</span></li>
+        <li data-status="em_rota"><i data-lucide="truck"></i><span>Em Rota</span></li>
+        <li data-status="no_local"><i data-lucide="map-pin"></i><span>No Local</span></li>
+        <li data-status="em_execucao"><i data-lucide="hammer"></i><span>Em Execução</span></li>
+        <li data-status="concluido_prestador"><i data-lucide="package-check"></i><span>Aguardando Confirmação</span></li> 
+        <li data-status="finalizado"><i data-lucide="check-circle-2"></i><span>Finalizado</span></li>
+    </ol>
+</section>
 
       <!-- Locais -->
       <section class="cartao locais">
@@ -163,8 +157,5 @@
   <script type="module" src="/firebase-init.js"></script>
   <script type="module" src="/script-module.js"></script>
   <script type="module" src="/StatusC.firebase.js"></script>
-  <script defer src="../js/statusC.js"></script>
-  <script defer src="../js/script.js"></script>
-    
 </body>
 </html>

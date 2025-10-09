@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>EntreGo - Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/chat.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script defer src="../js/chat.js"></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Menu lateral">
+    <div class="logo">
+      <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../html/dashboardC.html"><i data-lucide="home"></i><span> Início</span></a></li>
+        <li><a href="../html/buscar.html"><i data-lucide="search"></i><span> Buscar</span></a></li>
+        <li><a href="../html/pedidos.html"><i data-lucide="package"></i><span> Meus Pedidos</span></a></li>
+        <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i><span> Minha Carteira</span></a></li>
+        <li class="active"><a href="../html/chat.html"><i data-lucide="message-circle"></i><span> Chat</span></a></li>
+        <li><a href="../html/configC.html"><i data-lucide="settings"></i><span> Configurações</span></a></li>
+        <li><a href="../html/perfilC.html"><i data-lucide="user"></i><span> Perfil</span></a></li>
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i><span> Sair</span></button>
+
+    <!-- Modal de logout (opcional) -->
+    <div id="logout-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="logout-title" aria-hidden="true">
+      <div class="modal-content">
+        <p id="logout-title">Tem certeza que deseja sair?</p>
+        <div class="modal-actions">
+          <button id="confirm-yes">Sim</button>
+          <button id="confirm-no">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." aria-label="Buscar">
+        <button aria-label="Buscar"><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" aria-label="Notificações"><i data-lucide="bell"></i></button>
+        <img src="../arquivos/user.png" alt="Perfil" class="profile-pic">
+      </div>
+    </header>
+
+    <!-- Conteúdo -->
+    <section class="content chat-container">
+      <!-- Lista de conversas -->
+      <aside class="conversas" aria-label="Conversas">
+        <div class="conv-head">
+          <h2>Conversas</h2>
+          <input type="text" id="busca-conversa" placeholder="Buscar..." aria-label="Buscar conversas">
+        </div>
+        <ul id="lista-conversas" class="lista-conversas">
+          <!-- itens via JS -->
+        </ul>
+      </aside>
+
+      <!-- Área de chat -->
+      <div class="chat-box" aria-live="polite">
+        <div class="chat-header">
+          <div class="alvo">
+            <img id="alvo-foto" src="../arquivos/user.png" alt="Contato">
+            <div>
+              <h3 id="chat-titulo">Selecione uma conversa</h3>
+              <small id="chat-status">—</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-mensagens" id="chat-mensagens">
+          <!-- mensagens via JS -->
+        </div>
+
+        <form class="chat-input" id="form-chat" autocomplete="off">
+          <input type="text" id="msg" placeholder="Digite sua mensagem..." required aria-label="Mensagem">
+          <button type="submit" aria-label="Enviar"><i data-lucide="send"></i></button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer (opcional) -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-col">
+          <img src="../arquivos/logo02-removebg.png" alt="EntreGo" class="footer-logo">
+          <p>Conectando quem precisa com quem pode ajudar.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Links Rápidos</h4>
+          <ul>
+            <li><a href="welcome.html">Início</a></li>
+            <li><a href="cadastro.html">Cadastro</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="busca.html">Buscar Ajuda</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom"><p>&copy; 2025 EntreGo. Todos os direitos reservados.</p></div>
+    </footer>
+  </main>
+</body>
+</html>

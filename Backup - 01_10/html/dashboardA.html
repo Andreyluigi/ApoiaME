@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EntreGo - Dashboard</title>
+  <title>ApoiaMe - Dashboard Ajudante</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/dashboardA.css">
   <link rel="stylesheet" href="../css/styles.css">
-  <script defer src="../js/dashboardA.js"></script>
-  <script defer src="../js/script.js"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
 
 </head>
 <body>
@@ -23,7 +21,7 @@
         <li class="active"><a href="../html/dashboardA.html"><i data-lucide="home"></i> Início</a></li>
         <li><a href="meuservicosA.html"><i data-lucide="package"></i> Meus Serviços</a></li>
         <li><a href="../html/pedidosA.html"><i data-lucide="check-circle"></i>Meus Pedidos</a></li>
-        <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="../html/carteiraA.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
         <li><a href="chat.html"><i data-lucide="message-circle"></i> Chat</a></li>
         <li><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
         <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
@@ -49,168 +47,63 @@
       </div>
       <div class="topbar-right">
         <button class="notif-btn"><i data-lucide="bell"></i></button>
-        <img src="../arquivos/user.png" alt="Perfil" class="profile-pic">
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+        </div>
       </div>
     </header>
 
     <h3>Olá, Andrey</h3>
    
       <!--Resumo de Pedidos-->      
-  <section class="resumo-pedidos">
-  <div class="h2">
-    <h2>Resumo de Pedidos</h2>
+<section class="resumo-pedidos" id="resumo-pedidos-container">
+    <div class="h2">
+        <h2>Resumo de Pedidos</h2>
     </div>
-  <div class="pedido-card andamento">
-    <div class="pedido-info">
-      <h3>Entrega de frutas</h3>
-      <p>Status: <span>Em andamento</span></p>
-      <p>Data: 03/09/2025</p>
-      <p>Entregador: João Silva</p>
-    </div>
-    <div class="pedido-acao">
-      <button>Ver detalhes</button>
-    </div>
-  </div>
-
-  <div class="pedido-card concluido">
-    <div class="pedido-info">
-      <h3>Troca de gás</h3>
-      <p>Status: <span>Concluído</span></p>
-      <p>Data: 01/09/2025</p>
-      <p>Entregador: Maria Souza</p>
-    </div>
-    <div class="pedido-acao">
-      <button>Ver detalhes</button>
-    </div>
-  </div>
+    <p>Carregando seus pedidos...</p>
 </section>
 
-<!--RESULTADOS GRAFICO-->
 <section class="dashboard-vendas">
-  <!-- Título  -->
-  <header class="dashboard-header">
-    <h2>Resultados</h2>
-    <div class="dados-principais">
-      <div class="dados-item">
-        <p>Total de Serviços Realizados</p>
-        <h3>65 <span class="variacao-positiva">+26,90%</span></h3>
-      </div>
-      <div class="dados-item">
-        <p>Valor Total dos Serviços</p>
-        <h3>R$ 401,49 <span class="variacao-positiva">+14,30%</span></h3>
-      </div>
-      <div class="dados-item">
-        <p>Ticket Médio</p>
-        <h3>R$ 6,17 <span class="variacao-negativa">-2,5%</span></h3>
-      </div>
-      <div class="dados-item">
-        <p>Pedidos Pendentes</p>
-        <h3>24 <span class="variacao-negativa">-3,5%</span></h3>
-      </div>
+    <header class="dashboard-header">
+        <h2>Seus Resultados</h2>
+        <div class="dados-principais">
+            <div class="dados-item">
+                <p>Total de Serviços Finalizados</p>
+                <h3><span id="total-servicos-valor">...</span></h3>
+            </div>
+            <div class="dados-item">
+                <p>Pedidos Ativos / Pendentes</p>
+                <h3><span id="pedidos-pendentes-valor">...</span></h3>
+            </div>
+        </div>
+    </header>
+
+    <div class="radio-inputs">
+        <label class="radio">
+            <input type="radio" name="periodo" value="week" checked="" onclick="changePeriod(this.value)">
+            <span class="name">Semana</span>
+        </label>
+        <label class="radio">
+            <input type="radio" name="periodo" value="month" onclick="changePeriod(this.value)">
+            <span class="name">Mês</span>
+        </label>
+        <label class="radio">
+            <input type="radio" name="periodo" value="year" onclick="changePeriod(this.value)">
+            <span class="name">Ano</span>
+        </label>
     </div>
-  </header>
 
-  <!-- Botões de Filtro -->
-<div class="filtros">
-  <button class="filtro-ativo" onclick="changePeriod('week')">Total de Serviços</button>
-  <button onclick="changePeriod('month')">Valor Total</button>
-  <button onclick="changePeriod('year')">Ticket Médio</button>
-  <button onclick="changePeriod('year')">Pedidos Pendentes</button>
-</div>
-
-<!-- Menu de seleção de período -->
-<div class="radio-inputs">
-  <label class="radio">
-    <input type="radio" name="periodo" checked="" onclick="changePeriod('week')">
-    <span class="name">Semana</span>
-  </label>
-  <label class="radio">
-    <input type="radio" name="periodo" onclick="changePeriod('month')">
-    <span class="name">Mês</span>
-  </label>
-  <label class="radio">
-    <input type="radio" name="periodo" onclick="changePeriod('year')">
-    <span class="name">Ano</span>
-  </label>
-</div>
-
-  <!-- Gráfico de Vendas -->
-  <div class="grafico">
-    <canvas id="graficoVendas"></canvas>
-  </div>
+    <div class="grafico">
+        <canvas id="graficoVendas"></canvas>
+    </div>
 </section>
 
-  <!-- Ranking -->
-<section class="ranking-mensal">
-  <header class="ranking-header">
-    <h2>Ranking Mensal</h2>
-    <p>Total de pedidos concluídos: <strong>150</strong> (Este mês)</p>
-  </header>
 
-  <!-- Tabela de Ranking -->
-  <div class="ranking-table">
-    <div class="ranking-header-row">
-      <div class="ranking-col pos">Posição</div>
-      <div class="ranking-col user">Usuário</div>
-      <div class="ranking-col pedidos">Pedidos Concluídos</div>
-    </div>
-
-    <div class="ranking-row">
-      <div class="ranking-col pos">1º</div>
-      <div class="ranking-col user">
-        <img src="user1.jpg" alt="Usuário 1" class="avatar">
-        <span>João Silva</span>
-      </div>
-      <div class="ranking-col pedidos">45</div>
-    </div>
-
-    <div class="ranking-row">
-      <div class="ranking-col pos">2º</div>
-      <div class="ranking-col user">
-        <img src="user2.jpg" alt="Usuário 2" class="avatar">
-        <span>Maria Souza</span>
-      </div>
-      <div class="ranking-col pedidos">35</div>
-    </div>
-
-    <div class="ranking-row">
-      <div class="ranking-col pos">3º</div>
-      <div class="ranking-col user">
-        <img src="user3.jpg" alt="Usuário 3" class="avatar">
-        <span>Carlos Mendes</span>
-      </div>
-      <div class="ranking-col pedidos">30</div>
-    </div>
-        <div class="ranking-row">
-      <div class="ranking-col pos">4º</div>
-      <div class="ranking-col user">
-        <img src="user1.jpg" alt="Usuário 1" class="avatar">
-        <span>Pedro Garro</span>
-      </div>
-      <div class="ranking-col pedidos">25</div>
-    </div>
-
-    <div class="ranking-row">
-      <div class="ranking-col pos">5º</div>
-      <div class="ranking-col user">
-        <img src="user2.jpg" alt="Usuário 2" class="avatar">
-        <span>Matheus Franca</span>
-      </div>
-      <div class="ranking-col pedidos">15</div>
-    </div>
-
-    <div class="ranking-row">
-      <div class="ranking-col pos">6º</div>
-      <div class="ranking-col user">
-        <img src="user3.jpg" alt="Usuário 3" class="avatar">
-        <span>Carlos Henrique</span>
-      </div>
-      <div class="ranking-col pedidos">10</div>
-    </div>
-
-
-    <!-- Adicionar mais linhas conforme necessário -->
-  </div>
-</section>
     </body>
+  <script type="module" src="/firebase-init.js"></script>
+  <script type="module" src="/script-module.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="/dashboardA.firebase.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>lucide.createIcons();</script>  
     </html>

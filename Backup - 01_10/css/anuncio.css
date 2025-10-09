@@ -180,10 +180,15 @@ button:hover {
 
 }
 .botoes-modal {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* duas colunas iguais */
-  gap: 20px; /* espaço entre os campos */
-
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.button-confirm{
+  width: 1058px;
 }
 .form-group {
   display: flex;
@@ -195,4 +200,318 @@ button:hover {
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 16px;
+}
+.checkbox-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Espaçamento entre os itens */
+}
+
+.checkbox-item {
+  width: calc(20% - 10px); /* Cada item ocupa 20% do espaço, com espaçamento */
+  box-sizing: border-box;
+}
+
+.checkbox-item label {
+  display: block;
+  margin-top: 5px;
+}
+/* Esconde o checkbox padrão */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Estilo do container */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 colunas de tamanho igual */
+  gap: 16px; /* Espaçamento entre os checkboxes */
+}
+
+/* Estilo de cada item (checkbox) */
+.checkbox-item {
+  display: flex;
+  align-items: center; /* Alinha o checkbox e o texto */
+  gap: 8px; /* Espaço entre o checkbox e o label */
+}
+
+/* Esconde o checkbox real e cria o círculo de estilo customizado */
+.checkbox-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Criação do checkbox customizado */
+.checkbox-item label {
+  font-size: 16px; /* Ajusta o tamanho da fonte do texto */
+  margin: 0; /* Remove margens para garantir o alinhamento correto */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Criação do círculo (checkbox) */
+.checkbox-item input:checked + .checkmark {
+  background-color: #0B6E4F; /* Cor verde quando checado */
+  animation: pulse 500ms ease-in-out;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* O estilo do círculo do checkbox */
+.checkbox-item .checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #ccc;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+/* Animação quando o checkbox for marcado */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px #0B6E4F90;
+  }
+  50% {
+    box-shadow: 0 0 0 10px #0B6E4F60;
+  }
+  100% {
+    box-shadow: 0 0 0 13px #0B6E4F30;
+  }
+}
+
+/* Estilo da marca de check */
+.checkbox-item input:checked + .checkmark::after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.5em;
+  border: solid #E0E0E2;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+/* Responsividade para garantir que os checkboxes não fiquem muito apertados */
+@media (max-width: 768px) {
+  .checkbox-grid {
+    grid-template-columns: 1fr; /* Uma coluna em telas menores */
+  }
+}
+* Estilo para o grid de checkboxes */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 colunas de tamanho igual */
+  gap: 16px; /* Espaçamento entre os checkboxes */
+}
+
+/* Estilo de cada item (checkbox) */
+.checkbox-item {
+  display: flex;
+  align-items: center; /* Alinha o checkbox e o texto */
+  gap: 8px; /* Espaço entre o checkbox e o label */
+}
+
+/* Esconde o checkbox real e cria o círculo de estilo customizado */
+.checkbox-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0; /* Torna o checkbox invisível */
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Criação do checkbox customizado */
+.checkbox-item label {
+  font-size: 16px; /* Ajusta o tamanho da fonte do texto */
+  margin: 0; /* Remove margens para garantir o alinhamento correto */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Criação do círculo (checkbox) */
+.checkbox-item .checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #ccc;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+/* Quando o checkbox for marcado */
+.checkbox-item input:checked + .checkmark {
+  background-color: #0B6E4F; /* Cor verde quando checado */
+  animation: pulse 500ms ease-in-out;
+}
+
+/* O estilo do círculo do checkbox */
+.checkbox-item .checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #ccc;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+/* Animação quando o checkbox for marcado */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px #0B6E4F90;
+  }
+  50% {
+    box-shadow: 0 0 0 10px #0B6E4F60;
+  }
+  100% {
+    box-shadow: 0 0 0 13px #0B6E4F30;
+  }
+}
+
+/* Estilo da marca de check */
+.checkbox-item input:checked + .checkmark::after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.5em;
+  border: solid #E0E0E2;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+/* Ajustes de Layout para garantir que o Endereço de Entrega e Orçamento Máximo fiquem embaixo um do outro */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espaço entre o label e o campo de entrada */
+}
+
+/* Ajusta a grid de itens para garantir que fique na mesma coluna */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 colunas */
+  gap: 16px; /* Espaçamento entre as colunas */
+}
+
+.input {
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%;
+}
+
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  .checkbox-grid {
+    grid-template-columns: 1fr; /* Uma coluna em telas menores */
+  }
+  .grid {
+    grid-template-columns: 1fr; /* Coloca tudo em uma coluna */
+  }
+}
+.container {
+  /* A label que engloba tudo. Flex para alinhar o checkmark e o texto */
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  font-size: 1rem; /* Ajuste o tamanho da fonte */
+  user-select: none;
+  align-items: center; /* Alinha verticalmente o checkmark com o texto */
+  gap: 8px; /* Espaço entre o checkmark e o texto do item */
+}
+
+/* Esconde o checkbox padrão */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Cria o custom checkbox (o círculo) */
+.checkmark {
+  --clr: var(--verde-esc); /* Usando sua variável CSS para a cor verde escura */
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #ccc;
+  border-radius: 50%; /* Garante que é um círculo */
+  transition: 300ms;
+  /* Garante que o checkmark não encolha */
+  flex-shrink: 0;
+}
+
+/* Quando o checkbox é checado */
+.container input:checked ~ .checkmark {
+  background-color: var(--clr);
+  /* Removi o 'border-radius: .5rem;' daqui para manter o formato circular */
+  animation: pulse 500ms ease-in-out;
+}
+
+/* Cria o ícone de check (o V) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none; /* Escondido por padrão */
+}
+
+/* Mostra o checkmark quando checado */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Estilo do V no checkmark */
+.container .checkmark:after {
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.5em;
+  border: solid #E0E0E2;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 var(--verde-esc);
+    rotate: 20deg;
+  }
+
+  50% {
+    rotate: -20deg;
+  }
+
+  75% {
+    box-shadow: 0 0 0 10px #0B6E4F60;
+  }
+
+  100% {
+    box-shadow: 0 0 0 13px #0B6E4F30;
+    rotate: 0;
+  }
 }
