@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EntreGo - Incluir Cartão</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/adicionar-cartao.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script defer src="../js/adicionar-cartao.js"></script>
+</head>
+<body>
+      <a href="carteiraC.html" class="voltar">
+  <i class="bi bi-arrow-left"></i> Voltar
+</a>
+  <main class="wrap">
+    <h1 class="page-title"><i data-lucide="credit-card"></i> Incluir Cartão</h1>
+
+    <div class="grid">
+      <!-- PREVIEW ESQUERDA -->
+      <div class="card-preview" aria-hidden="true">
+        <div class="card-3d" id="card3d">
+          <div class="card-face card-front" id="cardFront">
+            <div class="brand" id="brandBadge">••••</div>
+            <div class="chip"></div>
+            <div class="number" id="pvNumber">•••• •••• •••• ••••</div>
+            <div class="card-footer">
+              <div class="name" id="pvName">NOME IMPRESSO</div>
+              <div class="exp" id="pvExp">MM/AA</div>
+            </div>
+          </div>
+          <div class="card-face card-back" id="cardBack">
+            <div class="magstripe"></div>
+            <div class="cvv-box"><span>CVV</span><strong id="pvCvv">•••</strong></div>
+            <div class="brand-right" id="brandBadgeBack">••••</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO DIREITA -->
+      <form id="formCartao" class="formulario" autocomplete="off" novalidate>
+        <div class="grupo">
+          <label for="tipo">Tipo</label>
+          <select id="tipo" required>
+            <option value="credito">Cartão de Crédito</option>
+            <option value="debito">Cartão de Débito</option>
+          </select>
+        </div>
+
+        <div class="grupo">
+          <label for="bandeira">Bandeira</label>
+          <select id="bandeira" required>
+            <option value="auto">Detectar automaticamente</option>
+            <option value="visa">Visa</option>
+            <option value="mastercard">Mastercard</option>
+            <option value="elo">Elo</option>
+            <option value="amex">American Express</option>
+            <option value="hipercard">Hipercard</option>
+          </select>
+        </div>
+
+        <div class="grupo">
+          <label for="numero">Número do cartão</label>
+          <div class="input-icon">
+            <input id="numero" inputmode="numeric" placeholder="•••• •••• •••• ••••" required>
+            <button type="button" class="eye" data-target="numero" aria-label="Mostrar/ocultar número"><i data-lucide="eye-off"></i></button>
+          </div>
+          <small id="numeroHelp" class="help"></small>
+        </div>
+
+        <div class="grupo">
+          <label for="nome">Nome impresso no cartão</label>
+          <input id="nome" maxlength="26" placeholder="EX.: ANDREY S LIMA" required>
+        </div>
+
+        <div class="row">
+          <div class="grupo">
+            <label for="venc">Vencimento (MM/AA)</label>
+            <input id="venc" inputmode="numeric" placeholder="MM/AA" required>
+          </div>
+          <div class="grupo">
+            <label for="cvv">CVV</label>
+            <div class="input-icon">
+              <input id="cvv" inputmode="numeric" placeholder="•••" required>
+              <button type="button" class="eye" data-target="cvv" aria-label="Mostrar/ocultar CVV"><i data-lucide="eye-off"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="acoes">
+          <button type="submit" class="btn primario"><i data-lucide="save"></i> Salvar cartão</button>
+          <button type="reset" class="btn secundario">Limpar</button>
+        </div>
+
+        <p class="nota">
+          ⚠️ Segurança: não salvamos PAN/CVV. Depois de validar aqui, tokenize com o provedor (ex.: Mercado Pago/Stripe) via backend.
+        </p>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

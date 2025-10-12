@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ApoiaMe — Meus Serviços</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/meuservicosA.css"/>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../arquivos/favicon.ico"/>
+     <link rel="stylesheet" href="../css/chat.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+        <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li ><a href="../html/dashboardA.html"><i data-lucide="home"></i> Início</a></li>
+        <li class="active" ><a href="meuservicosA.html"><i data-lucide="package"></i> Meus Serviços</a></li>
+        <li><a href="../html/pedidosA.html"><i data-lucide="check-circle"></i>Meus Pedidos</a></li>
+        <li><a href="../html/carteiraA.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li><a href="configA.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+    <!-- CONFIRMAÇÃO DE LOGOUT -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content">
+        <p>Tem certeza que deseja sair?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Cancelar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+<main class="main-content">
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." id="search">
+        <button><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn"><i data-lucide="bell"></i></button>
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+        </div>
+      </div>
+    </header>
+  
+
+  <section id="meus-servicos">
+  <!-- Barra de título + ações rápidas -->
+  <section class="barra-topo">
+    <div class="lado-esq">
+      <h1>Meus serviços</h1>
+      <p class="dica">Gerencie seus anúncios.</p>
+    </div>
+    <div class="lado-dir">
+      <a href="criarA.html" class="btn primario"><i data-lucide="plus"></i> Criar anúncio</a>
+    </div>
+  </section>
+
+  <!-- Abas (status) -->
+  <nav class="abas">
+    <button class="aba ativa" data-status="publicado">Publicados <span class="cont" id="cont-publicado">0</span></button>
+  </nav>
+
+  <!-- Filtros -->
+  <section class="filtros">
+    <div class="grupo">
+      <div class="campo">
+        <i data-lucide="search"></i>
+        <input id="busca" type="search" placeholder="Buscar por título, categoria ou bairro">
+      </div>
+      <select id="filtro-categoria">
+        <option value="">Todas as categorias</option>
+        <option value="Entregas">Entregas</option>
+        <option value="Compras/Feira">Compras/Feira</option>
+        <option value="Serviços domésticos">Serviços domésticos</option>
+        <option value="Pets">Pets</option>
+        <option value="Outros">Outros</option>
+      </select>
+      <select id="ordenar">
+        <option value="recente">Mais recentes</option>
+        <option value="antigo">Mais antigos</option>
+        <option value="maior-preco">Maior preço</option>
+        <option value="menor-preco">Menor preço</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- Lista -->
+  <section class="lista" id="lista-servicos" aria-live="polite"></section>
+
+  <!-- Paginação -->
+  <section class="paginacao" id="paginacao"></section>
+
+  <!-- Estado vazio -->
+  <section class="vazio" id="estado-vazio" hidden>
+    <div class="icone"><i data-lucide="file-plus"></i></div>
+    <h3>Você ainda não possui anúncios</h3>
+    <p>Crie seu primeiro anúncio e comece a receber pedidos.</p>
+    <a href="criarA.html" class="btn primario"><i data-lucide="plus"></i> Anunciar agora</a>
+  </section>
+
+  <!-- Template de card -->
+  <template id="tpl-card">
+    <article class="card">
+      <label class="marcador">
+        <input type="checkbox" class="chk">
+        <span></span>
+      </label>
+
+      <img class="thumb" alt="Capa do serviço">
+      <div class="info">
+        <h4 class="titulo"></h4>
+        <div class="meta">
+          <span class="preco"></span>
+          <span class="categoria"></span>
+          <span class="local"></span>
+          <span class="atualizado"></span>
+        </div>
+        <div class="badges">
+          <!-- ex.: <span class="badge destaque">Destaque</span> -->
+        </div>
+      </div>
+
+      <div class="acoes">
+        <button class="btn perigo btn-excluir" data-acao="excluir">Excluir</button>
+        <button class="btn ver-mais" data-acao="ver-mais">Ver Mais</button>
+        <!-- Botão de destacar -->
+        <button class="btn primario btn-destaque" data-acao="destacar">Destacar</button>
+      </div>
+      <!-- Modal de Confirmação de Destaque -->
+      <div id="destaque-modal" class="modal">
+        <div class="modal-content">
+          <p>Tem certeza que deseja destacar este anúncio? A taxa de anúncio em destaque aumentará em 3,99% sobre o valor do serviço.</p>
+          <button id="confirmar-destaque">Sim</button>
+          <button id="cancelar-destaque">Cancelar</button>
+        </div>
+      </div>
+    </article>
+  </template>
+</section>
+<div id="destaque-modal" class="modal" hidden>
+  <div class="modal-content">
+    <p>Deseja destacar este anúncio? Será aplicada taxa adicional de 3,99%.</p>
+    <button id="confirmar-destaque">Sim</button>
+    <button id="cancelar-destaque">Cancelar</button>
+  </div>
+</div>
+</main>
+
+<!-- Scripts -->
+<script type="module" src="../js/meuservicosA.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>lucide.createIcons();</script>    
+<script type="module" src="/firebase-init.js"></script>
+<script type="module" src="/script-module.js"></script>
+<script type="module" src="/meuservicosA.firebase.js"></script>
+<script defer src="../js/script.js"></script>
+  <script type="module" src="/chat.module.js"></script>
+  <script type="module" src="/chat-init.js"></script>
+</body>
+</html>

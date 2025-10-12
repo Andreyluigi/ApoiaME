@@ -1,0 +1,483 @@
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 2rem;
+}
+
+.tab {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.tab:hover {
+    color: var(--verde);
+}
+
+.tab.active {
+    color: var(--verde);
+    font-weight: 600;
+    border-bottom-color: var(--verde);
+}
+
+/* Lógica para mostrar/esconder o conteúdo das abas */
+.tab-content {
+    display: none; /* Todas as seções começam escondidas */
+}
+
+.tab-content.active {
+    display: block; /* Apenas a seção com a classe 'active' é mostrada */
+    background: var(--branco);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* Estilos gerais para os formulários dentro das abas */
+.tab-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 600px; /* Limita a largura do formulário */
+}
+
+.tab-content form label {
+    font-weight: 600;
+    margin-bottom: -10px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+  background: var(--branco);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+input, textarea, select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.btn {
+  padding: 12px;
+  border: none;
+  background: var(--verde);
+  color: var(--branco);
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--verde-escuro);
+}
+
+.option {
+  margin: 10px 0;
+}
+
+/* Tabela de histórico */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table th, table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--cinza-claro);
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.paid {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.refunded {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Estilo para o switch tipo iOS */
+.component-title {
+  width: 100%;
+  margin-left: 15px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #888;
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* O container que envolve o switch */
+.container {
+  width: 51px;
+  height: 31px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Esconde o checkbox original */
+.checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* Estilo do switch */
+.switch {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: #e9e9eb;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+/* O slider (bolinha) do switch */
+.slider {
+  width: 27px;
+  height: 27px;
+  position: absolute;
+  left: calc(50% - 27px/2 - 10px);
+  top: calc(50% - 27px/2);
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+}
+
+/* Quando o checkbox estiver marcado, muda a cor de fundo do switch */
+.checkbox:checked + .switch {
+  background-color: #34C759;
+}
+
+/* Quando o checkbox estiver marcado, move o slider para a direita */
+.checkbox:checked + .switch .slider {
+  left: calc(50% - 27px/2 + 10px);
+  top: calc(50% - 27px/2);
+}
+
+/* Ajuste nas opções de texto */
+.option {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Botão de salvar preferências */
+.btn {
+  padding: 12px;
+  border: none;
+  background: var(--verde);
+  color: var(--branco);
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--verde-escuro);
+}
+.custom-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.custom-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.custom-radio__input {
+  display: none;
+}
+
+.custom-radio__label {
+  font-size: 16px;
+  color: #333;
+  margin-left: 10px;
+}
+
+.custom-radio__input:checked + .custom-radio__label {
+  color: #3DBE34; /* Cor verde quando selecionado */
+}
+
+.custom-radio__input:checked + .custom-radio__label::before {
+  content: "✓"; /* Marca o ícone de check quando selecionado */
+  margin-right: 8px;
+  color: #3DBE34;
+}
+
+.custom-radio__input + .custom-radio__label::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  background-color: white;
+  transition: background-color 0.3s ease;
+}
+
+.custom-radio__input:checked + .custom-radio__label::before {
+  background-color: #3DBE34;
+  border-color: #3DBE34;
+}
+
+.custom-radio__input:focus + .custom-radio__label {
+  outline: none;
+  color: #3DBE34;
+}
+#endereco {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  padding: 40px 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #3DBE34;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.cep-background {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.cep-card {
+  margin-bottom: 20px;
+}
+
+.cep-card p {
+  font-size: 16px;
+  color: #666;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-endereco {
+  background-color: #3DBE34;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-endereco:hover {
+  background-color: #349c2b;
+}
+
+#cepInfo {
+  margin-top: 20px;
+}
+
+#cepInfo p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+#listaEnderecos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.endereco-card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.endereco-card p {
+  font-size: 14px;
+  color: #333;
+}
+
+.endereco-card .editar {
+  color: #3DBE34;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.endereco-card .principal {
+  background-color: #3DBE34;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+#salvos {
+  color: #3DBE34;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .cep-background {
+    padding: 20px;
+  }
+}
+ h3{
+  margin-top: 40px;
+  margin-bottom: 15px;
+ }
+ #editarBtn {
+  padding: 5px 15px;
+  background-color: #3DBE34;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#editarBtn:hover {
+  background-color: #2a9c2b;
+}
+
+#checkboxContainer {
+  display: none;
+  margin-top: 20px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+button#apagarBtn {
+  background-color: #ff6c0c;
+  color: white;
+}
+
+button#cancelarBtn {
+  background-color: #ccc;
+  color: black;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+#checkboxContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Container dos botões de ação */
+#checkboxContainer .btn-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+/* Botões estilo ApoiaMe */
+#checkboxContainer button {
+  padding: 10px 20px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Botão Apagar - laranja */
+#apagarBtn {
+  background-color: #ff6c0c;
+  color: #fff;
+}
+
+#apagarBtn:hover {
+  background-color: #e65b00;
+}
+
+/* Botão Cancelar - cinza escuro */
+#cancelarBtn {
+  background-color: #1d1d1d;
+  color: #fff;
+}
+
+#cancelarBtn:hover {
+  background-color: #333;
+}
