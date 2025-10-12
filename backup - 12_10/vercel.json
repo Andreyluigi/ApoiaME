@@ -2,19 +2,8 @@
   "redirects": [
     {
       "source": "/html/welcome.html",
-      "destination": "/",
+      "destination": "/html/index.html",
       "permanent": true
-    },
-    {
-      "source": "/welcome.html",
-      "destination": "/",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/html/index.html"
     }
   ]
 }
