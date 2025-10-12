@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ApoiaMe - Configurações do Ajudante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/configC.css">
+     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+     <aside class="sidebar">
+    <div class="logo">
+        <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="../html/dashboardA.html"><i data-lucide="home"></i> Início</a></li>
+        <li><a href="meuservicosA.html"><i data-lucide="package"></i> Meus Serviços</a></li>
+        <li><a href="../html/pedidosA.html"><i data-lucide="check-circle"></i>Meus Pedidos</a></li>
+        <li><a href="../html/carteiraA.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li  class="active"><a href="configA.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+    <!-- CONFIRMAÇÃO DE LOGOUT -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content">
+        <p>Tem certeza que deseja sair?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Cancelar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." id="search">
+        <button><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn"><i data-lucide="bell"></i></button>
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+        </div>
+      </div>
+    </header>
+
+<br>
+<br>
+        <section class="content">
+            <h3>Configurações de Conta</h3>
+
+            <nav class="tabs">
+                <button class="tab active" data-target="dados">Meus Dados</button>
+                <button class="tab" data-target="senha">Senha</button>
+            </nav>
+
+            <section id="dados" class="tab-content active">
+                <h2>Meus Dados</h2>
+                <form id="dados-form">
+                    <label for="user-nome">Nome Completo</label>
+                    <input type="text" id="user-nome" placeholder="Carregando..." required>
+
+                    <label for="user-nickname">Como você quer ser chamado?</label>
+                    <input type="text" id="user-nickname" placeholder="Aparecerá no seu perfil e chat">
+
+                    <label for="user-telefone">Telefone</label>
+                    <input type="text" id="user-telefone" placeholder="(00) 00000-0000" maxlength="15">
+                    
+                    <button type="submit" class="btn">Salvar Alterações</button>
+                </form>
+            </section>
+
+            <section id="senha" class="tab-content">
+                <h2>Alterar Senha</h2>
+                <form id="senha-form">
+                    <label for="senha-atual">Senha Atual</label>
+                    <input id="senha-atual" type="password" placeholder="••••••••" required>
+
+                    <label for="nova-senha">Nova Senha</label>
+                    <input id="nova-senha" type="password" placeholder="Mínimo 6 caracteres" required>
+
+                    <label for="confirmar-senha">Confirmar Nova Senha</label>
+                    <input id="confirmar-senha" type="password" placeholder="••••••••" required>
+
+                    <button type="submit" class="btn">Alterar Senha</button>
+                </form>
+            </section>
+        </section>
+    </main>
+    
+    <script>lucide.createIcons();</script>
+    <script type="module" src="/firebase-init.js"></script>
+    <script type="module" src="/script-module.js"></script>
+    <script type="module" src="/configA.firebase.js"></script>
+</body>
+</html>

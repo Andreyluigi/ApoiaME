@@ -1,0 +1,86 @@
+:root {
+  --verde: #3DBE34;
+  --verde-escuro: #2F8F27;
+  --branco: #ffffff;
+  --cinza: #f4f4f4;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--cinza);
+  color: #333;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background: var(--branco);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logo {
+  height: 60px;
+}
+
+.escolha-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  min-height: calc(100vh - 80px);
+  padding: 40px;
+}
+
+.escolha-card {
+  background: var(--branco);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  flex: 1;
+  max-width: 350px;
+  transition: transform 0.3s;
+}
+
+.escolha-card:hover {
+  transform: translateY(-10px);
+}
+
+.escolha-card img {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+.escolha-card h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.escolha-card p {
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  background: var(--verde);
+  color: var(--branco);
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: var(--verde-escuro);
+}
+
+@media (max-width: 768px) {
+  .escolha-section {
+    flex-direction: column;
+  }
+}
