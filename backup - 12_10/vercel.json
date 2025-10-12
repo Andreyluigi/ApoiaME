@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/html/welcome.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/welcome.html",
       "destination": "/",
       "permanent": true
@@ -8,8 +13,8 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/html/$1"
+      "source": "/",
+      "destination": "/html/index.html"
     }
   ]
 }
