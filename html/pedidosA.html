@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ApoiaMe - Pedidos (ajudante) </title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboardA.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/pedidosA.css">
+   <link rel="stylesheet" href="../css/chat.css">
+
+
+</head>
+<body>
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+        <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li ><a href="../html/dashboardA.html"><i data-lucide="home"></i> Início</a></li>
+        <li><a href="meuservicosA.html"><i data-lucide="package"></i> Meus Serviços</a></li>
+        <li class="active" ><a href="../html/pedidosA.html"><i data-lucide="check-circle"></i>Meus Pedidos</a></li>
+        <li><a href="../html/carteiraA.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li><a href="configA.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+    <!-- CONFIRMAÇÃO DE LOGOUT -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content">
+        <p>Tem certeza que deseja sair?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Cancelar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="search-container">
+        <input type="text" placeholder="Buscar..." id="search">
+        <button><i data-lucide="search"></i></button>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn"><i data-lucide="bell"></i></button>
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+        </div>
+      </div>
+    </header>
+    <main class="principal">
+      <!--Pedido ATIVO-->
+        <div class="status-header">
+          <span class="live-indicator"></span>
+          <h2>Pedido Ativo</h2>
+        </div>
+        <div id="pedido-ativo-container">
+    <div class="card-pedido1">
+        <div class="card-header">
+            <h3>Carregando...</h3>
+            <button class="btn-ver-detalhes">Ver detalhes</button>
+        </div>
+        <div class="card-body">
+            <p><strong>Status:</strong> Carregando...</p>
+            <p><strong>Data:</strong> Carregando...</p>
+            <p><strong>Entregador:</strong>Carregando...</p>
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- Pedidos Disponiveis-->
+            <div class="status-header">
+          <span class="live-indicator"></span>
+          <h2>Pedidos Disponíveis</h2>
+        </div>
+      
+      <section class="lista-pedidos" id="lista-pedidos">
+        
+        <!-- Card de exemplo estático. Seus dados virão do Firestore via JS -->
+<div class="card-pedido">
+  <div class="cabeca">
+    <h3>Pedidos Disponíveis</h3>
+    <span class="badge">Serviço</span>
+  </div>
+  <div class="informacoes">
+    <p><strong>Status:</strong> Carregando...</p>
+    <p><strong>Data:</strong> Carregando...</p>
+    <p><strong>Entregador:</strong> Carregando...</p>
+  </div>
+  <div id="campoAdicional" class="campo-adicional">
+    <!-- Campos do serviço serão carregados aqui dinamicamente -->
+  </div>
+  <div class="botoes">
+    <button class="btn recusar">Recusar</button>
+    <button class="btn aceitar">Aceitar</button>
+  </div>
+</div>
+        <!-- Repita via JS -->
+      </section>
+
+      <!-- Histórico -->
+      <section class="historico">
+        <h2><i data-lucide="history"></i> Histórico de pedidos</h2>
+        <div class="lista-historico" id="lista-historico">
+          <!-- Item de exemplo -->
+          <article class="item-historico">
+            <div class="bloco">
+              <span class="titulo-item">Carregando...</span>
+              <span class="sub">Concluído • Ontem 18:20</span>
+            </div>
+            <div class="bloco">
+              <span class="valor">R$ 00,00</span>
+              <span class="status tag sucesso">Finalizado</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+  </main>
+  
+   
+  <script defer src="../js/script.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script type="module" src="/firebase-init.js"></script>
+   <script type="module" src="/script-module.js"></script>
+   <script type="module" src="/pedidosA.firebase.js"></script>
+     <script type="module" src="/chat.module.js"></script>
+  <script type="module" src="/chat-init.js"></script>
+    </body>
+    </html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ApoiaMe - Buscar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/buscar.css">
+  <!-- Lucide (ícones) -->
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (window.lucide) {
+      // versões novas usam createIcons()
+      if (typeof window.lucide.createIcons === "function") {
+        window.lucide.createIcons();
+      }
+      // fallback para versões mais antigas
+      else if (typeof window.lucide.replace === "function") {
+        window.lucide.replace();
+      }
+    }
+  });
+</script>
+
+  <!-- JS da página -->
+  <script defer src="../js/buscar.js"></script>
+</head>
+<body>
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width: 180px; height: auto;">
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
+        <li class="active"><a href="../html/buscar.html"><i data-lucide="search"></i> Buscar</a></li>
+        <li><a href="#"><i data-lucide="package"></i> Meus Pedidos</a></li>
+        <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="chat.html"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
+        <li><a href="perfilC.html"><i data-lucide="user"></i> Perfil</a></li>
+      </ul>
+    </nav>
+
+    <button class="logout" id="logout-btn"><i data-lucide="log-out"></i> Sair</button>
+
+    <!-- MODAL CONFIRMAÇÃO LOGOUT -->
+    <div id="logout-modal" class="modal">
+      <div class="modal-content">
+        <p>Tem certeza que deseja sair?</p>
+        <button id="confirm-yes">Sim</button>
+        <button id="confirm-no">Cancelar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <!-- TOPO (SEM barra de busca dentro dele, como você pediu) -->
+    <header class="topbar">
+      <div></div> <!-- placeholder; mantém espaçamento à esquerda -->
+      <div class="topbar-right">
+        <button class="notif-btn" aria-label="Notificações"><i data-lucide="bell"></i>
+        <img src="../arquivos/user.png" alt="Perfil" class="profile-pic">
+      </div>
+    </header>
+
+    <!-- SEÇÃO DE RESULTADOS + BARRA DE BUSCA NO CONTEÚDO -->
+    <section class="results-section">
+      <h2>Resultados da busca</h2>
+
+      <!-- Barra de busca (dentro do conteúdo) -->
+      <div class="search-container" style="margin-bottom:16px;">
+        <input type="text" placeholder="Buscar..." id="search">
+        <button id="search-btn" aria-label="Buscar"><i data-lucide="search"></i></button>
+      </div>
+
+      <div class="results-grid" id="results-grid">
+        <div class="card" data-name="Troca de Gás">
+          <img src="../arquivos/exemplo1.jpg" alt="Serviço">
+          <h3>Troca de Gás</h3>
+          <p>Entrega rápida em até 30 minutos</p>
+          <button>Ver Detalhes</button>
+        </div>
+        <div class="card" data-name="Lavagem de Carro">
+          <img src="../arquivos/exemplo2.jpg" alt="Serviço">
+          <h3>Lavagem de Carro</h3>
+          <p>Profissionais avaliados perto de você</p>
+          <button>Ver Detalhes</button>
+        </div>
+        <div class="card" data-name="Compras na Feira">
+          <img src="../arquivos/exemplo3.jpg" alt="Serviço">
+          <h3>Compras na Feira</h3>
+          <p>Receba frutas e verduras frescas</p>
+          <button>Ver Detalhes</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
