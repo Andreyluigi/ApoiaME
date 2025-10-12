@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/welcome.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
