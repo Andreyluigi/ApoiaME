@@ -1,9 +1,12 @@
 {
   "redirects": [
+    { "source": "/welcome.html", "destination": "/", "permanent": true },
+    { "source": "/html/welcome.html", "destination": "/", "permanent": true }
+  ],
+  "rewrites": [
     {
-      "source": "/html/welcome.html",
-      "destination": "/html/index.html",
-      "permanent": true
+      "source": "/((?!css/|js/|arquivos/).*)",
+      "destination": "/html/$1"
     }
   ]
 }
