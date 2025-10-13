@@ -1,0 +1,153 @@
+
+.card-pedido-ativo {
+    background: #fff;
+    border: 2px solid var(--verde); 
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.card-pedido-ativo .card-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--verde-escuro);
+}
+
+.card-pedido-ativo .card-body p {
+    margin: 8px 0;
+}
+
+
+.btn-principal-cliente {
+    background-color: var(--verde);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn-principal-cliente:hover {
+    background-color: #339c29;
+}
+
+.btn-chat-cliente {
+    background-color: var(--azul);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 10px;
+    width: auto;
+}
+
+.barra-progresso-wrapper {
+    max-width: 800px; 
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+
+
+.pending-task {
+    text-align: center;
+    padding: 30px;
+}
+.historico{
+    margin-top: 28px;
+    max-width: 800px; /* Limita a largura para consistência com o card ativo */
+    margin-left: 24px;
+    margin-right: auto;
+}
+.historico h2{
+    margin: 0 0 12px 0; 
+    font-size: 22px; /* Aumenta a fonte do título */
+    color: var(--verde-escuro); /* Usa a cor do seu design */
+}
+.lista-historico{
+    display:flex; 
+    flex-direction:column; 
+    gap: 15px; /* Aumenta o espaçamento entre itens */
+}
+
+/* Item Individual do Histórico */
+.item-historico{
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between; 
+    gap:12px;
+    
+    background: var(--branco); 
+    border: 1px solid var(--cinza-3); 
+    border-radius: 10px; /* Borda levemente menor que o card ativo */
+    padding: 15px 20px; /* Mais preenchimento interno */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item-historico:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Efeito ao passar o mouse */
+}
+
+.item-historico .bloco{
+    display:flex; 
+    flex-direction:column;
+}
+
+.titulo-item{
+    font-weight: 600;
+    font-size: 16px; /* Fonte maior para o título */
+    color: #333;
+}
+
+.sub{
+    font-size: 13px; 
+    color: var(--cinza-2);
+}
+
+.valor{
+    font-weight: 700;
+    font-size: 18px; /* Destaque para o valor */
+    color: var(--verde-escuro);
+}
+
+/* Status Tag (mantido seu estilo de sucesso) */
+.status.tag{
+    padding:4px 10px; 
+    border-radius:999px; 
+    font-size:12px; 
+    border:1px solid var(--cinza-3);
+    text-transform: uppercase;
+}
+.tag.sucesso{
+    background:rgba(61,190,52,.12); 
+    border-color:rgba(61,190,52,.35); 
+    color:#1a6f15;
+}
+
+/* Tratamento para telas menores */
+@media (max-width: 600px) {
+    .item-historico {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .item-historico .bloco:last-child {
+        margin-top: 10px;
+        align-self: flex-end; /* Alinha valor e status à direita/fim */
+        align-items: flex-end;
+    }
+}
