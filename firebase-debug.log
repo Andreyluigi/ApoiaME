@@ -1,0 +1,107 @@
+[debug] [2025-10-12T21:54:46.146Z] ----------------------------------------------------------------------
+[debug] [2025-10-12T21:54:46.149Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\valde\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init functions
+[debug] [2025-10-12T21:54:46.149Z] CLI Version:   14.19.1
+[debug] [2025-10-12T21:54:46.149Z] Platform:      win32
+[debug] [2025-10-12T21:54:46.149Z] Node Version:  v22.20.0
+[debug] [2025-10-12T21:54:46.149Z] Time:          Sun Oct 12 2025 18:54:46 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2025-10-12T21:54:46.149Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\valde\Downloads\andrey\projetogithub\ApoiaME
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2025-10-12T21:54:58.113Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-12T21:54:58.113Z] > authorizing via signed-in user (andreybarro12@gmail.com)
+[debug] [2025-10-12T21:54:58.114Z] Checked if tokens are valid: false, expires at: 1760302358434
+[debug] [2025-10-12T21:54:58.114Z] Checked if tokens are valid: false, expires at: 1760302358434
+[debug] [2025-10-12T21:54:58.114Z] > refreshing access token with scopes: []
+[debug] [2025-10-12T21:54:58.115Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-10-12T21:54:58.115Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-12T21:54:58.329Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-10-12T21:54:58.329Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-12T21:54:58.339Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-10-12T21:54:58.999Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-10-12T21:54:58.999Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] 
+=== Functions Setup
+[debug] [2025-10-12T21:55:00.523Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-12T21:55:00.523Z] > authorizing via signed-in user (andreybarro12@gmail.com)
+[debug] [2025-10-12T21:55:00.523Z] [iam] checking project apoia-me for permissions ["firebase.projects.get"]
+[debug] [2025-10-12T21:55:00.524Z] Checked if tokens are valid: true, expires at: 1760309697329
+[debug] [2025-10-12T21:55:00.524Z] Checked if tokens are valid: true, expires at: 1760309697329
+[debug] [2025-10-12T21:55:00.524Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/apoia-me:testIamPermissions [none]
+[debug] [2025-10-12T21:55:00.524Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/apoia-me:testIamPermissions x-goog-quota-user=projects/apoia-me
+[debug] [2025-10-12T21:55:00.524Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/apoia-me:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-10-12T21:55:01.491Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/apoia-me:testIamPermissions 200
+[debug] [2025-10-12T21:55:01.491Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/apoia-me:testIamPermissions {"permissions":["firebase.projects.get"]}
+[info] Let's create a new codebase for your functions.
+[info] A directory corresponding to the codebase will be created in your project
+[info] with sample code pre-configured.
+
+[info] See https://firebase.google.com/docs/functions/organize-functions for
+[info] more information on organizing your functions using codebases.
+
+[info] Functions can be deployed with firebase deploy.
+
+[info] +  Wrote functions/package.json 
+[info] +  Wrote functions/index.js 
+[info] +  Wrote functions/.gitignore 
+[info] 
+[debug] [2025-10-12T21:55:54.732Z] ----------------------------------------------------------------------
+[debug] [2025-10-12T21:55:54.734Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\valde\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --only functions
+[debug] [2025-10-12T21:55:54.734Z] CLI Version:   14.19.1
+[debug] [2025-10-12T21:55:54.734Z] Platform:      win32
+[debug] [2025-10-12T21:55:54.734Z] Node Version:  v22.20.0
+[debug] [2025-10-12T21:55:54.734Z] Time:          Sun Oct 12 2025 18:55:54 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2025-10-12T21:55:54.735Z] ----------------------------------------------------------------------
+[debug] 
+[error] !!  functions: Failed to start Functions emulator: codebase source must be specified. Must specify either 'source' or 'remoteSource' in a functions config. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start Functions emulator: codebase source must be specified. Must specify either 'source' or 'remoteSource' in a functions config."}}
+[debug] [2025-10-12T21:55:54.766Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-12T21:55:54.766Z] > authorizing via signed-in user (andreybarro12@gmail.com)
+[warn] !  Could not find config (firebase.json) so using defaults. 
+[info] i  emulators: Starting emulators: functions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions"}}
+[debug] [2025-10-12T21:55:54.781Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-10-12T21:55:54.781Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-10-12T21:55:54.792Z] Emulator locator file path: C:\Users\valde\AppData\Local\Temp\hub-apoia-me.json
+[debug] [2025-10-12T21:55:54.793Z] [hub] writing locator at C:\Users\valde\AppData\Local\Temp\hub-apoia-me.json
+[error] !!  functions: Failed to start Functions emulator: codebase source must be specified. Must specify either 'source' or 'remoteSource' in a functions config. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start Functions emulator: codebase source must be specified. Must specify either 'source' or 'remoteSource' in a functions config."}}
+[debug] [2025-10-12T21:55:54.834Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬──────────────────────────────────┬─────────────────────┐
+│ Emulator  │ Host:Port                        │ View in Emulator UI │
+├───────────┼──────────────────────────────────┼─────────────────────┤
+│ Functions │ Failed to initialize (see above) │                     │
+└───────────┴──────────────────────────────────┴─────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2025-10-12T22:19:37.191Z] Received signal SIGHUP 1
+[info]  
+[info] i  emulators: Received SIGHUP for the first time. Starting a clean shutdown. 
+[info] i  emulators: Please wait for a clean shutdown or send the SIGHUP signal again to stop right now. 
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  ui: Stopping Emulator UI {"metadata":{"emulator":{"name":"ui"},"message":"Stopping Emulator UI"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2025-10-12T22:19:37.199Z] Emulator locator file path: C:\Users\valde\AppData\Local\Temp\hub-apoia-me.json
+[info] i  logging: Stopping Logging Emulator {"metadata":{"emulator":{"name":"logging"},"message":"Stopping Logging Emulator"}}
+[debug] [2025-10-12T22:19:37.206Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.

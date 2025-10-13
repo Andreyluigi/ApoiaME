@@ -41,7 +41,7 @@ confirmYes.addEventListener("click", async () => {
     modal.classList.remove("show");
     
     // Redireciona para a página welcome.html
-    window.location.href = "welcome.html";
+    window.location.href = "index.html";
     
     alert("Você saiu!");
   } catch (err) {

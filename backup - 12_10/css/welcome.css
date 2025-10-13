@@ -479,46 +479,65 @@ body {
     height: auto;
   }
 }
-/* Equipe */
 .equipe {
-  text-align: center;
-  padding: 60px 20px;
-  background: var(--branco);
+    text-align: center;
+    padding: 80px 20px;
+    background: #f8f9fa;
 }
 
 .equipe h2 {
-  font-size: 2rem;
-  color: var(--verde-escuro);
-  margin-bottom: 40px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--verde-escuro);
+    margin-bottom: 60px;
 }
 
 .membros {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
+/* O card de cada membro */
 .membro {
-  max-width: 200px;
+    background-color: #ffffff;
+    border-radius: 24px; /* Aumentando o raio do card */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    max-width: 300px; /* AUMENTADO para comportar a foto gigante */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.membro:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* A FOTO (AGORA BEM MAIOR) */
 .membro img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  margin-bottom: 15px;
+    width: 240px;   /* AUMENTADO para 240px */
+    height: 240px;  /* AUMENTADO para 240px */
+    object-fit: cover;
+    margin-bottom: 25px;
+    border-radius: 20px; /* Cantos arredondados um pouco maiores */
+    border: 6px solid var(--verde); /* Borda mais grossa */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+/* Nome do integrante (mantido) */
 .membro h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: var(--verde-medio);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #333;
 }
 
+/* Descrição do integrante (mantido) */
 .membro p {
-  font-size: 0.9rem;
-  color: var(--preto);
+    font-size: 1rem;
+    color: #6c757d;
+    line-height: 1.6;
 }
 
 /* Sobre Nós */
