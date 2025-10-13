@@ -415,20 +415,40 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
   }
 
   // pagar agora (simulação)
-  const pagarBtn = document.getElementById("pagar-orient-btn");
-  if (pagarBtn) {
-    pagarBtn.onclick = async () => {
-      if (!pedidoRef) return alert("Pedido não disponível.");
-      try {
-        await updateDoc(pedidoRef, { statusPagamento: "confirmado", status: "pago_aguardando_inicio" });
-        await addHistorico(pedidoRef, "Cliente realizou o pagamento via card.");
-        alert("Pagamento registrado. Aguardando início pelo ajudante.");
-      } catch (e) {
-        console.error(e);
-        alert("Erro ao registrar pagamento.");
-      }
-    };
-  }
+const pagarBtn = document.getElementById("pagar-orient-btn");
+  if (pagarBtn) {
+    pagarBtn.onclick = async () => {
+      // Desabilita o botão para evitar cliques duplos
+      pagarBtn.disabled = true;
+      pagarBtn.textContent = "Aguarde, gerando link...";
+
+      try {
+        // 1. Chama a sua nova Serverless Function na Vercel
+        const response = await fetch('/api/create-preference', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pedidoId: base.id }), // Envia o ID do pedido
+        });
+
+        const data = await response.json();
+
+        // 2. Se a resposta for um sucesso, redireciona o cliente
+        if (response.ok && data.init_point) {
+          window.location.href = data.init_point;
+        } else {
+          // Lança um erro se a resposta não for bem-sucedida
+          throw new Error(data.message || "Erro desconhecido ao criar preferência.");
+        }
+
+      } catch (error) {
+        console.error("Erro ao iniciar o processo de pagamento:", error);
+        alert("Não foi possível gerar o link de pagamento. Tente novamente mais tarde.");
+        // Reabilita o botão em caso de erro
+        pagarBtn.disabled = false;
+        pagarBtn.textContent = "Pagar agora";
+      }
+    };
+  }
 
   // confirmar chegada
   const confirmarChegadaBtn = document.getElementById("confirmar-chegada-orient-btn");
