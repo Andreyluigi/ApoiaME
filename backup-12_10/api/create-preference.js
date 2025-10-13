@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
         }
         
         console.log("--- DEBUG: Passo 5 - Sucesso! Retornando o link de pagamento.");
-        return res.status(200).json({ init_point: response.body.init_point });
+        return res.status(200).json({ init_point: response.init_point });
 
     } catch (error) {
         console.error("--- DEBUG: FALHA CRÍTICA DENTRO DO BLOCO TRY/CATCH ---", error);
