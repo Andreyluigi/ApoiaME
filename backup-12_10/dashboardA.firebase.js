@@ -2,7 +2,7 @@
 
 import { db, auth } from './firebase-init.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-import { doc, getDocs, collection, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { doc, getDoc, getDocs, collection, query, where, orderBy, limit, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 let unsubscribePedidoAtivo = null;
 
@@ -67,6 +67,25 @@ function renderResumoPedidos(pedidoAtivo, ultimosFinalizados) {
     }
 }
 
+
+async function limparPedidoAtivoDoAjudante(userId) {
+    console.log("--- DEBUG: Função 'limparPedidoAtivoDoAjudante' foi chamada.");
+    try {
+        const ajudanteRef = doc(db, "usuarios", userId);
+        const ajudanteSnap = await getDoc(ajudanteRef);
+
+        if (ajudanteSnap.exists() && ajudanteSnap.data().pedidoAtivo) {
+            console.log("--- DEBUG: 'pedidoAtivo' encontrado no perfil. Limpando agora...");
+            await updateDoc(ajudanteRef, { pedidoAtivo: null });
+            console.log("--- DEBUG: SUCESSO! 'pedidoAtivo' foi limpo.");
+        } else {
+            console.warn("--- DEBUG: Limpeza não foi necessária (perfil não encontrado ou 'pedidoAtivo' já está nulo).");
+        }
+    } catch (error) {
+        console.error("--- DEBUG: ERRO dentro de 'limparPedidoAtivoDoAjudante':", error);
+    }
+}
+
 /**
  * Busca o pedido ativo (em tempo real) e os últimos pedidos finalizados.
  */
@@ -77,7 +96,7 @@ async function monitorarPedidosAjudante(userId) {
         pedidosRef,
         where('ajudanteUid', '==', userId),
         where('status', 'in', ['aceito', 'pago_aguardando_inicio', 'em_rota', 'no_local', 'em_execucao', 'concluido_prestador']),
-        limit(1) // Busca apenas 1 pedido ativo
+        limit(1)
     );
 
     const qFinalizados = query(
@@ -85,30 +104,35 @@ async function monitorarPedidosAjudante(userId) {
         where('ajudanteUid', '==', userId),
         where('status', 'in', ['finalizado', 'cancelado']),
         orderBy('criadoEm', 'desc'),
-        limit(2) // Busca os 2 últimos finalizados/cancelados
+        limit(2)
     );
 
     try {
         const finalizadosSnapshot = await getDocs(qFinalizados);
-        
-        // Transforma o resultado em uma lista (array) de objetos
-        const ultimosFinalizados = finalizadosSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        const ultimosFinalizados = finalizadosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         if (unsubscribePedidoAtivo) unsubscribePedidoAtivo();
+        
+        console.log("--- DEBUG: Iniciando listener onSnapshot para pedidos ATIVOS...");
         unsubscribePedidoAtivo = onSnapshot(qAtivo, (querySnapshot) => {
-            const pedidoAtivo = querySnapshot.empty ? null : { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+            console.log("--- DEBUG: Listener onSnapshot (busca por pedido ativo) disparou!");
             
-            // Passa o pedido ativo e a LISTA de finalizados para a renderização
+            let pedidoAtivo = null;
+
+            if (querySnapshot.empty) {
+                console.log("--- DEBUG: A busca por pedidos ATIVOS retornou VAZIA. Acionando limpeza...");
+                limparPedidoAtivoDoAjudante(userId);
+            } else {
+                pedidoAtivo = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+                console.log("--- DEBUG: Pedido ATIVO encontrado:", pedidoAtivo.id, "Status:", pedidoAtivo.status);
+            }
+            
             renderResumoPedidos(pedidoAtivo, ultimosFinalizados);
         }, (error) => {
-            console.error("Erro ao monitorar pedido ativo:", error);
+            console.error("--- DEBUG: ERRO no listener onSnapshot:", error);
         });
     } catch (error) {
-        console.error("Erro ao buscar últimos pedidos finalizados:", error);
-        // Um erro aqui pode indicar a necessidade de criar um índice no Firestore.
+        console.error("--- DEBUG: ERRO GERAL em 'monitorarPedidosAjudante':", error);
     }
 }
 

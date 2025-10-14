@@ -467,30 +467,45 @@ const pagarBtn = document.getElementById("pagar-orient-btn");
   }
 
   // confirmar finalização
-  const confirmarFinalBtn = document.getElementById("confirmar-finalizacao-orient-btn");
- if (confirmarFinalBtn) {
+const confirmarFinalBtn = document.getElementById("confirmar-finalizacao-orient-btn");
+if (confirmarFinalBtn) {
   confirmarFinalBtn.onclick = async () => {
     if (!pedidoRef) return alert("Pedido não disponível.");
+    if (!confirm("Confirmar a finalização deste serviço?")) return;
 
     try {
-      // Pega o UID do cliente logado
-      const clienteUid = auth.currentUser.uid;
-      if (!clienteUid) throw new Error("Cliente não autenticado.");
+      // 1. Pega os dados do pedido e do anúncio
+      const pedidoSnap = await getDoc(pedidoRef);
+      if (!pedidoSnap.exists()) throw new Error("Pedido não encontrado.");
+      
+      const pedidoData = pedidoSnap.data();
+      const { anuncioId, precoBase, clienteUid, ajudanteUid } = pedidoData;
 
-      // 1. Atualiza o status do pedido para "finalizado"
-      await updateDoc(pedidoRef, { status: "finalizado" });
+      if (!anuncioId || precoBase == null) throw new Error("Dados incompletos para calcular ganhos.");
 
-      // 2. Limpa o pedidoAtivo APENAS do documento do cliente
-      const clienteRef = doc(db, "usuarios", clienteUid);
-      await updateDoc(clienteRef, { pedidoAtivo: null });
-      console.log(`Campo pedidoAtivo do cliente ${clienteUid} foi limpo.`);
+      const anuncioRef = doc(db, "anuncios", anuncioId);
+      const anuncioSnap = await getDoc(anuncioRef);
+      const eraDestaque = anuncioSnap.exists() && anuncioSnap.data().destaque === true;
 
-      await addHistorico(pedidoRef, "Cliente confirmou finalização via card.");
-      alert("Serviço confirmado e finalizado com sucesso!");
+      // 2. CALCULA o ganho do ajudante
+      let valorParaAjudante = eraDestaque ? (precoBase * 0.90) : (precoBase * 0.94);
+
+      // 3. ATUALIZA o pedido com o status E o ganho calculado
+      await updateDoc(pedidoRef, { 
+          status: "finalizado",
+          ganhoAjudante: parseFloat(valorParaAjudante.toFixed(2)),
+      });
+
+      // 4. Limpa o pedidoAtivo de ambos os usuários
+      if (clienteUid) await updateDoc(doc(db, "usuarios", clienteUid), { pedidoAtivo: null });
+      if (ajudanteUid) await updateDoc(doc(db, "ajudantes", ajudanteUid), { pedidoAtivo: null });
+
+      await addHistorico(pedidoRef, "Cliente confirmou a finalização do serviço.");
+      alert("Serviço finalizado com sucesso!");
 
     } catch (e) {
       console.error("Erro ao confirmar finalização:", e);
-      alert("Erro ao confirmar finalização. Verifique o console.");
+      alert("Ocorreu um erro ao finalizar o pedido.");
     }
   };
 }
