@@ -324,11 +324,10 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
   } else if (status === "finalizado") {
     orientacaoHTML = `
       <section class="cartao orientacao ${class_css}">
-        <h2><i data-lucide="check-circle-2"></i> Pedido finalizado</h2>
-        <p>Serviço finalizado com sucesso. Avalie o prestador para ajudar a comunidade.</p>
+        <h2><i data-lucide="check-circle-2"></i> Pedido Finalizado</h2>
+        <p>Este serviço foi concluído com sucesso. Obrigado por usar o ApoiaMe!</p>
         <div class="orient-actions">
-          <button id="avaliar-prestador-orient-btn" class="btn primario">Avaliar prestador</button>
-          <a href="dashboardC.html" class="btn fantasma">Voltar ao início</a>
+          <a href="dashboardC.html" class="btn primario">Voltar para o Início</a>
         </div>
       </section>
     `;
@@ -474,31 +473,30 @@ if (confirmarFinalBtn) {
     if (!confirm("Confirmar a finalização deste serviço?")) return;
 
     try {
-      // 1. Pega os dados do pedido e do anúncio
+      const clienteUid = auth.currentUser.uid;
+      
+      // 1. Pega os dados do pedido (para o cálculo e para o ID do ajudante)
       const pedidoSnap = await getDoc(pedidoRef);
       if (!pedidoSnap.exists()) throw new Error("Pedido não encontrado.");
       
       const pedidoData = pedidoSnap.data();
-      const { anuncioId, precoBase, clienteUid, ajudanteUid } = pedidoData;
+      const { anuncioId, precoBase } = pedidoData;
 
-      if (!anuncioId || precoBase == null) throw new Error("Dados incompletos para calcular ganhos.");
-
+      // 2. Calcula o ganho do ajudante (lógica que já tínhamos)
       const anuncioRef = doc(db, "anuncios", anuncioId);
       const anuncioSnap = await getDoc(anuncioRef);
       const eraDestaque = anuncioSnap.exists() && anuncioSnap.data().destaque === true;
+      const valorParaAjudante = eraDestaque ? (precoBase * 0.90) : (precoBase * 0.94);
 
-      // 2. CALCULA o ganho do ajudante
-      let valorParaAjudante = eraDestaque ? (precoBase * 0.90) : (precoBase * 0.94);
-
-      // 3. ATUALIZA o pedido com o status E o ganho calculado
+      // 3. Atualiza o pedido com o status e o ganho do ajudante
       await updateDoc(pedidoRef, { 
           status: "finalizado",
           ganhoAjudante: parseFloat(valorParaAjudante.toFixed(2)),
       });
 
-      // 4. Limpa o pedidoAtivo de ambos os usuários
-      if (clienteUid) await updateDoc(doc(db, "usuarios", clienteUid), { pedidoAtivo: null });
-      if (ajudanteUid) await updateDoc(doc(db, "ajudantes", ajudanteUid), { pedidoAtivo: null });
+      // 4. Limpa o pedidoAtivo APENAS do cliente logado
+      const clienteRef = doc(db, "usuarios", clienteUid);
+      await updateDoc(clienteRef, { pedidoAtivo: null });
 
       await addHistorico(pedidoRef, "Cliente confirmou a finalização do serviço.");
       alert("Serviço finalizado com sucesso!");
@@ -509,15 +507,6 @@ if (confirmarFinalBtn) {
     }
   };
 }
-
-  // avaliar prestador
-  const avaliarBtn = document.getElementById("avaliar-prestador-orient-btn");
-  if (avaliarBtn) {
-    avaliarBtn.onclick = () => {
-      // redireciona para a página de avaliação
-      window.location.href = `avaliacaoPrestador.html?pedido=${base.id}`;
-    };
-  }
 
   // contatar prestador (exemplo: abrir chat ou mostrar contato)
   const contatarBtns = document.querySelectorAll("#contatar-prestador-btn");
@@ -627,21 +616,7 @@ function renderPedidoCliente(pedido) {
     if (btn) btn.remove();
   }
 
-  // botões de confirmação via área de ações (quando aplicável já estão no card)
-  // finalizado: substitui area secundaria
-  if (status === "finalizado") {
-    const acoesSec = document.querySelector(".acoes-secundarias");
-    if (acoesSec) {
-      acoesSec.innerHTML = `
-        <button id="avaliarPrestadorBtn" class="btn primario" type="button"><i data-lucide="star"></i><span>Avaliar Prestador</span></button>
-        <a id="btn-voltar" href="dashboardC.html" class="btn fantasma"><i data-lucide="arrow-left"></i><span>Voltar</span></a>
-      `;
-      document.getElementById("avaliarPrestadorBtn").addEventListener("click", () => {
-        window.location.href = `avaliacaoPrestador.html?pedido=${pedido.id}`;
-      });
-      lucide.createIcons();
-    }
-  }
+
   lucide.createIcons();
 }
 

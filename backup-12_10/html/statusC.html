@@ -13,6 +13,7 @@
 
   <!-- Fonte + Ícones -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+      <link rel="stylesheet" href="../css/chat.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -28,7 +29,7 @@
        <!-- <li><a href="../html/buscar.html"><i data-lucide="search"></i>Buscar</a></li>-->
         <li><a href="../html/pedidosC.html"><i data-lucide="package"></i> Meus Pedidos</a></li>
        <!-- <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>-->
-        <li><a href="chat.html"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
         <li><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
       </ul>
     </nav>
@@ -155,5 +156,7 @@
   <script type="module" src="/firebase-init.js"></script>
   <script type="module" src="/script-module.js"></script>
   <script type="module" src="/statusC.firebase.js"></script>
+  <script type="module" src="/chat.module.js"></script>
+  <script type="module" src="/chat-init.js"></script>
 </body>
 </html>

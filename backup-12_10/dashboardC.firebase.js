@@ -20,9 +20,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ========================================================
-// --- LÓGICA DO CARD DE STATUS EM TEMPO REAL ---
-// ========================================================
 
 let unsubscribeUser = null;
 let unsubscribePedido = null;

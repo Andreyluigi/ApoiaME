@@ -563,7 +563,6 @@ if (status === "finalizado") {
                     <div class="actions-section">
                         <h2>Próximas Ações</h2>
                         <p>Contribua para a qualidade da nossa plataforma avaliando o cliente e o processo.</p>               
-                        <button id="avaliarClientBtn" class="action-button primary-action">Avaliar Cliente</button>
                         <button id="DashboardBtn" class="action-button secondary-action">Voltar para Dashboard</button>
                     </div>
 
@@ -614,11 +613,6 @@ if (status === "finalizado") {
 
 `; 
             
-            
-            document.getElementById("avaliarClientBtn").addEventListener("click", () => {
-                alert("Redirecionando para a tela de Avaliação do Cliente...");
-                // window.location.href = `/avaliacao/cliente/${pedidoData.idCliente}`; 
-            });
 
             document.getElementById("DashboardBtn").addEventListener("click", () => {
                 alert("Redirecionando para a Dashboard");
