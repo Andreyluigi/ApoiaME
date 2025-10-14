@@ -1,89 +1,69 @@
+
 const { MercadoPagoConfig, Preference } = require("mercadopago");
 const admin = require("firebase-admin");
 
-console.log("--- DEBUG: Módulo da função iniciado ---");
-
-// --- CONFIGURAÇÃO E INICIALIZAÇÃO ---
 const MERCADOPAGO_ACCESS_TOKEN = process.env.MERCADOPAGO_ACCESS_TOKEN;
 const FIREBASE_SERVICE_ACCOUNT_JSON = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-// DEBUG: Verifica se as variáveis de ambiente foram lidas
-console.log(`--- DEBUG: Chave do Mercado Pago lida? ${!!MERCADOPAGO_ACCESS_TOKEN}`);
-console.log(`--- DEBUG: Chave do Firebase lida? ${!!FIREBASE_SERVICE_ACCOUNT_JSON}`);
-
-// Inicializa o Firebase Admin
-try {
-    if (!admin.apps.length) {
-        admin.initializeApp({
-            credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT_JSON))
-        });
-        console.log("--- DEBUG: Firebase Admin inicializado com sucesso! ---");
-    }
-} catch (e) {
-    console.error("--- DEBUG: FALHA CRÍTICA AO INICIALIZAR FIREBASE ADMIN ---", e.message);
-    // Se o erro acontecer aqui, o JSON da chave do Firebase está formatado incorretamente.
+if (!admin.apps.length) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT_JSON))
+    });
+  } catch (e) {
+    console.error("ERRO CRÍTICO: Falha ao inicializar o Firebase Admin. Verifique a variável de ambiente FIREBASE_SERVICE_ACCOUNT.", e.message);
+  }
 }
 const db = admin.firestore();
 
-// Inicializa o Mercado Pago
 const client = new MercadoPagoConfig({ accessToken: MERCADOPAGO_ACCESS_TOKEN });
 const preference = new Preference(client);
 
-// --- A LÓGICA DA FUNÇÃO ---
 module.exports = async (req, res) => {
-    console.log("--- DEBUG: Função foi chamada! Método:", req.method);
+  // Configurações de CORS
+  const allowedOrigin = `https://${process.env.VERCEL_URL}`;
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ message: 'Apenas o método POST é permitido.' });
 
-    // ... (código de CORS e verificação do método POST) ...
+  const { pedidoId } = req.body;
+  if (!pedidoId) return res.status(400).json({ message: "O ID do pedido é obrigatório." });
 
-    const { pedidoId } = req.body;
-    console.log("--- DEBUG: Pedido ID recebido do frontend:", pedidoId);
+  try {
+    const pedidoRef = db.collection("pedidos").doc(pedidoId);
+    const pedidoSnap = await pedidoRef.get();
+    if (!pedidoSnap.exists()) return res.status(404).json({ message: "Pedido não encontrado." });
+    
+    const pedidoData = pedidoSnap.data();
+    const preferenceData = {
+      items: [{
+        title: pedidoData.tituloAnuncio || "Serviço ApoiaMe",
+        quantity: 1,
+        currency_id: "BRL",
+        unit_price: parseFloat(Number(pedidoData.precoBase).toFixed(2)) || 1.00,
+      }],
+      back_urls: {
+        success: `${allowedOrigin}/html/statusC.html?id=${pedidoId}`,
+        failure: `${allowedOrigin}/html/statusC.html?id=${pedidoId}`,
+      },
+      auto_return: "approved",
+      external_reference: pedidoId,
+    };
 
-    if (!pedidoId) {
-        return res.status(400).json({ message: "O ID do pedido é obrigatório." });
+    const response = await preference.create({ body: preferenceData });
+
+    if (response && response.init_point) {
+      return res.status(200).json({ init_point: response.init_point });
+    } else {
+      // Se por algum motivo o init_point não vier, registramos o erro.
+      console.error("Resposta do Mercado Pago não continha 'init_point'. Resposta:", response);
+      throw new Error("Resposta inesperada do Mercado Pago.");
     }
 
-    try {
-        console.log("--- DEBUG: Passo 1 - Buscando pedido no Firestore...");
-        const pedidoRef = db.collection("pedidos").doc(pedidoId);
-        const pedidoSnap = await pedidoRef.get();
-
-        if (!pedidoSnap.exists) {
-            console.error("--- DEBUG: ERRO - Pedido não encontrado no Firestore com o ID:", pedidoId);
-            return res.status(404).json({ message: "Pedido não encontrado." });
-        }
-        const pedidoData = pedidoSnap.data();
-        console.log("--- DEBUG: Passo 2 - Pedido encontrado:", pedidoData);
-
-        const preferenceData = {
-            items: [{
-                title: pedidoData.tituloAnuncio || "Serviço ApoiaMe",
-                quantity: 1,
-                currency_id: "BRL",
-                 unit_price: parseFloat(Number(pedidoData.precoBase).toFixed(2)) || 1.00,
-            }],
-            back_urls: {
-                success: `https://apoia-5f5fk532f-andrey-luigis-projects.vercel.app/html/statusC.html?id=${pedidoId}`,
-                failure: `https://apoia-5f5fk532f-andrey-luigis-projects.vercel.app/html/statusC.html?id=${pedidoId}`,
-            },
-            auto_return: "approved",
-            external_reference: pedidoId,
-        };
-        console.log("--- DEBUG: Passo 3 - Preparando para chamar a API do Mercado Pago com estes dados:", JSON.stringify(preferenceData, null, 2));
-
-        const response = await preference.create({ body: preferenceData });
-        console.log("--- DEBUG: Passo 4 - Resposta recebida do Mercado Pago.");
-
-        // O erro original acontecia aqui.
-        if (!response || !response.body || !response.body.init_point) {
-             console.error("--- DEBUG: FALHA - A resposta do Mercado Pago veio sem 'body' ou sem 'init_point'. Resposta completa:", response);
-             throw new Error("Resposta inesperada do Mercado Pago.");
-        }
-        
-        console.log("--- DEBUG: Passo 5 - Sucesso! Retornando o link de pagamento.");
-        return res.status(200).json({ init_point: response.init_point });
-
-    } catch (error) {
-        console.error("--- DEBUG: FALHA CRÍTICA DENTRO DO BLOCO TRY/CATCH ---", error);
-        return res.status(500).json({ message: "Erro interno do servidor." });
-    }
+  } catch (error) {
+    console.error("ERRO FINAL no bloco try/catch:", error);
+    return res.status(500).json({ message: "Erro interno do servidor ao criar pagamento." });
+  }
 };
