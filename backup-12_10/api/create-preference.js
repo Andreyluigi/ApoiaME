@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
                 title: pedidoData.tituloAnuncio || "Serviço ApoiaMe",
                 quantity: 1,
                 currency_id: "BRL",
-                unit_price: Number(pedidoData.precoBase) || 1.00,
+                 unit_price: parseFloat(Number(pedidoData.precoBase).toFixed(2)) || 1.00,
             }],
             back_urls: {
                 success: `https://apoia-5f5fk532f-andrey-luigis-projects.vercel.app/html/statusC.html?id=${pedidoId}`,
