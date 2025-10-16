@@ -30,9 +30,9 @@ let tipoSelecionado = null;
 function transicaoParaEscolhaDePerfil(uid) {
     currentUid = uid;
     
-    // Simplesmente chama a função global que está no login.js
+    // Chama a função global que está no login.js
     if (window.mostrarPainelSelecao) {
-        window.mostrarPainelSelecao(uid); // Passa o UID se necessário
+        window.mostrarPainelSelecao();
     } else {
         console.error("Função mostrarPainelSelecao não foi encontrada no login.js");
     }
