@@ -28,13 +28,25 @@ let tipoSelecionado = null;
 // --- Funções Auxiliares ---
 function transicaoParaEscolhaDePerfil(uid) {
     currentUid = uid;
-    formCadastro.style.display = "none";
-    formLogin.style.display = "none";
-    if (overlay) overlay.style.display = "none";
-    extraForm.style.display = "block";
-    extraForm.scrollIntoView({ behavior: "smooth" });
-}
+    const container = document.getElementById('container-login');
 
+    // Torna o container de login/cadastro transparente
+    if (container) {
+        container.style.opacity = '0';
+        
+        // Após a animação de fade-out, esconde o container e mostra o extraForm
+        setTimeout(() => {
+            container.style.display = 'none';
+            extraForm.style.display = 'block';
+            extraForm.scrollIntoView({ behavior: 'smooth' });
+        }, 400); // 400ms é o tempo para a animação de opacidade
+    } else {
+        // Fallback caso o container principal não seja encontrado
+        formCadastro.style.display = "none";
+        formLogin.style.display = "none";
+        extraForm.style.display = "block";
+    }
+}
 function redirecionarParaDashboard(tipo) {
     const rotas = {
         cliente: "dashboardC.html",
