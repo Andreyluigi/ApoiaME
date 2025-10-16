@@ -1,5 +1,3 @@
-// Arquivo: js/login-auth.js (Versão Final Limpa)
-
 import { auth } from "./firebase-init.js";
 import { 
     createUserWithEmailAndPassword, 
@@ -25,16 +23,17 @@ const btnGoogleLogin = document.getElementById("btn-google-login");
 let currentUid = null;
 let tipoSelecionado = null;
 
-// --- FUNÇÕES AUXILIARES ---
+// --- Funções Auxiliares ---
+
 function transicaoParaEscolhaDePerfil(uid) {
     currentUid = uid;
-    // Oculta os painéis de login/cadastro dentro do container principal
     if (container) {
         container.style.opacity = '0';
         setTimeout(() => {
             container.style.display = 'none';
             extraForm.style.display = 'block';
-        }, 400); // Espera a animação de fade-out
+            extraForm.scrollIntoView({ behavior: 'smooth' });
+        }, 400);
     }
 }
 
@@ -46,14 +45,36 @@ function redirecionarParaDashboard(tipo) {
     window.location.href = rotas[tipo] || "dashboardC.html";
 }
 
-// --- LÓGICAS DE CADASTRO E LOGIN ---
+// --- Lógicas de Cadastro e Login ---
 
 // 1. CADASTRO COM E-MAIL E SENHA
 formCadastro?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    // ... (seu código de validação e coleta de dados) ...
+    const nome = document.getElementById("nome-cadastro").value.trim();
+    const email = document.getElementById("email-cadastro").value.trim();
+    const senha = document.getElementById("senha-cadastro").value;
+    const senhaRepetir = document.getElementById("senha-repetir").value;
+    const categoria = document.getElementById("categoria-pessoa").value;
+    const cpf = document.getElementById("cpf-cadastro").value.trim();
+    const cnpj = document.getElementById("cnpj-cadastro").value.trim();
+
+    if (senha !== senhaRepetir) return alert("As senhas não conferem.");
+    if (!formCadastro.checkValidity()) {
+        formCadastro.classList.add("was-validated");
+        return;
+    }
+
     try {
-        // ... (seu código de createUserWithEmailAndPassword e setDoc) ...
+        const cred = await createUserWithEmailAndPassword(auth, email, senha);
+        await updateProfile(cred.user, { displayName: nome });
+        
+        await setDoc(doc(db, "usuarios", cred.user.uid), {
+            nome, email, status: "ativo", criadoEm: serverTimestamp(),
+            tipoPessoa: categoria,
+            cpf: categoria === 'pf' ? cpf : null,
+            cnpj: categoria === 'pj' ? cnpj : null,
+        });
+
         transicaoParaEscolhaDePerfil(cred.user.uid);
     } catch (err) {
         console.error("Erro no cadastro por e-mail:", err);
@@ -63,17 +84,28 @@ formCadastro?.addEventListener("submit", async (e) => {
 
 // 2. LOGIN/CADASTRO COM GOOGLE
 async function loginComGoogle() {
-    // ... (seu código de login com Google que já está correto) ...
+    const provider = new GoogleAuthProvider();
     try {
-        // ...
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const userRef = doc(db, "usuarios", user.uid);
+        const userSnap = await getDoc(userRef);
+
         if (!userSnap.exists() || !userSnap.data().tipo) {
-            // ... (código de setDoc para novo usuário) ...
+            await setDoc(userRef, {
+                nome: user.displayName,
+                email: user.email,
+                fotoUrl: user.photoURL,
+                criadoEm: serverTimestamp()
+            }, { merge: true });
+            
             transicaoParaEscolhaDePerfil(user.uid);
         } else {
             redirecionarParaDashboard(userSnap.data().tipo);
         }
     } catch (error) {
         console.error("Erro no login com Google:", error);
+        alert("Ocorreu um erro ao tentar fazer login com o Google.");
     }
 }
 
@@ -82,9 +114,18 @@ btnGoogleLogin?.addEventListener('click', loginComGoogle);
 
 // 3. LOGIN COM E-MAIL E SENHA
 formLogin?.addEventListener("submit", async (e) => {
-    // ... (seu código de login com e-mail que já está correto) ...
+    e.preventDefault();
+    const email = document.getElementById("email-login").value.trim();
+    const senha = document.getElementById("senha-login").value.trim();
+
+    if (!formLogin.checkValidity()) { 
+        formLogin.classList.add("was-validated");
+        return;
+    }
     try {
-        // ...
+        const cred = await signInWithEmailAndPassword(auth, email, senha);
+        const userDoc = await getDoc(doc(db, "usuarios", cred.user.uid));
+        
         if (userDoc.exists() && userDoc.data().tipo) {
             redirecionarParaDashboard(userDoc.data().tipo);
         } else {
@@ -92,6 +133,7 @@ formLogin?.addEventListener("submit", async (e) => {
         }
     } catch (err) {
         console.error("Erro no login por e-mail:", err);
+        alert("E-mail ou senha incorretos.");
     }
 });
 
