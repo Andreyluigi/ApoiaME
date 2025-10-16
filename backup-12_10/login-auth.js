@@ -29,12 +29,12 @@ let tipoSelecionado = null;
 // --- Funções Auxiliares ---
 function transicaoParaEscolhaDePerfil(uid) {
     currentUid = uid;
-    // Chama a função global que criamos no login.js
+    
+    // Simplesmente chama a função global que está no login.js
     if (window.mostrarPainelSelecao) {
-        window.mostrarPainelSelecao();
+        window.mostrarPainelSelecao(uid); // Passa o UID se necessário
     } else {
-        // Fallback caso a função não exista
-        console.error("Função mostrarPainelSelecao não encontrada.");
+        console.error("Função mostrarPainelSelecao não foi encontrada no login.js");
     }
 }
 function redirecionarParaDashboard(tipo) {

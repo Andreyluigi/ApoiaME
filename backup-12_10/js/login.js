@@ -1,64 +1,79 @@
-// =====================
-// UI Login EntreGo (somente interface)
-// =====================
-(function () {
-  const container  = document.getElementById('container-login');
-  const btnIrCad   = document.getElementById('btn-ir-cadastro');
-  const btnIrLogin = document.getElementById('btn-ir-login');
-  
+// Pega o container principal logo no início para que fique acessível
+const container = document.getElementById('container-login');
 
-  // Overlay: alternar painéis
-  function irParaCadastro() { container?.classList.add('direita-ativa'); }
-  function irParaLogin()    { container?.classList.remove('direita-ativa'); }
+// Lógica de animação do Overlay
+const btnIrCad = document.getElementById('btn-ir-cadastro');
+const btnIrLogin = document.getElementById('btn-ir-login');
 
-  document.addEventListener('DOMContentLoaded', irParaCadastro);
-  btnIrCad?.addEventListener('click', irParaCadastro);
-  btnIrLogin?.addEventListener('click', irParaLogin);
+function irParaCadastro() {
+    container?.classList.add('direita-ativa');
+}
 
-  // Mostrar/ocultar senha (olhinho)
-  document.querySelectorAll('.toggle-senha').forEach(btn => {
+function irParaLogin() {
+    container?.classList.remove('direita-ativa');
+}
+
+// Eventos para os botões de troca de painel
+btnIrCad?.addEventListener('click', irParaCadastro);
+btnIrLogin?.addEventListener('click', irParaLogin);
+
+// Função para mostrar/ocultar senha (olhinho)
+document.querySelectorAll('.toggle-senha').forEach(btn => {
     btn.addEventListener('click', () => {
-      const alvoId = btn.getAttribute('data-target');
-      const input = document.getElementById(alvoId);
-      if (!input) return;
-      const novoTipo = input.type === 'password' ? 'text' : 'password';
-      input.type = novoTipo;
-      const icon = btn.querySelector('i');
-      icon?.classList.toggle('bi-eye');
-      icon?.classList.toggle('bi-eye-slash');
-      btn.setAttribute('aria-label', novoTipo === 'password' ? 'Mostrar senha' : 'Ocultar senha');
+        const alvoId = btn.getAttribute('data-target');
+        const input = document.getElementById(alvoId);
+        if (!input) return;
+        const novoTipo = input.type === 'password' ? 'text' : 'password';
+        input.type = novoTipo;
+        const icon = btn.querySelector('i');
+        icon?.classList.toggle('bi-eye');
+        icon?.classList.toggle('bi-eye-slash');
     });
-  });
+});
 
-  // Validação visual básica dos forms 
-  function enableBSValidation(form) {
-    form?.addEventListener('submit', (e) => {
-      if (!form.checkValidity()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      form.classList.add('was-validated');
-    });
-  }
-  enableBSValidation(document.getElementById('form-cadastro'));
-  enableBSValidation(document.getElementById('form-login'));
+// Validação visual dos formulários do Bootstrap
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
 })();
+
+
+// NOVA FUNÇÃO GLOBAL PARA TRANSIÇÃO DE CADASTRO -> ESCOLHA DE PERFIL
 window.mostrarPainelSelecao = function() {
-    container.classList.add("right-panel-active"); // Move o overlay para a esquerda
+    if (!container) {
+        console.error("Container principal 'container-login' não encontrado.");
+        return;
+    }
 
-    // Esconde os painéis de login/cadastro
-    document.querySelector('.bloco-login').style.display = 'none';
-    document.querySelector('.bloco-cadastro').style.display = 'none';
+    // Esconde os formulários e o overlay
+    const blocoLogin = document.querySelector('.bloco-login');
+    const blocoCadastro = document.querySelector('.bloco-cadastro');
+    const containerOverlay = document.querySelector('.container-overlay');
 
-    // Mostra e move o painel de seleção para a posição correta
-    const painelSelecao = document.getElementById('painel-selecao-perfil');
-    painelSelecao.style.display = 'flex';
-    painelSelecao.style.transform = 'translateX(0)';
+    if (blocoLogin) blocoLogin.style.display = 'none';
+    if (blocoCadastro) blocoCadastro.style.display = 'none';
+    if (containerOverlay) containerOverlay.style.display = 'none';
 
-    // Move o conteúdo do extra-form para o novo painel
+    // Move o conteúdo do extra-form para o container principal e o exibe
     const extraFormContent = document.getElementById('extra-form');
     if (extraFormContent) {
-        painelSelecao.appendChild(extraFormContent);
+        container.innerHTML = ''; // Limpa o container
+        container.appendChild(extraFormContent);
         extraFormContent.style.display = 'block';
+        
+        // Ajusta o estilo do container para centralizar o novo conteúdo
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
+        container.style.justifyContent = 'center';
     }
 };
