@@ -1,3 +1,5 @@
+// Arquivo: js/login-auth.js (Versão Final Limpa)
+
 import { auth } from "./firebase-init.js";
 import { 
     createUserWithEmailAndPassword, 
@@ -11,7 +13,6 @@ import { getFirestore, setDoc, doc, serverTimestamp, getDoc } from "https://www.
 const db = getFirestore();
 
 // --- Elementos do DOM ---
-const container = document.getElementById('container-login');
 const formCadastro = document.getElementById("form-cadastro");
 const formLogin = document.getElementById("form-login");
 const extraForm = document.getElementById("extra-form");
@@ -19,22 +20,19 @@ const finalForm = document.getElementById("final-form");
 const btnSelectRole = document.getElementById("select-role");
 const btnGoogleCadastro = document.getElementById("btn-google-cadastro");
 const btnGoogleLogin = document.getElementById("btn-google-login");
+const overlay = document.querySelector('.container-overlay');
 
 let currentUid = null;
 let tipoSelecionado = null;
 
 // --- Funções Auxiliares ---
-
 function transicaoParaEscolhaDePerfil(uid) {
     currentUid = uid;
-    if (container) {
-        container.style.opacity = '0';
-        setTimeout(() => {
-            container.style.display = 'none';
-            extraForm.style.display = 'block';
-            extraForm.scrollIntoView({ behavior: 'smooth' });
-        }, 400);
-    }
+    formCadastro.style.display = "none";
+    formLogin.style.display = "none";
+    if (overlay) overlay.style.display = "none";
+    extraForm.style.display = "block";
+    extraForm.scrollIntoView({ behavior: "smooth" });
 }
 
 function redirecionarParaDashboard(tipo) {
