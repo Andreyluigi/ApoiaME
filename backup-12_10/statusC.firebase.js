@@ -127,6 +127,7 @@ function renderOrientacao(status, pedido = {}) {
         <div class="orient-actions">
           <p><strong>Total:</strong> ${formatCurrency(base.preco)}</p>
           <button id="pagar-orient-btn" class="btn primario">Pagar agora</button>
+          <button id="confirmar-pagamento-manual-btn" class="btn secundario">Confirmar Pagamento</button>
         </div>
       </section>
     `;
@@ -448,7 +449,35 @@ const pagarBtn = document.getElementById("pagar-orient-btn");
       }
     };
   }
+const confirmarPgBtn = document.getElementById("confirmar-pagamento-manual-btn");
+  if (confirmarPgBtn) {
+    confirmarPgBtn.onclick = async () => {
+        if (!currentPedidoRef) return alert("Referência do pedido não encontrada.");
 
+        confirmarPgBtn.disabled = true;
+        confirmarPgBtn.textContent = "Confirmando...";
+
+        try {
+            // Atualiza os status no Firestore
+            await updateDoc(currentPedidoRef, {
+                status: "pago_aguardando_inicio",
+                statusPagamento: "confirmado"
+            });
+
+            // Adiciona um registro ao histórico
+            await addHistorico(currentPedidoRef, "Cliente confirmou o pagamento manualmente.");
+
+            // Não precisa de alert, pois o onSnapshot vai recarregar a tela
+            // alert("Pagamento confirmado com sucesso!");
+
+        } catch (err) {
+            console.error("Erro ao confirmar pagamento manual:", err);
+            alert("Ocorreu um erro ao confirmar o pagamento.");
+            confirmarPgBtn.disabled = false; // Reabilita o botão em caso de erro
+            confirmarPgBtn.textContent = "Confirmar Pagamento";
+        }
+    };
+  }
   // confirmar chegada
   const confirmarChegadaBtn = document.getElementById("confirmar-chegada-orient-btn");
   if (confirmarChegadaBtn) {
