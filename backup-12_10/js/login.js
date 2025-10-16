@@ -5,6 +5,7 @@
   const container  = document.getElementById('container-login');
   const btnIrCad   = document.getElementById('btn-ir-cadastro');
   const btnIrLogin = document.getElementById('btn-ir-login');
+  
 
   // Overlay: alternar painéis
   function irParaCadastro() { container?.classList.add('direita-ativa'); }
@@ -42,3 +43,22 @@
   enableBSValidation(document.getElementById('form-cadastro'));
   enableBSValidation(document.getElementById('form-login'));
 })();
+window.mostrarPainelSelecao = function() {
+    container.classList.add("right-panel-active"); // Move o overlay para a esquerda
+
+    // Esconde os painéis de login/cadastro
+    document.querySelector('.bloco-login').style.display = 'none';
+    document.querySelector('.bloco-cadastro').style.display = 'none';
+
+    // Mostra e move o painel de seleção para a posição correta
+    const painelSelecao = document.getElementById('painel-selecao-perfil');
+    painelSelecao.style.display = 'flex';
+    painelSelecao.style.transform = 'translateX(0)';
+
+    // Move o conteúdo do extra-form para o novo painel
+    const extraFormContent = document.getElementById('extra-form');
+    if (extraFormContent) {
+        painelSelecao.appendChild(extraFormContent);
+        extraFormContent.style.display = 'block';
+    }
+};

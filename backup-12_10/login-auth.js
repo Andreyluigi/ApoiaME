@@ -22,29 +22,19 @@ const btnGoogleCadastro = document.getElementById("btn-google-cadastro");
 const btnGoogleLogin = document.getElementById("btn-google-login");
 const overlay = document.querySelector('.container-overlay');
 
+
 let currentUid = null;
 let tipoSelecionado = null;
 
 // --- Funções Auxiliares ---
 function transicaoParaEscolhaDePerfil(uid) {
     currentUid = uid;
-    const container = document.getElementById('container-login');
-
-    // Torna o container de login/cadastro transparente
-    if (container) {
-        container.style.opacity = '0';
-        
-        // Após a animação de fade-out, esconde o container e mostra o extraForm
-        setTimeout(() => {
-            container.style.display = 'none';
-            extraForm.style.display = 'block';
-            extraForm.scrollIntoView({ behavior: 'smooth' });
-        }, 400); // 400ms é o tempo para a animação de opacidade
+    // Chama a função global que criamos no login.js
+    if (window.mostrarPainelSelecao) {
+        window.mostrarPainelSelecao();
     } else {
-        // Fallback caso o container principal não seja encontrado
-        formCadastro.style.display = "none";
-        formLogin.style.display = "none";
-        extraForm.style.display = "block";
+        // Fallback caso a função não exista
+        console.error("Função mostrarPainelSelecao não encontrada.");
     }
 }
 function redirecionarParaDashboard(tipo) {

@@ -226,3 +226,12 @@ a.link-acao{ color: var(--primaria-escura); text-decoration: none; font-size: 14
   #container-login.direita-ativa .bloco-login{ transform: translateX(0); opacity: 0; pointer-events: none; }
   #container-login.direita-ativa .bloco-cadastro{ transform: translateX(0); }
 }
+.painel-selecao-perfil {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    left: 0;
+    transform: translateX(100%); /* Começa escondido à direita */
+    transition: transform 0.6s ease-in-out;
+}
