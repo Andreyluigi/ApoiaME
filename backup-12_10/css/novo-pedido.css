@@ -1,0 +1,226 @@
+/* ======================================== */
+/* CSS COMPLETO: PÁGINA "NOVO PEDIDO" */
+/*    (COM A PALETA OFICIAL APOIAME)    */
+/* ======================================== */
+
+/* 1. Variáveis de Cor (Guia de Marca Oficial) */
+:root {
+    --cor-primaria: #017643;        /* Verde Principal */
+    --cor-secundaria: #005f36;      /* Verde Escuro (para hover) */
+    --cor-preto: #000000;           /* Preto (para botões e textos fortes) */
+    --cor-acento: #e3fae3;          /* Verde Claro (para fundos de hover) */
+    
+    --cor-fundo: #F7F7F7;           /* Fundo da PÁGINA (Cinza claro) */
+    --cor-card: #FFFFFF;            /* Fundo do TEXTO (Branco) */
+    
+    --cor-texto-principal: #000000; /* Texto (Preto) */
+    --cor-texto-secundario: #333333; /* Texto (Cinza Escuro) */
+    --cor-cinza-claro: #eceeef;      /* Bordas e divisórias */
+    --cor-cinza-medio: #A4A69C;     /* Ícones/textos desabilitados */
+}
+
+/* ======================================== */
+/* 2. MÁGICA: LAYOUT DE APP 100% ALTURA */
+/* ======================================== */
+/*  Isto força a página a ocupar 100% da altura da tela, 
+  distribuindo o espaço entre o topbar e o conteúdo.
+*/
+
+/* O seu main-content original */
+.main-content {
+    height: 100vh; /* Ocupa a tela inteira */
+    display: flex;
+    flex-direction: column;
+    background-color: var(--cor-fundo); /* Fundo cinza claro */
+}
+
+/* O seu header original */
+.topbar {
+    flex-shrink: 0; /* Impede que o topbar encolha */
+}
+
+/* O seu content-wrapper original */
+.content-wrapper {
+    flex-grow: 1; /* FAZ O CONTEÚDO OCUPAR TODO O RESTO */
+    display: flex; /* Para o .hero-container crescer */
+    height: 500px;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+/* ======================================== */
+/* 3. ESTILOS DA PÁGINA (HERO SECTION) */
+/* ======================================== */
+
+.hero-container {
+    flex-grow: 1; /* O .hero-container se expande para preencher o .content-wrapper */
+    display: grid;
+    grid-template-columns: 1fr; /* Padrão mobile: 1 coluna */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    /* min-height não é mais necessário, flex-grow cuida disso */
+}
+
+.hero-text-panel {
+    background-color: var(--cor-card); /* Fundo branco */
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border-radius: 12px 0 0 12px; /* Cantos arredondados na esquerda */
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--cor-texto-principal);
+    line-height: 1.2;
+}
+
+.text-highlight {
+    color: var(--cor-primaria); /* Destaque com o Verde Principal */
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--cor-texto-secundario);
+    margin-top: 1rem;
+    max-width: 500px;
+}
+
+.hero-buttons {
+    margin-top: 2rem;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.hero-buttons .btn {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botão Primário (Verde) */
+.hero-buttons .btn-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: white;
+}
+.hero-buttons .btn-primary:hover {
+    background-color: var(--cor-secundaria);
+    border-color: var(--cor-secundaria);
+}
+
+/* Botão Secundário (Preto) */
+.hero-buttons .btn-secondary {
+    background-color: var(--cor-preto);
+    border-color: var(--cor-preto);
+    color: white;
+}
+.hero-buttons .btn-secondary:hover {
+    background-color: #333; /* Preto um pouco mais claro no hover */
+    border-color: #333;
+}
+
+.hero-image-panel {
+    display: none; /* Escondido em telas pequenas */
+    background-color: var(--cor-primaria); /* Fundo Verde Principal */
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    /* A curva grande da sua nova imagem */
+
+    border-bottom-left-radius: 125px;
+}
+
+.hero-illustration {
+    max-width: 190%;
+    height: auto;
+    max-height: 600px;
+}
+
+/* Media query para telas grandes (desktop) */
+@media (min-width: 992px) {
+    .hero-container {
+        /* Mais espaço para o texto (como na sua imagem) */
+        grid-template-columns: 5fr 5fr;
+    }
+    
+    .hero-text-panel {
+        padding: 4rem;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-image-panel {
+        display: flex; /* Mostra a imagem no desktop */
+    }
+}
+
+
+/* ======================================== */
+/* 4. ESTILOS DO MODAL (WIZARD) - SEM MUDANÇA */
+/* =Imutável, já estava correto */
+/* ======================================== */
+
+.wizard-pane { display: none; }
+.wizard-pane.active { display: block; }
+.stepper { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 0 1rem; }
+.step { display: flex; flex-direction: column; align-items: center; color: var(--cor-cinza-medio); text-align: center; }
+.step-icon { height: 30px; width: 30px; background-color: var(--cor-cinza-claro); color: var(--cor-cinza-medio); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; border: 2px solid var(--cor-cinza-claro); transition: all 0.3s ease; }
+.step-label { font-size: 0.8rem; font-weight: 500; margin-top: 0.5rem; }
+.step-line { flex-grow: 1; height: 2px; background-color: var(--cor-cinza-claro); margin: 0 -1rem; margin-bottom: 20px; }
+.step.active .step-icon { background-color: #fff; color: var(--cor-primaria); border-color: var(--cor-primaria); }
+.step.active .step-label { color: var(--cor-primaria); }
+
+.category-card { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem 1rem; border: 2px solid var(--cor-cinza-claro); border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; text-align: center; height: 100%; background: #fff; }
+.category-card i[data-lucide] { color: var(--cor-primaria); width: 32px; height: 32px; }
+.category-card-title { font-weight: 600; color: var(--cor-texto-principal); margin-top: 0.75rem; }
+.category-card:hover { border-color: var(--cor-primaria); background-color: var(--cor-acento); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(1, 118, 67, 0.1); }
+.category-card.selected { border-color: var(--cor-primaria); background-color: var(--cor-acento); }
+.category-card.selected i[data-lucide] { color: var(--cor-primaria); }
+.category-card.selected .category-card-title { color: var(--cor-primaria); }
+
+#dynamic-fields-container { border: 1px solid var(--cor-cinza-claro); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; background-color: #F7F7F7; }
+#dynamic-fields-container .form-group { margin-bottom: 1rem; }
+#dynamic-fields-container .form-group:last-child { margin-bottom: 0; }
+.checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+.container.custom-checkbox-label { display: block; position: relative; cursor: pointer; font-size: 1rem; user-select: none; padding-left: 35px; margin-bottom: 12px; font-weight: 500; color: var(--cor-texto-principal); }
+.container.custom-checkbox-label input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.checkmark { --clr: var(--cor-primaria); position: absolute; top: 0; left: 0; height: 1.5em; width: 1.5em; background-color: var(--cor-cinza-claro); border-radius: 50%; transition: 300ms; }
+.container.custom-checkbox-label input:checked ~ .checkmark { background-color: var(--clr); border-radius: .5rem; }
+.checkmark:after { content: ""; position: absolute; display: none; }
+.container.custom-checkbox-label input:checked ~ .checkmark:after { display: block; }
+.container.custom-checkbox-label .checkmark:after { left: 0.55em; top: 0.25em; width: 0.35em; height: 0.75em; border: solid var(--cor-card); border-width: 0 0.15em 0.15em 0; transform: rotate(45deg); }
+
+.form-label { font-weight: 600; color: var(--cor-texto-secundario); }
+.form-control:read-only, .form-control:disabled { background-color: var(--cor-cinza-claro); opacity: 0.8; }
+.form-control:focus, .form-select:focus { border-color: var(--cor-primaria); box-shadow: 0 0 0 0.25rem rgba(1, 118, 67, 0.25); }
+.modal-footer .btn-primary { background-color: var(--cor-primaria); border-color: var(--cor-primaria); }
+.modal-footer .btn-primary:hover { background-color: var(--cor-secundaria); border-color: var(--cor-secundaria); }
+.btn{
+    width: 600px;
+    height: 60px;
+
+}
+.animate-in {
+    opacity: 0;
+    transform: translateY(20px);
+    /* A transição suave que dura 0.6 segundos */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* * Estado final:
+ * Visível (opacity: 1) e na posição original (translateY(0))
+*/
+.animate-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}

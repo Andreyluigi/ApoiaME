@@ -1,0 +1,292 @@
+:root {
+    --cor-primaria: #1A3325; /* Verde Escuro (do logo) */
+    --cor-cinza-medio: #A4A69C; /* Cinza (para bordas/links hover) */
+    --cor-cinza-claro: #D5D6D0; /* Cinza Claro 2 (para bordas suaves) */
+    --cor-fundo: #F2F2F2;      /* Cinza Claro (fundo da página) */
+    --cor-card: #FFFFFF;      /* Branco (fundo dos cards) */
+    --cor-texto: #333333;      /* Cor de texto padrão */
+}
+
+/* Configuração global de fonte */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+}
+
+.logo-cadastro {
+    max-width: 150px;
+    margin-bottom: 1rem;
+}
+
+/* Contêiner principal das etapas */
+.card-form {
+    background-color: var(--cor-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* --- ESTILO DOS CARDS DE SELEÇÃO DE PERFIL (ATUALIZADO) --- */
+.card-option {
+    /* REMOVIDO: Borda cinza clara */
+    /* border: 2px solid var(--cor-cinza-claro); */
+    
+    /* ADICIONADO: Sombra sutil para o estado padrão */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    background-color: var(--cor-card);
+    
+    border: 2px solid transparent; /* Borda transparente para manter o espaço */
+    border-radius: 12px; /* Aumentado para combinar com o .card-form */
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.card-option:hover {
+    border-color: var(--cor-primaria); /* Borda verde escura no hover */
+    transform: translateY(-5px);
+    /* ADICIONADO: Sombra um pouco mais forte e verde no hover */
+    box-shadow: 0 6px 20px rgba(26, 51, 37, 0.18);
+}
+
+.card-option.selected {
+    border-width: 2px; /* Garante a borda de 2px */
+    border-color: var(--cor-primaria); /* Borda verde escura quando selecionado */
+    /* ATUALIZADO: Fundo verde bem claro para destacar a seleção */
+    background-color: rgba(26, 51, 37, 0.05); /* 5% de opacidade do verde primário */
+    transform: translateY(-2px); /* Leve elevação */
+    box-shadow: 0 4px 12px rgba(26, 51, 37, 0.15);
+}
+
+/* --- AJUSTE NA IMAGEM (ATUALIZADO) --- */
+/* ATUALIZADO: Alvo na tag <img> dentro do card, não em .card-option-icon */
+.card-option img {
+    width: 100%; /* Faz a imagem usar o espaço disponível */
+    max-width: 160px; /* Limita o tamanho máximo da foto */
+    height: auto;
+    border-radius: 8px; /* Arredonda os cantos da foto */
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+/* Efeito de zoom na imagem ao passar o mouse no card */
+.card-option:hover img {
+    transform: scale(1.03);
+}
+
+
+.card-option h3 {
+    font-weight: 600;
+    color: var(--cor-texto);
+    margin-top: 0; /* Removido margin-top (a imagem já dá espaço) */
+    margin-bottom: 0.25rem; /* Espaço entre título e subtexto */
+}
+
+/* ADICIONADO: Estilo para o subtexto (parágrafo) */
+.card-option p {
+    font-size: 0.9rem;
+    color: #6c757d; /* Cinza subtexto */
+    margin-bottom: 0;
+}
+
+
+/* --- BOTÕES E LINKS (Sem alteração) --- */
+
+.btn-primary {
+    background-color:#017643;
+    border-color: var(--cor-primaria);
+    color: var(--cor-card);
+    font-weight: 600;
+    padding: 12px;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #00683b;
+    border-color: #1E392A;
+    color: var(--cor-card);
+}
+
+a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a:hover {
+    color: var(--cor-cinza-medio);
+    text-decoration: underline;
+}
+
+.btn-voltar {
+    color: var(--cor-texto);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-voltar:hover {
+    color: var(--cor-primaria);
+    text-decoration: underline;
+}
+
+.etapa {
+    /* O JS controlará o display: none / block */
+}
+.card-form h4.h5 {
+    color: var(--cor-primaria); /* Muda a cor do texto para o verde escuro */
+    font-weight: 600; /* Deixa o título um pouco mais forte */
+    border-top-color: var(--cor-cinza-claro) !important; /* Muda a cor da linha para o cinza claro */
+}
+/* Centraliza o container */
+.profile-pic-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem; /* Ajuste o espaçamento abaixo do círculo */
+}
+
+/* O label é o círculo grande clicável */
+.profile-pic-label {
+    position: relative;
+    cursor: pointer;
+    width: 150px;  /* Tamanho grande */
+    height: 150px; /* Tamanho grande */
+    border-radius: 50%;
+    border: 4px solid var(--cor-cinza-claro);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.profile-pic-label:hover {
+    border-color: var(--cor-cinza-medio);
+}
+
+/* A imagem de preview preenche o círculo */
+.profile-pic-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%; 
+    object-fit: cover; /* Garante que a imagem cubra o círculo */
+}
+
+/* O ícone de "editar" (câmera) sobreposto */
+.profile-pic-edit {
+    position: absolute;
+    bottom: 5px;  /* Posição sobreposta */
+    right: 5px; /* Posição sobreposta */
+    background-color: var(--cor-primaria);
+    color: var(--cor-card);
+    border-radius: 50%;
+    padding: 8px; /* Padding para o ícone */
+    font-size: 1rem; /* Tamanho do ícone */
+    line-height: 1;
+    border: 2px solid var(--cor-card); /* Borda branca para destacar */
+    transition: all 0.3s ease;
+}
+
+.profile-pic-label:hover .profile-pic-edit {
+    transform: scale(1.1);
+}
+
+/* Botão de "Carregar Imagem" (usado no HTML anterior, agora opcional) */
+.btn-outline-primary {
+    border-color: var(--cor-primaria);
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--cor-primaria);
+    color: var(--cor-card);
+}
+#mapa-cadastro {
+    width: 100%;
+    height: 300px;
+    border-radius: 8px; /* Bordas arredondadas */
+    background-color: #eee; /* Cor de fundo enquanto o mapa carrega */
+    border: 2px solid var(--cor-cinza-claro);
+    margin-top: 0.5rem;
+    margin-bottom: 1rem; /* Espaçamento abaixo do mapa */
+    z-index: 1; /* Garante que o mapa fique no fluxo correto */
+}
+/* A Label principal que contém tudo */
+.container.custom-checkbox-label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 1rem; /* Ajustado para 1rem (padrão) */
+  user-select: none;
+  padding-left: 35px; /* NOVO: Espaço para o checkbox customizado */
+  margin-bottom: 12px; /* NOVO: Espaçamento entre os itens */
+  font-weight: 500; /* NOVO: Peso da fonte */
+  color: var(--cor-texto); /* NOVO: Cor do texto */
+}
+
+/* Esconde o checkbox original */
+.container.custom-checkbox-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* O checkmark customizado (a caixa) */
+.checkmark {
+  --clr: var(--cor-primaria); /* NOVO: Puxa sua cor verde escura */
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1.5em; /* 24px com base no font-size */
+  width: 1.5em; /* 24px com base no font-size */
+  background-color: var(--cor-cinza-claro); /* Fundo cinza claro */
+  border-radius: 50%; /* Começa como círculo */
+  transition: 300ms;
+}
+
+/* Quando checado, muda o fundo e a forma */
+.container.custom-checkbox-label input:checked ~ .checkmark {
+  background-color: var(--clr);
+  border-radius: .5rem; /* Vira um quadrado arredondado */
+  animation: pulse 500ms ease-in-out;
+}
+
+/* O "v" (check) - escondido por padrão */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Mostra o "v" quando checado */
+.container.custom-checkbox-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Estilo do "v" (check) */
+.container.custom-checkbox-label .checkmark:after {
+  left: 0.55em;  /* Ajustado */
+  top: 0.25em;   /* Ajustado */
+  width: 0.35em; /* Ajustado */
+  height: 0.75em;/* Ajustado */
+  border: solid var(--cor-card); /* Cor branca */
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+/* Animação de pulso (do seu código) */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(26, 51, 37, 0.5); /* Verde escuro com 50% opacidade */
+    rotate: 20deg;
+  }
+  50% {
+    rotate: -20deg;
+  }
+  75% {
+    box-shadow: 0 0 0 10px rgba(26, 51, 37, 0.15); /* Verde escuro com 15% opacidade */
+  }
+  100% {
+    box-shadow: 0 0 0 13px rgba(26, 51, 37, 0); /* Verde escuro com 0% opacidade */
+    rotate: 0;
+  }
+}

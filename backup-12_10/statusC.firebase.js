@@ -1,5 +1,7 @@
 // StatusC.firebase.js
+// ATUALIZADO para o novo modelo de dados (Novembro/2025)
 // integração Firebase para status do pedido (cliente) com cards de orientação específicos por status
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 import {
@@ -9,7 +11,9 @@ import {
   updateDoc,
   serverTimestamp,
   arrayUnion,
-  onSnapshot
+  onSnapshot,
+  addDoc,
+  collection
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -52,8 +56,34 @@ function formatCurrency(n) {
   catch { return "R$ 0,00"; }
 }
 
+/**
+ * Formata o objeto de localização em uma string de endereço legível.
+ * @param {object} loc - O objeto 'localizacao' do pedido.
+ * @returns {string} - O endereço formatado.
+ */
+function formatEndereco(loc) {
+    if (!loc) return "Endereço não informado.";
+    
+    // Junta Rua, Número e Complemento (se houver)
+    const line1Parts = [loc.rua, loc.numero, loc.complemento].filter(Boolean);
+    const line1 = line1Parts.join(", ");
+
+    // Junta Bairro, Cidade e Estado (se houver)
+    const line2Parts = [loc.bairro, loc.cidade].filter(Boolean);
+    let line2 = line2Parts.join(" - ");
+    if(loc.estado) line2 += `, ${loc.estado}`;
+    
+    // Adiciona o CEP
+    const line3 = loc.cep ? `CEP: ${loc.cep}` : "";
+
+    // Junta tudo, filtrando linhas vazias
+    return [line1, line2, line3].filter(Boolean).join("\n");
+}
+
+
 function renderTimeline(status) {
   const items = document.querySelectorAll("#status-etapas li");
+  // NOTA: Verifique se esta ordem de status ainda é válida para seu novo fluxo
   const order = ["pendente","aceito","pago_aguardando_inicio","em_rota","no_local","em_execucao","concluido_prestador","finalizado"];
   items.forEach(li => {
     li.classList.remove("active", "completed");
@@ -70,8 +100,15 @@ function renderHistorico(entradaHistorico = []) {
     ul.innerHTML = `<li>Nenhum evento registrado ainda.</li>`;
     return;
   }
-  entradaHistorico.forEach(evt => {
-    const timeStr = evt.time ? new Date(evt.time.toDate ? evt.time.toDate() : evt.time).toLocaleString() : '';
+  // Ordena do mais recente para o mais antigo
+  const sortedHistorico = [...entradaHistorico].sort((a, b) => {
+      const timeA = a.time ? (a.time.toDate ? a.time.toDate() : new Date(a.time)) : 0;
+      const timeB = b.time ? (b.time.toDate ? b.time.toDate() : new Date(b.time)) : 0;
+      return timeB - timeA;
+  });
+
+  sortedHistorico.forEach(evt => {
+    const timeStr = evt.time ? new Date(evt.time.toDate ? evt.time.toDate() : evt.time).toLocaleString("pt-BR") : '';
     const li = document.createElement("li");
     li.innerText = `${timeStr} — ${evt.text}`;
     ul.appendChild(li);
@@ -80,7 +117,7 @@ function renderHistorico(entradaHistorico = []) {
 
 function addHistorico(pedidoRef, text) {
   return updateDoc(pedidoRef, {
-    historico: arrayUnion({ text, time: new Date() }) 
+    historico: arrayUnion({ text, time: new Date() }) // <-- CORRIGIDO
   }).catch(err => console.error("Erro ao adicionar histórico:", err));
 }
 
@@ -92,11 +129,13 @@ function clearOrientacaoCard() {
 // monta e insere o card ANTES da section .cartao.etapas
 // recebe pedido para possibilitar conteúdo dinâmico (ex: título, valor)
 function renderOrientacao(status, pedido = {}) {
+  
+  // *** ATUALIZADO PARA NOVO MODELO ***
   const base = {
     id: pedido.id || "",
-    titulo: pedido.tituloAnuncio || "—",
-    preco: pedido.precoBase || 0,
-    prestador: pedido.nomePrestador || "—"
+    titulo: pedido.titulo || "—",
+    preco: pedido.orcamentoMaximo || 0, // <- MUDOU de precoBase
+    prestador: pedido.fornecedorNome || "—" // <- MUDOU de nomePrestador
   };
 
   let class_css = `status-${status}`;
@@ -114,8 +153,8 @@ function renderOrientacao(status, pedido = {}) {
         </div>
         <p>Seu pedido foi criado e está aguardando que o ajudante aceite. Você será notificado quando houver aceitação.</p>
         <div class="orient-actions">
-          <p><strong>Anúncio:</strong> ${base.titulo}</p>
-          <p><strong>Prestador:</strong> ${base.prestador}</p>
+          <p><strong>Título do pedido:</strong> ${base.titulo}</p>
+          
         </div>
       </section>
     `;
@@ -134,7 +173,7 @@ function renderOrientacao(status, pedido = {}) {
   } else if (status === "pago_aguardando_inicio") {
     orientacaoHTML = `
       <section class="cartao orientacao ${class_css}">
-       
+        
         <h2><i data-lucide="info"></i> Pagamento recebido</h2>
         <div class="success-icon">✓</div>
         <p>Pagamento confirmado. Aguardando o ajudante confirmar o início do deslocamento.</p>
@@ -148,138 +187,20 @@ function renderOrientacao(status, pedido = {}) {
       <section class="cartao orientacao ${class_css}">
         <h2><i data-lucide="truck"></i> Ajudante em rota</h2>
         <div class="loader">
-  <div class="truckWrapper">
-    <div class="truckBody">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 198 93"
-        class="trucksvg"
-      >
-        <path
-          stroke-width="3"
-          stroke="#282828"
-          fill="#F83D3D"
-          d="M135 22.5H177.264C178.295 22.5 179.22 23.133 179.594 24.0939L192.33 56.8443C192.442 57.1332 192.5 57.4404 192.5 57.7504V89C192.5 90.3807 191.381 91.5 190 91.5H135C133.619 91.5 132.5 90.3807 132.5 89V25C132.5 23.6193 133.619 22.5 135 22.5Z"
-        ></path>
-        <path
-          stroke-width="3"
-          stroke="#282828"
-          fill="#7D7C7C"
-          d="M146 33.5H181.741C182.779 33.5 183.709 34.1415 184.078 35.112L190.538 52.112C191.16 53.748 189.951 55.5 188.201 55.5H146C144.619 55.5 143.5 54.3807 143.5 53V36C143.5 34.6193 144.619 33.5 146 33.5Z"
-        ></path>
-        <path
-          stroke-width="2"
-          stroke="#282828"
-          fill="#282828"
-          d="M150 65C150 65.39 149.763 65.8656 149.127 66.2893C148.499 66.7083 147.573 67 146.5 67C145.427 67 144.501 66.7083 143.873 66.2893C143.237 65.8656 143 65.39 143 65C143 64.61 143.237 64.1344 143.873 63.7107C144.501 63.2917 145.427 63 146.5 63C147.573 63 148.499 63.2917 149.127 63.7107C149.763 64.1344 150 64.61 150 65Z"
-        ></path>
-        <rect
-          stroke-width="2"
-          stroke="#282828"
-          fill="#FFFCAB"
-          rx="1"
-          height="7"
-          width="5"
-          y="63"
-          x="187"
-        ></rect>
-        <rect
-          stroke-width="2"
-          stroke="#282828"
-          fill="#282828"
-          rx="1"
-          height="11"
-          width="4"
-          y="81"
-          x="193"
-        ></rect>
-        <rect
-          stroke-width="3"
-          stroke="#282828"
-          fill="#DFDFDF"
-          rx="2.5"
-          height="90"
-          width="121"
-          y="1.5"
-          x="6.5"
-        ></rect>
-        <rect
-          stroke-width="2"
-          stroke="#282828"
-          fill="#DFDFDF"
-          rx="2"
-          height="4"
-          width="6"
-          y="84"
-          x="1"
-        ></rect>
-      </svg>
-    </div>
-    <div class="truckTires">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 30 30"
-        class="tiresvg"
-      >
-        <circle
-          stroke-width="3"
-          stroke="#282828"
-          fill="#282828"
-          r="13.5"
-          cy="15"
-          cx="15"
-        ></circle>
-        <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
-      </svg>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 30 30"
-        class="tiresvg"
-      >
-        <circle
-          stroke-width="3"
-          stroke="#282828"
-          fill="#282828"
-          r="13.5"
-          cy="15"
-          cx="15"
-        ></circle>
-        <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
-      </svg>
-    </div>
-    <div class="road"></div>
-
-    <svg
-      xml:space="preserve"
-      viewBox="0 0 453.459 453.459"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns="http://www.w3.org/2000/svg"
-      id="Capa_1"
-      version="1.1"
-      fill="#000000"
-      class="lampPost"
-    >
-      <path
-        d="M252.882,0c-37.781,0-68.686,29.953-70.245,67.358h-6.917v8.954c-26.109,2.163-45.463,10.011-45.463,19.366h9.993
-c-1.65,5.146-2.507,10.54-2.507,16.017c0,28.956,23.558,52.514,52.514,52.514c28.956,0,52.514-23.558,52.514-52.514
-c0-5.478-0.856-10.872-2.506-16.017h9.992c0-9.354-19.352-17.204-45.463-19.366v-8.954h-6.149C200.189,38.779,223.924,16,252.882,16
-c29.952,0,54.32,24.368,54.32,54.32c0,28.774-11.078,37.009-25.105,47.437c-17.444,12.968-37.216,27.667-37.216,78.884v113.914
-h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75
-v-11.202c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066c0-5.068-4.107-9.177-9.176-9.177h-0.795
-V196.641c0-43.174,14.942-54.283,30.762-66.043c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
-M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514c0-5.531,1.078-10.957,3.141-16.017
-h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
-      ></path>
-    </svg>
-  </div>
-</div>
-
+          <div class="truckWrapper">
+            <div class="truckBody">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 198 93" class="trucksvg"><path stroke-width="3" stroke="#282828" fill="#F83D3D" d="M135 22.5H177.264C178.295 22.5 179.22 23.133 179.594 24.0939L192.33 56.8443C192.442 57.1332 192.5 57.4404 192.5 57.7504V89C192.5 90.3807 191.381 91.5 190 91.5H135C133.619 91.5 132.5 90.3807 132.5 89V25C132.5 23.6193 133.619 22.5 135 22.5Z"></path><path stroke-width="3" stroke="#282828" fill="#7D7C7C" d="M146 33.5H181.741C182.779 33.5 183.709 34.1415 184.078 35.112L190.538 52.112C191.16 53.748 189.951 55.5 188.201 55.5H146C144.619 55.5 143.5 54.3807 143.5 53V36C143.5 34.6193 144.619 33.5 146 33.5Z"></path><path stroke-width="2" stroke="#282828" fill="#282828" d="M150 65C150 65.39 149.763 65.8656 149.127 66.2893C148.499 66.7083 147.573 67 146.5 67C145.427 67 144.501 66.7083 143.873 66.2893C143.237 65.8656 143 65.39 143 65C143 64.61 143.237 64.1344 143.873 63.7107C144.501 63.2917 145.427 63 146.5 63C147.573 63 148.499 63.2917 149.127 63.7107C149.763 64.1344 150 64.61 150 65Z"></path><rect stroke-width="2" stroke="#282828" fill="#FFFCAB" rx="1" height="7" width="5" y="63" x="187"></rect><rect stroke-width="2" stroke="#282828" fill="#282828" rx="1" height="11" width="4" y="81" x="193"></rect><rect stroke-width="3" stroke="#282828" fill="#DFDFDF" rx="2.5" height="90" width="121" y="1.5" x="6.5"></rect><rect stroke-width="2" stroke="#282828" fill="#DFDFDF" rx="2" height="4" width="6" y="84" x="1"></rect></svg>
+            </div>
+            <div class="truckTires">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg"><circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle><circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle></svg><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg"><circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle><circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle></svg>
+            </div>
+            <div class="road"></div>
+            <svg xml:space="preserve" viewBox="0 0 453.459 453.459" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1" fill="#000000" class="lampPost"><path d="M252.882,0c-37.781,0-68.686,29.953-70.245,67.358h-6.917v8.954c-26.109,2.163-45.463,10.011-45.463,19.366h9.993 c-1.65,5.146-2.507,10.54-2.507,16.017c0,28.956,23.558,52.514,52.514,52.514c28.956,0,52.514-23.558,52.514-52.514 c0-5.478-0.856-10.872-2.506-16.017h9.992c0-9.354-19.352-17.204-45.463-19.366v-8.954h-6.149C200.189,38.779,223.924,16,252.882,16 c29.952,0,54.32,24.368,54.32,54.32c0,28.774-11.078,37.009-25.105,47.437c-17.444,12.968-37.216,27.667-37.216,78.884v113.914 h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75 v-11.202c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066c0-5.068-4.107-9.177-9.176-9.177h-0.795 V196.641c0-43.174,14.942-54.283,30.762-66.043c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514c0-5.531,1.078-10.957,3.141-16.017 h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path></svg>
+          </div>
+        </div>
         <p>O ajudante está a caminho. Verifique o endereço e, se necessário, deixe instruções de chegada.</p>
         <div class="orient-actions">
-          <p><strong>Endereço de entrega:</strong> ${pedido.endereco || pedido.enderecoEntrega || pedido.enderecoRetirada || pedido.enderecoReparo || pedido.enderecoMontagem || pedido.enderecoServico || '—'}</p>
+          <p><strong>Endereço de entrega:</strong> ${formatEndereco(pedido.localizacao)}</p>
         </div>
       </section>
     `;
@@ -294,20 +215,19 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
     orientacaoHTML = `
       <section class="cartao orientacao ${class_css}">
         <h2><i data-lucide="hammer"></i> Serviço em execução</h2>
-         <div class="hourglassBackground">
-      <div class="hourglassContainer">
-        <div class="hourglassCurves"></div>
-        <div class="hourglassCapTop"></div>
-        <div class="hourglassGlassTop"></div>
-        <div class="hourglassSand"></div>
-        <div class="hourglassSandStream"></div>
-        <div class="hourglassCapBottom"></div>
-        <div class="hourglassGlass"></div>
-      </div>
-    </div>
+          <div class="hourglassBackground">
+            <div class="hourglassContainer">
+              <div class="hourglassCurves"></div>
+              <div class="hourglassCapTop"></div>
+              <div class="hourglassGlassTop"></div>
+              <div class="hourglassSand"></div>
+              <div class="hourglassSandStream"></div>
+              <div class="hourglassCapBottom"></div>
+              <div class="hourglassGlass"></div>
+            </div>
+          </div>
         <p>O serviço está em andamento. Aguarde a conclusão. Mantenha comunicação se necessário.</p>
         <div class="orient-actions">
-          <button id="contatar-prestador-btn" class="btn secundario">Contatar prestador</button>
         </div>
       </section>
     `;
@@ -322,16 +242,21 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
         </div>
       </section>
     `;
-  } else if (status === "finalizado") {
-    orientacaoHTML = `
-      <section class="cartao orientacao ${class_css}">
-        <h2><i data-lucide="check-circle-2"></i> Pedido Finalizado</h2>
-        <p>Este serviço foi concluído com sucesso. Obrigado por usar o ApoiaMe!</p>
-        <div class="orient-actions">
-          <a href="dashboardC.html" class="btn primario">Voltar para o Início</a>
-        </div>
-      </section>
-    `;
+} else if (status === "finalizado") {
+    orientacaoHTML = `
+      <section class="cartao orientacao ${class_css}">
+        <h2><i data-lucide="check-circle-2"></i> Pedido Finalizado</h2>
+        <p>Este serviço foi concluído com sucesso. Obrigado por usar o ApoiaMe!</p>
+                <div class="orient-actions finalizado">
+            <a href="dashboardC.html" class="btn primario">Voltar para o Início</a>
+            
+            ${pedido.avaliacaoCliente ? 
+                `<p class="avaliado-sucesso"><i data-lucide="check-circle"></i> Você já avaliou este serviço.</p>` : 
+                `<button id="btn-abrir-modal-avaliacao" class="btn btn-avaliacao">Avaliar Serviço</button>`
+            }
+        </div>
+      </section>
+    `;
   } else if (status === "cancelado") {
     orientacaoHTML = `
       <section class="cartao orientacao ${class_css}">
@@ -350,7 +275,6 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
       </section>
     `;
   }
-
   
   const sectionEtapas = document.querySelector(".cartao.etapas");
   if (!sectionEtapas) return;
@@ -362,44 +286,138 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
   // usa currentPedidoRef para operações no Firestore
   const pedidoRef = currentPedidoRef;
 
+const btnAbrirModal = document.getElementById("btn-abrir-modal-avaliacao");
+    const modalAvaliacao = document.getElementById("avaliacao-modal");
+    const btnFecharModal = document.getElementById("fechar-modal-avaliacao");
+
+    if (btnAbrirModal && modalAvaliacao) {
+        btnAbrirModal.onclick = () => { 
+            if (pedido.fornecedorId) {
+                document.getElementById("nome-fornecedor-avaliacao").textContent = pedido.fornecedorNome || "Fornecedor";            
+                document.getElementById("foto-fornecedor-avaliacao").src = pedido.fornecedorFotoURL || '../arquivos/foto-perfil.jpg';
+            }
+            modalAvaliacao.classList.add('visivel');
+        };
+    }
+
+    const formAvaliacao = document.getElementById("form-avaliacao"); // Assumindo que seu <form> tem este ID
+const btnEnviarAvaliacao = document.getElementById("enviar-avaliacao-btn");
+
+// O 'modalAvaliacao' já foi pego ali em cima
+if (formAvaliacao && btnEnviarAvaliacao && modalAvaliacao) {
+
+    formAvaliacao.addEventListener("submit", async (event) => {
+        // 1. IMPEDE O RELOAD DA PÁGINA
+        event.preventDefault(); 
+
+        // 2. VERIFICA SE O PEDIDO E FORNECEDOR EXISTEM
+        if (!currentPedidoRef || !pedido.fornecedorId) {
+            alert("Erro: Referência do pedido ou do fornecedor não encontrada.");
+            return;
+        }
+
+        // 3. DESABILITA O BOTÃO
+        btnEnviarAvaliacao.disabled = true;
+        btnEnviarAvaliacao.textContent = "Enviando...";
+
+        try {
+            // 4. PEGA OS DADOS DO FORMULÁRIO
+            // Adapte os seletores se seus inputs tiverem nomes diferentes
+           const notaInput = document.querySelector('input[name="star-radio"]:checked');
+            const comentarioInput = document.getElementById("comentario-avaliacao"); // Assumindo que sua <textarea> tem este ID
+
+            if (!notaInput) {
+                throw new Error("Por favor, selecione uma nota (estrelas).");
+            }
+
+            const nota = parseInt(notaInput.value, 10);
+            const comentario = comentarioInput.value || ""; // Pega o comentário, ou string vazia
+            const timestamp = serverTimestamp(); // Pega o horário do servidor
+
+            // 5. PREPARA OS OBJETOS DE DADOS
+            
+            // Objeto para salvar no PEDIDO
+            const avaliacaoParaPedido = {
+                nota: nota,
+                comentario: comentario,
+                data: timestamp
+            };
+
+            // Objeto para salvar no FORNECEDOR (como você pediu)
+            const avaliacaoParaFornecedor = {
+                nota: nota,
+                comentario: comentario,
+                data: timestamp,
+                pedidoId: currentPedidoRef.id, // ID do pedido
+                clienteId: auth.currentUser.uid, // ID de quem avaliou
+                clienteNome: auth.currentUser.displayName || "Cliente" // Nome de quem avaliou
+            };
+
+            // 6. SALVA NOS DOIS LUGARES
+
+            // ATUALIZA O PEDIDO (para o onSnapshot mostrar "Já avaliado")
+            await updateDoc(currentPedidoRef, {
+                avaliacaoCliente: avaliacaoParaPedido
+            });
+
+const avaliacoesSubcollectionRef = collection(db, "usuarios", pedido.fornecedorId, "avaliacoes");
+            
+            // O objeto 'avaliacaoParaFornecedor' já tem todos os campos que você queria
+            // (nota, comentario, data, pedidoId, clienteId, clienteNome)
+            await addDoc(avaliacoesSubcollectionRef, avaliacaoParaFornecedor);
+
+            // 7. FECHA O MODAL
+            modalAvaliacao.classList.remove('visivel');
+            // O 'onSnapshot' vai cuidar de atualizar a tela automaticamente
+
+        } catch (error) {
+            console.error("Erro ao enviar avaliação:", error);
+            alert("Falha ao enviar avaliação: " + error.message);
+        } finally {
+            // 8. REABILITA O BOTÃO
+            btnEnviarAvaliacao.disabled = false;
+            btnEnviarAvaliacao.textContent = "Enviar Avaliação";
+        }
+    });
+}
+
   // cancelar pedido
-   const cancelarBtn = document.getElementById("cancelar-pedido-btn");
+    const cancelarBtn = document.getElementById("cancelar-pedido-btn");
   if (cancelarBtn) {
     cancelarBtn.onclick = async () => {
       if (!pedidoRef) return alert("Pedido não disponível para cancelamento.");
       
-      // Adiciona uma confirmação para evitar cliques acidentais
       if (!confirm("Tem certeza que deseja cancelar este pedido? Esta ação não pode ser desfeita.")) {
-          return; // Para a execução se o usuário clicar em "Cancelar"
+          return; 
       }
 
       try {
-        // --- INÍCIO DA LÓGICA ATUALIZADA ---
+        // --- INÍCIO DA LÓGICA ATUALIZADA (NOVO MODELO) ---
 
-        // 1. Busca os dados do pedido para pegar os UIDs
+        // 1. Busca os dados do pedido para pegar os IDs
         const pedidoSnap = await getDoc(pedidoRef);
         if (!pedidoSnap.exists()) throw new Error("Pedido não encontrado no banco de dados.");
         
         const pedidoData = pedidoSnap.data();
-        const clienteUid = pedidoData.clienteUid;
-        const ajudanteUid = pedidoData.ajudanteUid;
+        const clienteId = pedidoData.clienteId; // <- MUDOU de clienteUid
+        const fornecedorId = pedidoData.fornecedorId; // <- MUDOU de ajudanteUid
 
         // 2. Atualiza o status do pedido para "cancelado"
         await updateDoc(pedidoRef, { status: "cancelado" });
 
-        // 3. Limpa o pedidoAtivo do documento do cliente (se ele existir)
-        if (clienteUid) {
-            const clienteRef = doc(db, "usuarios", clienteUid);
+        // 3. Limpa o pedidoAtivo do documento do cliente
+        if (clienteId) {
+            const clienteRef = doc(db, "usuarios", clienteId);
             await updateDoc(clienteRef, { pedidoAtivo: null });
-            console.log(`Campo pedidoAtivo do cliente ${clienteUid} foi limpo.`);
+            console.log(`Campo pedidoAtivo do cliente ${clienteId} foi limpo.`);
         }
         
-        // 4. Limpa o pedidoAtivo do documento do ajudante (se ele existir)
-        if (ajudanteUid) {
-            // ATENÇÃO: Verifique se sua coleção de ajudantes se chama 'ajudantes' ou 'usuarios'
-            const ajudanteRef = doc(db, "ajudantes", ajudanteUid); 
-            await updateDoc(ajudanteRef, { pedidoAtivo: null });
-            console.log(`Campo pedidoAtivo do ajudante ${ajudanteUid} foi limpo.`);
+        // 4. Limpa o pedidoAtivo do documento do fornecedor
+        if (fornecedorId) {
+            // ATENÇÃO: Assumindo que a coleção de fornecedores/ajudantes é "fornecedores"
+            const fornecedorRef = doc(db, "fornecedores", fornecedorId); 
+            await updateDoc(fornecedorRef, { pedidoAtivo: null });
+            console.log(`Campo pedidoAtivo do fornecedor ${fornecedorId} foi limpo.`);
         }
 
         // --- FIM DA LÓGICA ATUALIZADA ---
@@ -414,42 +432,39 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"
     };
   }
 
-  // pagar agora (simulação)
-const pagarBtn = document.getElementById("pagar-orient-btn");
-  if (pagarBtn) {
-    pagarBtn.onclick = async () => {
-      // Desabilita o botão para evitar cliques duplos
-      pagarBtn.disabled = true;
-      pagarBtn.textContent = "Aguarde, gerando link...";
+  // pagar agora (chamada à API)
+  const pagarBtn = document.getElementById("pagar-orient-btn");
+  if (pagarBtn) {
+    pagarBtn.onclick = async () => {
+      pagarBtn.disabled = true;
+      pagarBtn.textContent = "Aguarde, gerando link...";
 
-      try {
-        // 1. Chama a sua nova Serverless Function na Vercel
-        const response = await fetch('/api/create-preference', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pedidoId: base.id }), // Envia o ID do pedido
-        });
+      try {
+        const response = await fetch('/api/create-preference', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pedidoId: base.id }), // Envia o ID do pedido
+        });
 
-        const data = await response.json();
+        const data = await response.json();
 
-        // 2. Se a resposta for um sucesso, redireciona o cliente
-        if (response.ok && data.init_point) {
-          window.location.href = data.init_point;
-        } else {
-          // Lança um erro se a resposta não for bem-sucedida
-          throw new Error(data.message || "Erro desconhecido ao criar preferência.");
-        }
+        if (response.ok && data.init_point) {
+          window.location.href = data.init_point;
+        } else {
+          throw new Error(data.message || "Erro desconhecido ao criar preferência.");
+        }
 
-      } catch (error) {
-        console.error("Erro ao iniciar o processo de pagamento:", error);
-        alert("Não foi possível gerar o link de pagamento. Tente novamente mais tarde.");
-        // Reabilita o botão em caso de erro
-        pagarBtn.disabled = false;
-        pagarBtn.textContent = "Pagar agora";
-      }
-    };
-  }
-const confirmarPgBtn = document.getElementById("confirmar-pagamento-manual-btn");
+      } catch (error) {
+        console.error("Erro ao iniciar o processo de pagamento:", error);
+        alert("Não foi possível gerar o link de pagamento. Tente novamente mais tarde.");
+        pagarBtn.disabled = false;
+        pagarBtn.textContent = "Pagar agora";
+      }
+    };
+  }
+
+  // confirmar pagamento manual
+  const confirmarPgBtn = document.getElementById("confirmar-pagamento-manual-btn");
   if (confirmarPgBtn) {
     confirmarPgBtn.onclick = async () => {
         if (!currentPedidoRef) return alert("Referência do pedido não encontrada.");
@@ -458,33 +473,29 @@ const confirmarPgBtn = document.getElementById("confirmar-pagamento-manual-btn")
         confirmarPgBtn.textContent = "Confirmando...";
 
         try {
-            // Atualiza os status no Firestore
             await updateDoc(currentPedidoRef, {
                 status: "pago_aguardando_inicio",
-                statusPagamento: "confirmado"
+                statusPagamento: "confirmado" // <- Campo do novo modelo
             });
-
-            // Adiciona um registro ao histórico
             await addHistorico(currentPedidoRef, "Cliente confirmou o pagamento manualmente.");
-
-            // Não precisa de alert, pois o onSnapshot vai recarregar a tela
-            // alert("Pagamento confirmado com sucesso!");
-
         } catch (err) {
             console.error("Erro ao confirmar pagamento manual:", err);
             alert("Ocorreu um erro ao confirmar o pagamento.");
-            confirmarPgBtn.disabled = false; // Reabilita o botão em caso de erro
+            confirmarPgBtn.disabled = false;
             confirmarPgBtn.textContent = "Confirmar Pagamento";
         }
     };
   }
-  // confirmar chegada
+  
+  // confirmar chegada (esta lógica parece ser do cliente, mantida)
   const confirmarChegadaBtn = document.getElementById("confirmar-chegada-orient-btn");
   if (confirmarChegadaBtn) {
     confirmarChegadaBtn.onclick = async () => {
       if (!pedidoRef) return alert("Pedido não disponível.");
       try {
-        await updateDoc(pedidoRef, { clienteConfirmouChegada: true });
+        // NOTA: Verifique se o campo 'clienteConfirmouChegada' existe no novo modelo.
+        // Se não, esta lógica precisa ser adaptada.
+        await updateDoc(pedidoRef, { clienteConfirmouChegada: true }); 
         await addHistorico(pedidoRef, "Cliente confirmou a chegada do ajudante via card.");
         alert("Chegada confirmada.");
       } catch (e) {
@@ -497,54 +508,47 @@ const confirmarPgBtn = document.getElementById("confirmar-pagamento-manual-btn")
   // confirmar finalização
 const confirmarFinalBtn = document.getElementById("confirmar-finalizacao-orient-btn");
 if (confirmarFinalBtn) {
-  confirmarFinalBtn.onclick = async () => {
-    if (!pedidoRef) return alert("Pedido não disponível.");
-    if (!confirm("Confirmar a finalização deste serviço?")) return;
+  confirmarFinalBtn.onclick = async () => {
+    if (!currentPedidoRef) return alert("Pedido não disponível.");
+    if (!confirm("Confirmar a finalização deste serviço?")) return;
 
-    try {
-      const clienteUid = auth.currentUser.uid;
-      
-      // 1. Pega os dados do pedido (para o cálculo e para o ID do ajudante)
-      const pedidoSnap = await getDoc(pedidoRef);
-      if (!pedidoSnap.exists()) throw new Error("Pedido não encontrado.");
-      
-      const pedidoData = pedidoSnap.data();
-      const { anuncioId, precoBase } = pedidoData;
+    try {
+      const clienteUid = auth.currentUser.uid; 
+      
+      const pedidoSnap = await getDoc(currentPedidoRef);
+      if (!pedidoSnap.exists()) throw new Error("Pedido não encontrado.");
+      
+      const pedidoData = pedidoSnap.data();
+      const valorPago = pedidoData.orcamentoMaximo || 0; 
+      const fornecedorId = pedidoData.fornecedorId; 
 
-      // 2. Calcula o ganho do ajudante (lógica que já tínhamos)
-      const anuncioRef = doc(db, "anuncios", anuncioId);
-      const anuncioSnap = await getDoc(anuncioRef);
-      const eraDestaque = anuncioSnap.exists() && anuncioSnap.data().destaque === true;
-      const valorParaAjudante = eraDestaque ? (precoBase * 0.90) : (precoBase * 0.94);
+      const valorParaAjudante = valorPago * 0.90; 
 
-      // 3. Atualiza o pedido com o status e o ganho do ajudante
-      await updateDoc(pedidoRef, { 
-          status: "finalizado",
-          ganhoAjudante: parseFloat(valorParaAjudante.toFixed(2)),
-      });
+      // 3. Atualiza o pedido
+      await updateDoc(currentPedidoRef, { 
+          status: "finalizado",
+          dataConclusao: serverTimestamp(),
+          ganhoAjudante: parseFloat(valorParaAjudante.toFixed(2)),
+      });
 
-      // 4. Limpa o pedidoAtivo APENAS do cliente logado
-      const clienteRef = doc(db, "usuarios", clienteUid);
-      await updateDoc(clienteRef, { pedidoAtivo: null });
+      // 4. Limpa o pedidoAtivo do cliente
+      const clienteRef = doc(db, "usuarios", clienteUid);
+      await updateDoc(clienteRef, { pedidoAtivo: null });
 
-      await addHistorico(pedidoRef, "Cliente confirmou a finalização do serviço.");
-      alert("Serviço finalizado com sucesso!");
+      // 5. (REMOVIDO) A lógica de limpar o 'pedidoAtivo' do fornecedor foi removida.
+      //    (Isso deve ser feito pelo próprio fornecedor ou por Cloud Function)
 
-    } catch (e) {
-      console.error("Erro ao confirmar finalização:", e);
-      alert("Ocorreu um erro ao finalizar o pedido.");
-    }
-  };
-}
+      await addHistorico(currentPedidoRef, "Cliente confirmou a finalização do serviço.");
+      alert("Serviço finalizado com sucesso!");
 
-  // contatar prestador (exemplo: abrir chat ou mostrar contato)
-  const contatarBtns = document.querySelectorAll("#contatar-prestador-btn");
-  if (contatarBtns && contatarBtns.length) {
-    contatarBtns.forEach(b => b.onclick = () => {
-      // implemente sua lógica de contato/chat
-      alert("Abrir chat/contato com o prestador (implemente a rota).");
-    });
-  }
+    } catch (e) {
+      console.error("Erro ao confirmar finalização:", e);
+      alert("Ocorreu um erro ao finalizar o pedido.");
+    }
+  };
+} 
+
+
 
   // reportar problema / reabrir issue
   const reabrirBtn = document.getElementById("reabrir-issue-btn");
@@ -562,8 +566,6 @@ if (confirmarFinalBtn) {
   }
 }
 
-
-
 function restoreAcoesSecundariasPadrao() {
   const acoesSec = document.querySelector(".acoes-secundarias");
   if (acoesSec) {
@@ -572,38 +574,69 @@ function restoreAcoesSecundariasPadrao() {
       <a id="btn-voltar" href="dashboardC.html" class="btn fantasma"><i data-lucide="arrow-left"></i><span>Voltar</span></a>
     `;
     lucide.createIcons();
+    
     const btnCancel = document.getElementById("btn-cancelar");
     if (btnCancel) {
+      // *** ATUALIZADO (NOVO MODELO) ***
+      // Esta é a mesma lógica de cancelamento do 'renderOrientacao' para consistência
       btnCancel.addEventListener("click", async () => {
-        if (!currentPedidoRef) return;
+        if (!currentPedidoRef) return alert("Pedido não disponível.");
+        if (!confirm("Tem certeza que deseja cancelar este pedido?")) return;
+
         try {
-          await updateDoc(currentPedidoRef, { status: "cancelado" });
-          await addHistorico(currentPedidoRef, "Cliente cancelou o pedido via botão.");
-          alert("Pedido cancelado.");
+            const pedidoSnap = await getDoc(currentPedidoRef);
+            if (!pedidoSnap.exists()) throw new Error("Pedido não encontrado.");
+            
+            const pedidoData = pedidoSnap.data();
+            const clienteId = pedidoData.clienteId;
+            const fornecedorId = pedidoData.fornecedorId;
+
+            await updateDoc(currentPedidoRef, { status: "cancelado" });
+
+            if (clienteId) {
+                const clienteRef = doc(db, "usuarios", clienteId);
+                await updateDoc(clienteRef, { pedidoAtivo: null });
+            }
+            if (fornecedorId) {
+                const fornecedorRef = doc(db, "fornecedores", fornecedorId); 
+                await updateDoc(fornecedorRef, { pedidoAtivo: null });
+            }
+
+            await addHistorico(currentPedidoRef, "Cliente cancelou o pedido via botão.");
+            alert("Pedido cancelado.");
         } catch (e) {
-          console.error(e);
-          alert("Erro ao cancelar pedido.");
+            console.error("Erro ao cancelar pedido:", e);
+            alert("Erro ao cancelar pedido.");
         }
       });
     }
   }
 }
+
 function clearActionButtonsArea() {
   const acoesPrincipais = document.querySelector(".acoes-principais");
   if (acoesPrincipais) {
     acoesPrincipais.innerHTML = ""; // Limpa a área de botões
   }
 }
+
 function renderPedidoCliente(pedido) {
+  // *** ATUALIZADO PARA NOVO MODELO ***
   document.getElementById("pedido-id").innerText = pedido.id || "—";
-  document.getElementById("pedido-titulo").innerText = pedido.tituloAnuncio || "—";
-  document.getElementById("pedido-prestador").innerText = pedido.nomePrestador || "—";
-  document.getElementById("status-pill").innerText = (pedido.status || "pendente").replace(/_/g, " ");
-  document.getElementById("valor-servico").innerText = formatCurrency(pedido.precoBase || 0);
-  document.getElementById("valor-entrega").innerText = formatCurrency(pedido.taxaEntrega || 0);
-  document.getElementById("valor-total").innerText = formatCurrency((pedido.precoBase || 0) + (pedido.taxaEntrega || 0));
-  document.getElementById("retirada-txt").innerText = pedido.enderecoRetirada || "—";
-  document.getElementById("entrega-txt").innerText = pedido.enderecoEntrega || "—";
+  document.getElementById("pedido-titulo").innerText = pedido.titulo || "—"; // <- MUDOU
+  document.getElementById("pedido-prestador").innerText = pedido.fornecedorNome || "—"; // <- MUDOU
+  
+  const statusFormatado = (pedido.status || "pendente").replace(/_/g, " ");
+  document.getElementById("status-pill").innerText = statusFormatado;
+  document.getElementById("status-pill").className = `status-pill status-${pedido.status || 'pendente'}`; // Adiciona classe para CSS
+
+  document.getElementById("valor-servico").innerText = formatCurrency(pedido.orcamentoMaximo || 0); // <- MUDOU
+  document.getElementById("valor-entrega").innerText = formatCurrency(0); // <- MUDOU (Campo não existe mais)
+  document.getElementById("valor-total").innerText = formatCurrency(pedido.orcamentoMaximo || 0); // <- MUDOU
+
+  const enderecoFormatado = formatEndereco(pedido.localizacao);
+  document.getElementById("retirada-txt").innerText = enderecoFormatado; // <- MUDOU
+  document.getElementById("entrega-txt").innerText = enderecoFormatado; // <- MUDOU
 
   // orientacao ANTES da timeline
   renderOrientacao(pedido.status || "pendente", pedido);
@@ -627,9 +660,15 @@ function renderPedidoCliente(pedido) {
       btnPagar.style.display = "inline-block";
       btnPagar.onclick = async () => {
         if (!pedidoRef) return alert("Pedido não disponível.");
+        // Esta é a lógica de pagamento "manual", simulada
+        // O botão do card de orientação (`pagar-orient-btn`) chama a API
+        // Mantenha esta lógica se você quiser um pgto manual/simulado aqui.
         try {
-          await updateDoc(pedidoRef, { statusPagamento: "confirmado", status: "pago_aguardando_inicio" });
-          await addHistorico(pedidoRef, "Cliente realizou o pagamento via cabeçalho.");
+          await updateDoc(pedidoRef, { 
+              statusPagamento: "confirmado", // <- MUDOU
+              status: "pago_aguardando_inicio" 
+          });
+          await addHistorico(pedidoRef, "Cliente realizou o pagamento via cabeçalho (manual).");
           alert("Pagamento registrado. Aguardando início pelo ajudante.");
         } catch (e) {
           console.error(e);
@@ -639,12 +678,11 @@ function renderPedidoCliente(pedido) {
     }
   }
 
-  // garante remoção dos botões específicos que possam não aplicar mais
-  if (status !== "no_local") {
-    const btn = document.getElementById("confirmar-chegada-btn");
-    if (btn) btn.remove();
+  // Oculta o botão de cancelar se o pedido estiver em estados avançados ou finalizado/cancelado
+  const btnCancelarSec = document.getElementById("btn-cancelar");
+  if (btnCancelarSec && (status === "finalizado" || status === "cancelado" || status === "em_execucao" || status === "concluido_prestador")) {
+      btnCancelarSec.style.display = "none";
   }
-
 
   lucide.createIcons();
 }
@@ -654,8 +692,15 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById("user-name").innerText = user.displayName || user.email || "cliente";
     const pedidoID = new URLSearchParams(window.location.search).get('id');
-    loadPedidoCliente(pedidoID);
+    if(pedidoID) {
+        loadPedidoCliente(pedidoID);
+    } else {
+        console.error("Nenhum ID de pedido encontrado na URL.");
+        // Redirecionar ou mostrar mensagem de erro
+    }
   } else {
     console.log("Cliente não está logado.");
+    // Redirecionar para a página de login
+    // window.location.href = "login.html"; 
   }
 });

@@ -77,22 +77,41 @@ function carregarMensagens(pedidoId) {
 }
 
 async function encontrarPedidoAtivo(tipoUsuario) {
-    const userId = auth.currentUser.uid;
-    if (tipoUsuario === 'cliente') {
-        const userRef = doc(db, 'usuarios', userId);
-        const userSnap = await getDoc(userRef);
-        return userSnap.exists() ? userSnap.data().pedidoAtivo : null;
-    } 
-    if (tipoUsuario === 'ajudante') {
-        const pedidosRef = collection(db, 'pedidos');
-        const statusAtivosParaChat = ['aceito', 'pago_aguardando_inicio', 'em_rota', 'no_local', 'em_execucao', 'concluido_prestador'];
-        const q = query(pedidosRef, where('ajudanteUid', '==', userId), where('status', 'in', statusAtivosParaChat), limit(1));
-        const querySnapshot = await getDocs(q);
-        return querySnapshot.empty ? null : querySnapshot.docs[0].id;
-    }
-    return null;
+    const userId = auth.currentUser.uid;
+    
+    if (tipoUsuario === 'cliente') {
+        // A lógica do cliente já busca 'pedidoAtivo' no perfil, o que está correto.
+        // No entanto, precisamos garantir que o campo de ID do usuário esteja correto
+        // caso a coleção 'usuarios' esteja sendo usada.
+        const userRef = doc(db, 'usuarios', userId);
+        const userSnap = await getDoc(userRef);
+        return userSnap.exists() ? userSnap.data().pedidoAtivo : null;
+    } 
+    
+    if (tipoUsuario === 'ajudante') { // 'ajudante' é o tipo do chat-init.js
+        const pedidosRef = collection(db, 'pedidos');
+        
+        // CORREÇÃO: Lista de status atualizada (removido 'pendente' pois o fornecedor não tem chat antes de aceitar)
+        const statusAtivosParaChat = [
+            'aceito', 
+            'pago_aguardando_inicio', 
+            'em_rota', 
+            'no_local', 
+            'em_execucao', 
+            'concluido_prestador'
+        ];
+        
+        const q = query(pedidosRef, 
+            where('fornecedorId', '==', userId), // CORRIGIDO: Usa 'fornecedorId'
+            where('status', 'in', statusAtivosParaChat), 
+            limit(1)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.empty ? null : querySnapshot.docs[0].id;
+    }
+    return null;
 }
-
 export function inicializarChat(tipoUsuario) {
     injetarHTMLdoModal();
 

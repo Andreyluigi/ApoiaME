@@ -181,14 +181,30 @@ function iniciarMonitoramentoDeLocalizacao() {
  */
 export async function iniciarRota(pedidoData) {
     const obterEnderecoDoCliente = (pData) => {
-        const enderecoCompleto = pData.enderecoRetirada || pData.enderecoReparo || pData.enderecoMontagem || pData.enderecoServico || pData.enderecoEntrega;
-        if (enderecoCompleto) return enderecoCompleto;
+    
+    const localizacao = pData.localizacao || {};
+    const detalhes = pData.detalhes || {};
 
-        if (pData.endereco && pData.cidade) {
-            return `${pData.endereco}, ${pData.numero || ''}, ${pData.bairro || ''}, ${pData.cidade}, ${pData.estado || ''}`;
-        }
-        return pData.endereco; // Último fallback
-    };
+    // 1. Tenta obter o endereço completo e detalhado (Etapa 3 - localizacao)
+    const enderecoCompleto = 
+        `${localizacao.rua || ''}, ${localizacao.numero || 'S/N'}, ${localizacao.bairro || ''}, ${localizacao.cidade || ''} - ${localizacao.estado || ''}`;
+    
+    if (enderecoCompleto.length > 10) {
+        return enderecoCompleto;
+    }
+    
+    // 2. Tenta obter o endereço de retirada de documentos (que é o endereço mais complexo)
+    if (pData.categoria === 'Buscar/Levar documentos' && detalhes.localRetirada?.endereco) {
+        return detalhes.localRetirada.endereco;
+    }
+
+    // 3. Fallback: Se o pedido tem apenas o endereço base salvo (modelos antigos ou incompletos)
+    if (localizacao.rua) {
+        return `${localizacao.rua}, ${localizacao.numero || ''}, ${localizacao.cidade}`;
+    }
+    
+    return null; // Retorna nulo se não encontrar nada válido
+};
 
     dadosDoPedido = {
         origem: {

@@ -1,8 +1,11 @@
     //dependências do Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-    import { iniciarRota } from './rotaA.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js"
+import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { iniciarRota } from './rotaA.js';
+
+// --- VARIÁVEL GLOBAL PARA MANTER O ESTADO DO PEDIDO (CORREÇÃO DE ESCOPO) ---
+let pedidoDataGlobal = null;
 
 
     // Configuração do Firebase
@@ -30,14 +33,16 @@
         if (docSnap.exists()) {
             const pedidoData = docSnap.data();
             const status = pedidoData.status;
-            const statusPagamento = pedidoData.statusPagamento;
+            const statusPagamento = pedidoData.statusPagamento || 'pendente';
             pedidoData.id = docSnap.id
 
-
+            pedidoDataGlobal = pedidoData;
+            
             // Exibe o conteúdo baseado no status do pedido
             loadStatusContent(status, statusPagamento, pedidoData);
         } else {
             console.log("Pedido não encontrado!");
+            document.getElementById("tasks-container").innerHTML = '<h1>Pedido não encontrado.</h1>';
         }
     }
 
@@ -47,7 +52,9 @@
         const taskContainer = document.getElementById("tasks-container");
         const barraProgresso = document.getElementById("progress-bar")
 
-        
+        const tituloPedido = pedidoData.titulo || "Tarefa Sem Título"; 
+        const categoriaPedido = pedidoData.categoria || "N/A"; 
+        const precoBase = pedidoData.orcamentoMaximo || 0;
 
 
         // Verifica se o container está disponível
@@ -77,112 +84,33 @@
 
     </div>
             `;
-            barraProgresso.innerHTML = `
-            <div class="progress-bar"> 
-                    <div class="progress-step completed" id="step-1"> 
-                        <span class="step-icon">1</span>
-                        <span class="step-label">Aguardando Pagamento</span>
-                    </div>
-                    <div class="progress-step active" id="step-2">
-                        <span class="step-icon">2</span>
-                        <span class="step-label">Pagamento Confirmado</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-3">
-                        <span class="step-icon">3</span>
-                        <span class="step-label">Em Rota</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-4">
-                        <span class="step-icon">4</span>
-                        <span class="step-label">No Local</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-5">
-                        <span class="step-icon">5</span>
-                        <span class="step-label">Em Execução</span>
-                    </div>
-                </div>
-                
-
-                <!-- Segunda Linha de Etapas -->
-                <div class="progress-bar">
-                    <div class="progress-step waiting" id="step-6">
-                        <span class="step-icon">6</span>
-                        <span class="step-label">Concluído Prestador</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-7">
-                        <span class="step-icon">7</span>
-                        <span class="step-label">Aguardando Confirmação Cliente</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-8">
-                        <span class="step-icon">8</span>
-                        <span class="step-label">Finalizado</span>
-                    </div>
-                </div>
-            `;
+            
         }
         
         if (status === "pago_aguardando_inicio" && statusPagamento === "confirmado") {
     const detalhesEspecificos = gerarDetalhesPedidoHTML(pedidoData);
+    
 
     
     taskContainer.innerHTML = `
         <div class="task">
             <h1>Pagamento Concluído!</h1>
             <br>
-            <h2>${pedidoData.tituloAnuncio}</h2>
+            <h2>${tituloPedido}</h2>
             <br>
-            <p><strong>Tipo de Serviço:</strong> ${pedidoData.tipoServico}</p>
+            <p><strong>Tipo de Serviço:</strong> ${categoriaPedido}</p>
 
             ${detalhesEspecificos} 
 
             <hr>
             <p><strong>Data:</strong> ${pedidoData.data || 'Não informada'}</p>
             <p><strong>Hora:</strong> ${pedidoData.Hora || 'Não informada'}</p>
-            <p><strong>Preço Base:</strong> R$ ${pedidoData.precoBase || '0,00'}</p>
+            <p><strong>Preço Base:</strong> R$ ${precoBase.toFixed(2).replace('.', ',')}</p>
 
             <button id="startBtn" class="action-button">Iniciar Tarefa</button>
         </div>
     `;
-            barraProgresso.innerHTML = `
-                <div class="progress-bar prog-4 comp-2 multi-fill"> 
-                        <div class="progress-step completed" id="step-1"> 
-                            <span class="step-icon">1</span>
-                            <span class="step-label">Aguardando Pagamento</span>
-                        </div>
-                        <div class="progress-step completed" id="step-2">
-                            <span class="step-icon">2</span>
-                            <span class="step-label">Pagamento Confirmado</span>
-                        </div>
-                        <div class="progress-step active" id="step-3">
-                            <span class="step-icon">3</span>
-                            <span class="step-label">Em Rota</span>
-                        </div>
-                        <div class="progress-step waiting" id="step-4">
-                            <span class="step-icon">4</span>
-                            <span class="step-label">No Local</span>
-                        </div>
-                        <div class="progress-step waiting" id="step-5">
-                            <span class="step-icon">5</span>
-                            <span class="step-label">Em Execução</span>
-                        </div>
-                    </div>
-                
 
-                <!-- Segunda Linha de Etapas -->
-                <div class="progress-bar">
-                    <div class="progress-step waiting" id="step-6">
-                        <span class="step-icon">6</span>
-                        <span class="step-label">Concluído Prestador</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-7">
-                        <span class="step-icon">7</span>
-                        <span class="step-label">Aguardando Confirmação Cliente</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-8">
-                        <span class="step-icon">8</span>
-                        <span class="step-label">Finalizado</span>
-                    </div>
-                </div>
-            `;
 
         document.getElementById("startBtn").addEventListener("click", async () => {
              // Esta verificação agora deve passar
@@ -225,56 +153,16 @@
             await updateDoc(pedidoRef, { status: "no_local" }); 
             loadPedido(pedidoData.id);
         });
-            barraProgresso.innerHTML = `
-                <div class="progress-bar"> 
-                        <div class="progress-step completed" id="step-1"> 
-                            <span class="step-icon">1</span>
-                            <span class="step-label">Aguardando Pagamento</span>
-                        </div>
-                        <div class="progress-step completed" id="step-2">
-                            <span class="step-icon">2</span>
-                            <span class="step-label">Pagamento Confirmado</span>
-                        </div>
-                        <div class="progress-step completed" id="step-3">
-                            <span class="step-icon">3</span>
-                            <span class="step-label">Em Rota</span>
-                        </div>
-                        <div class="progress-step active" id="step-4">
-                            <span class="step-icon">4</span>
-                            <span class="step-label">No Local</span>
-                        </div>
-                        <div class="progress-step waiting" id="step-5">
-                            <span class="step-icon">5</span>
-                            <span class="step-label">Em Execução</span>
-                        </div>
-                    </div>
-                
-
-                <!-- Segunda Linha de Etapas -->
-                <div class="progress-bar">
-                    <div class="progress-step waiting" id="step-6">
-                        <span class="step-icon">6</span>
-                        <span class="step-label">Concluído Prestador</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-7">
-                        <span class="step-icon">7</span>
-                        <span class="step-label">Aguardando Confirmação Cliente</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-8">
-                        <span class="step-icon">8</span>
-                        <span class="step-label">Finalizado</span>
-                    </div>
-                </div>
-            `;
+           
         }
         if (status === "no_local") {
             taskContainer.innerHTML = `
                 <div class="task">
                     <h1>Chegada ao Local Confirmada!</h1>
                     <br>
-                    <h2>${pedidoData.tituloAnuncio}</h2>
+                    <h2>${tituloPedido}</h2>
                     <br>
-                    <p><strong>Tipo de Serviço:</strong> ${pedidoData.tipoServico}</p>
+                    <p><strong>Tipo de Serviço:</strong> ${categoriaPedido}</p>
                     
                     <div class="task-description">
                         <h3>Próximos Passos:</h3>
@@ -284,47 +172,7 @@
                     <button id="execBtn" class="action-button">Iniciar Execução da Tarefa</button>
                 </div>
             `;
-            barraProgresso.innerHTML = `
-                <div class="progress-bar"> 
-                        <div class="progress-step completed" id="step-1"> 
-                            <span class="step-icon">1</span>
-                            <span class="step-label">Aguardando Pagamento</span>
-                        </div>
-                        <div class="progress-step completed" id="step-2">
-                            <span class="step-icon">2</span>
-                            <span class="step-label">Pagamento Confirmado</span>
-                        </div>
-                        <div class="progress-step completed" id="step-3">
-                            <span class="step-icon">3</span>
-                            <span class="step-label">Em Rota</span>
-                        </div>
-                        <div class="progress-step completed" id="step-4">
-                            <span class="step-icon">4</span>
-                            <span class="step-label">No Local</span>
-                        </div>
-                        <div class="progress-step active" id="step-5">
-                            <span class="step-icon">5</span>
-                            <span class="step-label">Em Execução</span>
-                        </div>
-                    </div>
-                
-
-                <!-- Segunda Linha de Etapas -->
-                <div class="progress-bar">
-                    <div class="progress-step waiting" id="step-6">
-                        <span class="step-icon">6</span>
-                        <span class="step-label">Concluído Prestador</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-7">
-                        <span class="step-icon">7</span>
-                        <span class="step-label">Aguardando Confirmação Cliente</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-8">
-                        <span class="step-icon">8</span>
-                        <span class="step-label">Finalizado</span>
-                    </div>
-                </div>
-            `;
+           
             
             document.getElementById("execBtn").addEventListener("click", async () => {
                 
@@ -353,7 +201,7 @@
          if (status === "em_execucao") {
             
             let instrucaoPersonalizada = `O serviço está em andamento. Mantenha a comunicação com o cliente e verifique se todos os detalhes do pedido foram cumpridos.`;
-            const tipoServico = pedidoData.tipoServico; 
+            const tipoServico = categoriaPedido; 
 
             switch (tipoServico) {
                 case "Troca de gás":
@@ -412,48 +260,7 @@
                 </div>
             `;
 
-            barraProgresso.innerHTML = `
-                <div class="progress-bar"> 
-                        <div class="progress-step completed" id="step-1"> 
-                            <span class="step-icon">1</span>
-                            <span class="step-label">Aguardando Pagamento</span>
-                        </div>
-                        <div class="progress-step completed" id="step-2">
-                            <span class="step-icon">2</span>
-                            <span class="step-label">Pagamento Confirmado</span>
-                        </div>
-                        <div class="progress-step completed" id="step-3">
-                            <span class="step-icon">3</span>
-                            <span class="step-label">Em Rota</span>
-                        </div>
-                        <div class="progress-step completed" id="step-4">
-                            <span class="step-icon">4</span>
-                            <span class="step-label">No Local</span>
-                        </div>
-                        <div class="progress-step completed" id="step-5">
-                            <span class="step-icon">5</span>
-                            <span class="step-label">Em Execução</span>
-                        </div>
-                    </div>
-                
-
-                <!-- Segunda Linha de Etapas -->
-                <div class="progress-bar">
-                    <div class="progress-step waiting" id="step-6">
-                        <span class="step-icon">6</span>
-                        <span class="step-label">Concluído Prestador</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-7">
-                        <span class="step-icon">7</span>
-                        <span class="step-label">Aguardando Confirmação Cliente</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-8">
-                        <span class="step-icon">8</span>
-                        <span class="step-label">Finalizado</span>
-                    </div>
-                </div>
-            `;
-
+            
             
 document.getElementById("concludeBtn").addEventListener("click", async () => {
     if (!pedidoData || !pedidoData.id) { 
@@ -501,47 +308,7 @@ document.getElementById("concludeBtn").addEventListener("click", async () => {
                     </div>
                 </div>
             `;
-barraProgresso.innerHTML = `
-                <div class="progress-bar"> 
-                        <div class="progress-step completed" id="step-1"> 
-                            <span class="step-icon">1</span>
-                            <span class="step-label">Aguardando Pagamento</span>
-                        </div>
-                        <div class="progress-step completed" id="step-2">
-                            <span class="step-icon">2</span>
-                            <span class="step-label">Pagamento Confirmado</span>
-                        </div>
-                        <div class="progress-step completed" id="step-3">
-                            <span class="step-icon">3</span>
-                            <span class="step-label">Em Rota</span>
-                        </div>
-                        <div class="progress-step completed" id="step-4">
-                            <span class="step-icon">4</span>
-                            <span class="step-label">No Local</span>
-                        </div>
-                        <div class="progress-step completed" id="step-5">
-                            <span class="step-icon">5</span>
-                            <span class="step-label">Em Execução</span>
-                        </div>
-                    </div>
-                
 
-                <!-- Segunda Linha de Etapas -->
-                <div class="progress-bar">
-                    <div class="progress-step completed" id="step-6">
-                        <span class="step-icon">6</span>
-                        <span class="step-label">Concluído Prestador</span>
-                    </div>
-                    <div class="progress-step active" id="step-7">
-                        <span class="step-icon">7</span>
-                        <span class="step-label">Aguardando Confirmação Cliente</span>
-                    </div>
-                    <div class="progress-step waiting" id="step-8">
-                        <span class="step-icon">8</span>
-                        <span class="step-label">Finalizado</span>
-                    </div>
-                </div>
-`;
 
         }
 
@@ -555,9 +322,9 @@ if (status === "finalizado") {
                     <hr>
                     <div class="order-summary">
                         <h2>Resumo da Tarefa</h2>
-                        <p><strong>Título:</strong> ${pedidoData.tituloAnuncio}</p>
-                        <p><strong>Tipo de Serviço:</strong> ${pedidoData.tipoServico}</p>
-                        <p><strong>Valor Total:</strong> R$ ${pedidoData.precoBase}</p>
+                        <p><strong>Título:</strong> ${tituloPedido}</p>
+                        <p><strong>Tipo de Serviço:</strong> ${categoriaPedido}</p>
+                        <p><strong>Valor Total:</strong> R$ ${precoBase.toFixed(2).replace('.', ',')}</p>
                     </div>
                     <hr>
                     <div class="actions-section">
@@ -570,49 +337,6 @@ if (status === "finalizado") {
             `;
 
             
-            barraProgresso.innerHTML = `
-                <div class="progress-bar"> 
-                        <div class="progress-step completed" id="step-1"> 
-                            <span class="step-icon">1</span>
-                            <span class="step-label">Aguardando Pagamento</span>
-                        </div>
-                        <div class="progress-step completed" id="step-2">
-                            <span class="step-icon">2</span>
-                            <span class="step-label">Pagamento Confirmado</span>
-                        </div>
-                        <div class="progress-step completed" id="step-3">
-                            <span class="step-icon">3</span>
-                            <span class="step-label">Em Rota</span>
-                        </div>
-                        <div class="progress-step completed" id="step-4">
-                            <span class="step-icon">4</span>
-                            <span class="step-label">No Local</span>
-                        </div>
-                        <div class="progress-step completed" id="step-5">
-                            <span class="step-icon">5</span>
-                            <span class="step-label">Em Execução</span>
-                        </div>
-                    </div>
-                
-
-                <!-- Segunda Linha de Etapas -->
-                <div class="progress-bar">
-                    <div class="progress-step completed" id="step-6">
-                        <span class="step-icon">6</span>
-                        <span class="step-label">Concluído Prestador</span>
-                    </div>
-                    <div class="progress-step completed" id="step-7">
-                        <span class="step-icon">7</span>
-                        <span class="step-label">Aguardando Confirmação Cliente</span>
-                    </div>
-                    <div class="progress-step completed" id="step-8">
-                        <span class="step-icon">8</span>
-                        <span class="step-label">Finalizado</span>
-                    </div>
-                </div>
-
-`; 
-            
 
             document.getElementById("DashboardBtn").addEventListener("click", () => {
                 alert("Redirecionando para a Dashboard");
@@ -624,110 +348,114 @@ if (status === "finalizado") {
     function gerarDetalhesPedidoHTML(pedidoData) {
     let detalhesHtml = '';
 
+    // Mapeia o objeto de detalhes (Etapa 2) e localização (Etapa 3)
+    const detalhes = pedidoData.detalhes || {};
+    const localizacao = pedidoData.localizacao || {};
+
     // O switch constrói o HTML específico para cada tipo de serviço
-    switch (pedidoData.tipoServico) {
+    switch (pedidoData.categoria) { // CORRIGIDO: Usa pedidoData.categoria
         case "Troca de gás":
             detalhesHtml = `
-                <p><strong>Tipo de Botijão:</strong> ${pedidoData.tipoBotijao || 'Não informado'}</p>
-                <p><strong>Quantidade:</strong> ${pedidoData.quantidade || 'Não informada'}</p>
-                <p><strong>Endereço de Instalação:</strong> ${pedidoData.endereco || ''}, ${pedidoData.numero || ''} - ${pedidoData.bairro || ''}, ${pedidoData.cidade || ''} - ${pedidoData.estado || ''}</p>
-                <p><strong>Complemento:</strong> ${pedidoData.andar ? `Andar: ${pedidoData.andar}` : ''} ${pedidoData.elevador ? `(Elevador: ${pedidoData.elevador})` : ''}</p>
-                <p><strong>Retirar botijão vazio:</strong> ${pedidoData.retirarVazio || 'Não informado'}</p>
+                <p><strong>Tipo de Botijão:</strong> ${detalhes.tipoBotijao || 'Não informado'}</p>
+                <p><strong>Quantidade:</strong> ${detalhes.quantidade || 'Não informada'}</p>
+                <p><strong>Endereço de Instalação:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.bairro || ''}, ${localizacao.cidade || ''} - ${localizacao.estado || ''}</p>
+                <p><strong>Complemento:</strong> ${detalhes.andar ? `Andar: ${detalhes.andar}` : ''} ${detalhes.temElevador ? `(Elevador: ${detalhes.temElevador ? 'Sim' : 'Não'})` : ''}</p>
+                <p><strong>Retirar botijão vazio:</strong> ${detalhes.retirarVazio ? 'Sim' : 'Não'}</p>
             `;
             break;
 
         case "Fazer feira":
         case "Compras no mercado":
             detalhesHtml = `
-                <p><strong>Itens da Compra:</strong></p>
-                <ul>${(pedidoData.itensCompra || []).map(item => `<li>${item}</li>`).join('')}</ul>
-                <p><strong>Orçamento Máximo:</strong> R$ ${pedidoData.orcamentoMax || 'Não informado'}</p>
-                <p><strong>Endereço de Entrega:</strong> ${pedidoData.endereco || ''}, ${pedidoData.numero || ''} - ${pedidoData.bairro || ''}, ${pedidoData.cidade || ''} - ${pedidoData.estado || ''}</p>
+                <p><strong>Lista de Compra:</strong> ${detalhes.descricaoGeral || 'Não informada'}</p>
+                <p><strong>Orçamento Máximo:</strong> R$ ${pedidoData.orcamentoMaximo || '0,00'}</p>
+                <p><strong>Endereço de Entrega:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.bairro || ''}, ${localizacao.cidade || ''} - ${localizacao.estado || ''}</p>
             `;
             break;
 
         case "Buscar/Levar documentos":
             detalhesHtml = `
-                <p><strong>Urgência:</strong> ${pedidoData.urgencia || 'Não informada'}</p>
-                <p><strong>Requer Assinatura:</strong> ${pedidoData.requerAssinatura || 'Não informado'}</p>
-                <p><strong>Tamanho do Pacote:</strong> ${pedidoData.tamanho || 'Não informado'}</p>
-                <p><strong>Endereço de Retirada:</strong> ${pedidoData.enderecoRetirada || 'Não informado'}</p>
-                <p><strong>Endereço de Entrega:</strong> ${pedidoData.enderecoEntrega || 'Não informado'}</p>
+                <p><strong>Urgência:</strong> ${detalhes.urgencia ? 'Sim' : 'Não'}</p>
+                <p><strong>Requer Assinatura:</strong> ${detalhes.requerAssinatura ? 'Sim' : 'Não'}</p>
+                <p><strong>Tamanho do Pacote:</strong> ${detalhes.tamanho || 'Não informado'}</p>
+                <p><strong>Endereço de Retirada:</strong> ${detalhes.localRetirada?.endereco || 'N/A'} (CEP: ${detalhes.localRetirada?.cep || 'N/A'})</p>
+                <p><strong>Endereço de Entrega:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.cidade || ''}</p>
             `;
             break;
 
         case "Passear com cachorro":
             detalhesHtml = `
-                <p><strong>Nome do Pet:</strong> ${pedidoData.nomePet || 'Não informado'}</p>
-                <p><strong>Porte do Pet:</strong> ${pedidoData.porte || 'Não informado'}</p>
-                <p><strong>Duração Mínima do Passeio:</strong> ${pedidoData.duracaoMinima || 'Não informada'} minutos</p>
-                <p><strong>Endereço de Retirada:</strong> ${pedidoData.enderecoRetirada || 'Não informado'}</p>
+                <p><strong>Nome do Pet:</strong> ${detalhes.nomePet || 'N/A'}</p>
+                <p><strong>Porte do Pet:</strong> ${detalhes.porte || 'N/A'}</p>
+                <p><strong>Duração Mínima:</strong> ${detalhes.duracaoMinima || 'N/A'} minutos</p>
+                <p><strong>Endereço do Passeio:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.cidade || ''}</p>
             `;
             break;
 
         case "Pequenos reparos":
             detalhesHtml = `
-                <p><strong>Categoria do Reparo:</strong> ${pedidoData.categoriaReparo || 'Não especificada'}</p>
-                <p><strong>Descrição do Problema:</strong> ${pedidoData.descricaoReparo || 'Sem descrição'}</p>
-                <p><strong>Fornecimento de Materiais:</strong> ${pedidoData.materiaisFornecidos || 'Não informado'}</p>
-                <p><strong>Endereço do Serviço:</strong> ${pedidoData.enderecoReparo || 'Não informado'}</p>
+                <p><strong>Categoria do Reparo:</strong> ${detalhes.tipoReparo || 'Não especificada'}</p>
+                <p><strong>Descrição do Problema:</strong> ${detalhes.descricaoProblema || 'Sem descrição'}</p>
+                <p><strong>Fornecimento de Materiais:</strong> ${detalhes.materiaisFornecidosPor === 'ajudante' ? 'Fornecedor Compra' : 'Cliente Fornece'}</p>
+                <p><strong>Endereço do Serviço:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.cidade || ''}</p>
             `;
             break;
 
         case "Montagem de móveis":
             detalhesHtml = `
-                <p><strong>Tipo de Móvel:</strong> ${pedidoData.tipoMovel || 'Não informado'}</p>
-                <p><strong>Quantidade:</strong> ${pedidoData.quantidade || 'Não informada'}</p>
-                <p><strong>Marca/Modelo:</strong> ${pedidoData.marcaModelo || 'Não informado'}</p>
-                <p><strong>Possui Manual:</strong> ${pedidoData.temManual || 'Não informado'}</p>
-                <p><strong>Precisa furar parede:</strong> ${pedidoData.precisaFurar || 'Não informado'}</p>
-                <p><strong>Endereço de Montagem:</strong> ${pedidoData.enderecoMontagem || 'Não informado'}</p>
+                <p><strong>Tipo de Móvel:</strong> ${detalhes.tipoMovel || 'Não informado'}</p>
+                <p><strong>Quantidade:</strong> ${detalhes.quantidade || 'Não informada'}</p>
+                <p><strong>Marca/Modelo:</strong> ${detalhes.marcaModelo || 'N/A'}</p>
+                <p><strong>Possui Manual:</strong> ${detalhes.temManual ? 'Sim' : 'Não'}</p>
+                <p><strong>Endereço de Montagem:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.cidade || ''}</p>
             `;
             break;
 
         case "Jardinagem e poda":
             detalhesHtml = `
-                <p><strong>Área Aproximada:</strong> ${pedidoData.area || 'Não informada'} m²</p>
-                <p><strong>Serviço Específico:</strong> ${pedidoData.tipoServicoJardinagem || 'Não especificado'}</p>
-                <p><strong>Destino dos Resíduos:</strong> ${pedidoData.destinoResiduos || 'Não informado'}</p>
-                <p><strong>Endereço do Serviço:</strong> ${pedidoData.enderecoServico || 'Não informado'}</p>
+                <p><strong>Área Aproximada:</strong> ${detalhes.areaM2 || 'N/A'} m²</p>
+                <p><strong>Serviço Específico:</strong> ${detalhes.tipoServico || 'Não especificado'}</p>
+                <p><strong>Destino dos Resíduos:</strong> ${detalhes.destinoResiduos || 'Não informado'}</p>
+                <p><strong>Endereço do Serviço:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.cidade || ''}</p>
             `;
             break;
 
         case "Instalação de TV/suporte":
             detalhesHtml = `
-                <p><strong>Tamanho da TV:</strong> ${pedidoData.polegadasTv || 'Não informado'}"</p>
-                <p><strong>Tipo de Parede:</strong> ${pedidoData.tipoParede || 'Não informado'}</p>
-                <p><strong>Altura de Instalação:</strong> ${pedidoData.alturaTv || 'A definir'}</p>
-                <p><strong>Necessita Passagem de Cabos:</strong> ${pedidoData.passagemCabos || 'Não informado'}</p>
-                <p><strong>Cliente fornecerá o suporte:</strong> ${pedidoData.precisaSuporte === 'sim' ? 'Não' : 'Sim'}</p>
-                <p><strong>Endereço do Serviço:</strong> ${pedidoData.enderecoServico || 'Não informado'}</p>
+                <p><strong>Tamanho da TV:</strong> ${detalhes.polegadasTv || 'N/A'}"</p>
+                <p><strong>Tipo de Parede:</strong> ${detalhes.tipoParede || 'N/A'}</p>
+                <p><strong>Necessita Passagem de Cabos:</strong> ${detalhes.passagemCabos ? 'Sim' : 'Não'}</p>
+                <p><strong>Precisa Suporte:</strong> ${detalhes.precisaSuporte ? 'Sim' : 'Não'}</p>
+                <p><strong>Endereço do Serviço:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.cidade || ''}</p>
             `;
             break;
 
         case "Limpeza residencial":
             detalhesHtml = `
-                <p><strong>Tipo de Limpeza:</strong> ${pedidoData.tipoLimpeza || 'Não especificado'}</p>
-                <p><strong>Metragem do Imóvel:</strong> ${pedidoData.metragem || 'Não informada'} m²</p>
-                <p><strong>Quantidade de Quartos:</strong> ${pedidoData.quartos || 'Não informado'}</p>
-                <p><strong>Quantidade de Banheiros:</strong> ${pedidoData.banheiros || 'Não informado'}</p>
-                <p><strong>Materiais de Limpeza:</strong> ${pedidoData.materiaisDisponiveis || 'Não informado'}</p>
-                <p><strong>Periodicidade:</strong> ${pedidoData.periodicidade || 'Única'}</p>
-                <p><strong>Endereço do Serviço:</strong> ${pedidoData.enderecoServico || 'Não informado'}</p>
+                <p><strong>Tipo de Limpeza:</strong> ${detalhes.tipoLimpeza || 'Não especificado'}</p>
+                <p><strong>Metragem do Imóvel:</strong> ${detalhes.metragem || 'N/A'} m²</p>
+                <p><strong>Quartos:</strong> ${detalhes.quartos || 'N/A'} / <strong>Banheiros:</strong> ${detalhes.banheiros || 'N/A'}</p>
+                <p><strong>Materiais de Limpeza:</strong> ${detalhes.materiaisDisponiveis ? 'Sim' : 'Não'}</p>
+                <p><strong>Periodicidade:</strong> ${detalhes.periodicidade || 'Única'}</p>
+                <p><strong>Endereço do Serviço:</strong> ${localizacao.rua || ''}, ${localizacao.numero || ''} - ${localizacao.cidade || ''}</p>
             `;
             break;
             
         case "Outros":
-             detalhesHtml = `
-                <p><strong>Descrição Detalhada do Serviço:</strong> ${pedidoData.descricaoServico || 'Sem descrição'}</p>
-            `;
+            detalhesHtml = `<p><strong>Descrição Detalhada do Serviço:</strong> ${detalhes.descricaoGeral || 'Sem descrição'}</p>`;
             break;
 
         default:
             detalhesHtml = `<p>Não foi possível carregar os detalhes específicos do pedido.</p>`;
     }
 
-    return detalhesHtml;
+    return `
+        <div class="detalhes-bloco">
+            <h3>Detalhes do Pedido</h3>
+            <hr>
+            ${detalhesHtml}
+        </div>
+    `;
 }
 
     onAuthStateChanged(auth, (user) => {

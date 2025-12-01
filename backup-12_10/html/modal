@@ -1,0 +1,34 @@
+
+<!-- <div class="modal fade" id="modalVerPerfil" tabindex="-1" aria-labelledby="modalVerPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px; border: none;">
+            
+            <div class="modal-body p-4 p-sm-5 text-center" id="modal-perfil-loading">
+                <div class="spinner-border text-primary" role="status" style="color: var(--cor-primaria)!important;">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <p class="mt-2" style="color: var(--cor-texto);">Carregando perfil...</p>
+            </div>
+
+            <div class="modal-body p-4 p-sm-5" id="modal-perfil-content" style="display: none;">
+                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; top: 1rem; right: 1rem;"></button>
+
+                <div class="text-center mb-4">
+                    <div class="modal-profile-pic-container">
+                        <img id="modal-perfil-foto" src="../arquivos/foto-perfil.jpg" alt="Foto do Fornecedor" class="modal-profile-pic-preview">
+                    </div>
+                    <h2 class="h4 fw-bold mt-3 mb-1" id="modal-perfil-nome" style="color: var(--cor-texto);">Carregando...</h2>
+                    <span class="badge bg-success" id="modal-perfil-status"><i class="bi bi-patch-check-fill"></i> Fornecedor Verificado</span>
+                </div>
+
+                <h5 class="h6 fw-bold" style="color: var(--cor-primaria);">Sobre mim</h5>
+                <p class="text-muted" id="modal-perfil-descricao" style="color: var(--cor-texto);"></p>
+
+                <h5 class="h6 fw-bold mt-4" style="color: var(--cor-primaria);">Áreas de Atuação</h5>
+                <div class="d-flex flex-wrap gap-2" id="modal-perfil-areas">
+                    </div>
+
+                <h5 class="h6 fw-bold mt-4" style="color: var(--cor-primaria);">Localização e Raio de Atuação</h5>
+                <div id="modal-perfil-mapa"></div> </div> </div>
+    </div> -->

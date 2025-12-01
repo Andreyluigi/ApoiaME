@@ -21,16 +21,16 @@
   <!-- MENU LATERAL -->
   <aside class="sidebar">
     <div class="logo">
-      <img src="../arquivos/LOGOMINIBRANCA.png" alt="logo" style="width:180px;height:auto;">
+        <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" style="width: 150px; height: auto;">
     </div>
     <nav>
       <ul>
         <li><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
-       <!-- <li><a href="../html/buscar.html"><i data-lucide="search"></i>Buscar</a></li>-->
+       <li><a href="../html/novo-pedido.html"><i data-lucide="plus-circle"></i> Novo Pedido</a></li>
         <li><a href="../html/pedidosC.html"><i data-lucide="package"></i> Meus Pedidos</a></li>
-       <!-- <li><a href="../html/carteiraC.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>-->
-        <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
-        <li><a href="configC.html"><i data-lucide="settings"></i> Configurações</a></li>
+         <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
+      <li><a href="../html/perfil-cliente.html"><i data-lucide="users"></i> Meu Perfil</a></li>
+
       </ul>
     </nav>
 
@@ -76,7 +76,7 @@
             <span class="val" id="pedido-titulo">—</span>
           </div>
           <div class="linha">
-            <span class="lbl">Prestador</span>
+            <span class="lbl">Fornecedor</span>
             <span class="val" id="pedido-prestador">—</span>
           </div>
           <div class="linha pill-line">
@@ -149,7 +149,54 @@
 
     </section>
   </main>
-    
+    <div id="avaliacao-modal" class="modal-avaliacao-backdrop">
+    <div class="modal-avaliacao-content">
+        <header class="modal-header">
+            <h2>Avalie este Serviço</h2>
+            <button id="fechar-modal-avaliacao" class="fechar-modal">
+                <i data-lucide="x"></i>
+            </button>
+        </header>
+        
+        <form id="form-avaliacao">
+            
+            <div class="fornecedor-info-modal">
+                <img id="foto-fornecedor-avaliacao" src="../arquivos/foto-perfil.jpg" alt="Foto do Fornecedor">
+                <p>Como foi sua experiência com <strong id="nome-fornecedor-avaliacao">...</strong>?</p>
+            </div>
+
+            <div class="rating">
+                <input type="radio" id="star-5" name="star-radio" value="5">
+                <label for="star-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+                </label>
+                <input type="radio" id="star-4" name="star-radio" value="4">
+                <label for="star-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+                </label>
+                <input type="radio" id="star-3" name="star-radio" value="3">
+                <label for="star-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+                </label>
+                <input type="radio" id="star-2" name="star-radio" value="2">
+                <label for="star-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+                </label>
+                <input type="radio" id="star-1" name="star-radio" value="1">
+                <label for="star-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path></svg>
+                </label>
+            </div>
+
+            <div class="form-group-avaliacao">
+                <label for="comentario-avaliacao">Deixe um comentário (opcional):</label>
+                <textarea id="comentario-avaliacao" rows="4" placeholder="Descreva o que você achou do serviço..."></textarea>
+            </div>
+
+            <button type="submit" id="enviar-avaliacao-btn" class="btn primario">Enviar Avaliação</button>
+        </form>
+    </div>
+</div>
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>lucide.createIcons();</script>    

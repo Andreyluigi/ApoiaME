@@ -1,0 +1,205 @@
+:root {
+    --cor-primaria: #007B49;
+    --cor-secundaria: #326147;
+    --cor-cinza-medio: #A4A69C;
+    --cor-fundo: #F2F2F2;
+    --cor-card: #FFFFFF;
+    --cor-texto: #333333;
+}
+.content-wrapper {
+    padding-top: 80px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 2rem;
+    width: 100%;
+}
+
+.card-form {
+    background-color: var(--branco); /* Usa a cor do seu styles.css */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* --- ESTILO DO UPLOAD DE FOTO DE PERFIL --- */
+.profile-pic-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+.profile-pic-label {
+    position: relative;
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid var(--cinza-medio); /* Usa a cor do seu styles.css */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+.profile-pic-label:hover {
+    border-color: var(--cor-primaria);
+}
+.profile-pic-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%; 
+    object-fit: cover;
+}
+.profile-pic-edit {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: var(--cor-primaria); /* Usa a cor do seu styles.css */
+    color: var(--branco);
+    border-radius: 50%;
+    padding: 8px;
+    font-size: 1rem;
+    line-height: 1;
+    border: 2px solid var(--branco);
+    transition: all 0.3s ease;
+}
+.profile-pic-label:hover .profile-pic-edit {
+    transform: scale(1.1);
+}
+
+/* --- BOTÕES E FORMULÁRIOS --- */
+
+/* Botão primário (usando a paleta verde clara) */
+.btn-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: var(--branco);
+    font-weight: 600;
+    padding: 12px;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--cor-secundaria);
+    border-color: var(--verde-escuro);
+    color: var(--branco);
+}
+.btn-primary:active {
+    background-color: var(--cor-primaria); /* Um tom ainda mais escuro para o clique */
+    border-color: #2a8023;
+    box-shadow: none; 
+}
+.btn-primary:disabled {
+    background-color: #2a8023; /* Um tom ainda mais escuro para o clique */
+    border-color: #2a8023;
+    box-shadow: none; 
+}
+/* Spinner */
+.btn-primary .spinner-border {
+    color: var(--branco);
+    border-width: .2em;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+}
+
+/* Campos desabilitados */
+input:disabled, input[readonly] {
+    background-color: var(--cinza-claro); /* Usa a cor do seu styles.css */
+    opacity: 0.8;
+}
+
+/* Foco do formulário */
+.form-control:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 0.25rem #007B49; /* Sombra verde clara */
+}
+
+/* Links (se houver algum dentro do card) */
+.card-form a {
+    color: var(--verde);
+}
+.card-form a:hover {
+    color: var(--verde-escuro);
+}
+/* A Label principal que contém tudo */
+.container.custom-checkbox-label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 1rem; /* Ajustado para 1rem (padrão) */
+  user-select: none;
+  padding-left: 35px; /* NOVO: Espaço para o checkbox customizado */
+  margin-bottom: 12px; /* NOVO: Espaçamento entre os itens */
+  font-weight: 500; /* NOVO: Peso da fonte */
+  color: var(--cor-texto); /* NOVO: Cor do texto */
+}
+
+/* Esconde o checkbox original */
+.container.custom-checkbox-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* O checkmark customizado (a caixa) */
+.checkmark {
+  --clr: var(--cor-primaria); /* NOVO: Puxa sua cor verde escura */
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1.5em; /* 24px com base no font-size */
+  width: 1.5em; /* 24px com base no font-size */
+  background-color: var(--cor-cinza-claro); /* Fundo cinza claro */
+  border-radius: 50%; /* Começa como círculo */
+  transition: 300ms;
+}
+
+/* Quando checado, muda o fundo e a forma */
+.container.custom-checkbox-label input:checked ~ .checkmark {
+  background-color: var(--clr);
+  border-radius: .5rem; /* Vira um quadrado arredondado */
+  animation: pulse 500ms ease-in-out;
+}
+
+/* O "v" (check) - escondido por padrão */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Mostra o "v" quando checado */
+.container.custom-checkbox-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Estilo do "v" (check) */
+.container.custom-checkbox-label .checkmark:after {
+  left: 0.55em;  /* Ajustado */
+  top: 0.25em;   /* Ajustado */
+  width: 0.35em; /* Ajustado */
+  height: 0.75em;/* Ajustado */
+  border: solid var(--cor-card); /* Cor branca */
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+/* Animação de pulso (do seu código) */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(26, 51, 37, 0.5); /* Verde escuro com 50% opacidade */
+    rotate: 20deg;
+  }
+  50% {
+    rotate: -20deg;
+  }
+  75% {
+    box-shadow: 0 0 0 10px rgba(26, 51, 37, 0.15); /* Verde escuro com 15% opacidade */
+  }
+  100% {
+    box-shadow: 0 0 0 13px rgba(26, 51, 37, 0); /* Verde escuro com 0% opacidade */
+    rotate: 0;
+  }
+}
+#mapa-perfil {
+  height: 300px;  /* <-- Esta é a linha mais importante! */
+  width: 100%;
+  border-radius: 8px; /* Para ficar com as bordas bonitas */
+  z-index: 0;         /* Importante para o mapa não sobrepor o menu */
+}

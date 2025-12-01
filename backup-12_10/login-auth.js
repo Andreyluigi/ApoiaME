@@ -1,90 +1,120 @@
-// Arquivo: js/login-auth.js (Versão Final Limpa)
+// Arquivo: js/login-auth.js
+// Responsável pela lógica de AUTENTICAÇÃO e verificação de perfil no Login.
+// ESTE ARQUIVO É UM MÓDULO.
 
-import { auth } from "./firebase-init.js";
+// 1. IMPORTAÇÕES
+// Importa os serviços do seu arquivo de inicialização (ex: firebase-init.js)
+import { auth, db } from "./firebase-init.js";
+
+// Importa as funções específicas que vamos usar
 import { 
-    createUserWithEmailAndPassword, 
-    updateProfile, 
     signInWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithPopup 
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-import { getFirestore, setDoc, doc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { 
+    getDoc, 
+    doc,
+    setDoc,
+    serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-const db = getFirestore();
+// 2. FUNÇÕES AUXILIARES
 
-// --- Elementos do DOM ---
-const formCadastro = document.getElementById("form-cadastro");
-const formLogin = document.getElementById("form-login");
-const extraForm = document.getElementById("extra-form");
-const finalForm = document.getElementById("final-form");
-const btnSelectRole = document.getElementById("select-role");
-const btnGoogleCadastro = document.getElementById("btn-google-cadastro");
-const btnGoogleLogin = document.getElementById("btn-google-login");
-const overlay = document.querySelector('.container-overlay');
+/**
+ * Verifica o documento do usuário no Firestore e redireciona.
+ * Se o usuário não tiver um 'tipo' definido (ex: login Google incompleto),
+ * ele é enviado para o cadastro para escolher o perfil.
+ * Se for 'fornecedor' e estiver 'pendente', ele é avisado.
+ */
+async function redirecionarUsuario(uid) {
+    const userRef = doc(db, "usuarios", uid);
+    const userSnap = await getDoc(userRef);
 
+    if (userSnap.exists() && userSnap.data().tipo) {
+        const userData = userSnap.data();
+        const tipo = userData.tipo;
 
-let currentUid = null;
-let tipoSelecionado = null;
+        // REGRA DE NEGÓCIO CRUCIAL: Checagem do status do Fornecedor
+        if (tipo === 'fornecedor' && userData.status === 'pendente') {
+            await auth.signOut(); 
+            window.location.href = "em-analise.html"; // Redireciona para a página de "em análise"
+            return; 
+        }
 
-// --- Funções Auxiliares ---
-function transicaoParaEscolhaDePerfil(uid) {
-    currentUid = uid;
-    
-    // Chama a função global que está no login.js
-    if (window.mostrarPainelSelecao) {
-        window.mostrarPainelSelecao();
+        // ==========================================================
+        // NOVA LÓGICA DE REDIRECIONAMENTO POR TIPO
+        // ==========================================================
+        if (tipo === 'cliente') {
+            window.location.href = "dashboardC.html";
+        } else if (tipo === 'fornecedor') {
+            window.location.href = "dashboardA.html";
+        } else if (tipo === 'admin') {
+            window.location.href = "admin.html";
+        } else {
+            // Fallback
+            alert("Tipo de usuário desconhecido. Indo para o cadastro.");
+            window.location.href = "cadastro.html";
+        }
+        // ==========================================================
+        
     } else {
-        console.error("Função mostrarPainelSelecao não foi encontrada no login.js");
+        // Usuário autenticado mas sem 'tipo' (ex: login Google incompleto)
+        alert("Parece que seu cadastro está incompleto. Vamos finalizá-lo.");
+        window.location.href = "cadastro.html"; 
     }
 }
-function redirecionarParaDashboard(tipo) {
-    const rotas = {
-        cliente: "dashboardC.html",
-        ajudante: "dashboardA.html",
-    };
-    window.location.href = rotas[tipo] || "dashboardC.html";
-}
 
-// --- Lógicas de Cadastro e Login ---
+// 3. LISTENERS DOS FORMULÁRIOS
 
-// 1. CADASTRO COM E-MAIL E SENHA
-formCadastro?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const nome = document.getElementById("nome-cadastro").value.trim();
-    const email = document.getElementById("email-cadastro").value.trim();
-    const senha = document.getElementById("senha-cadastro").value;
-    const senhaRepetir = document.getElementById("senha-repetir").value;
-    const categoria = document.getElementById("categoria-pessoa").value;
-    const cpf = document.getElementById("cpf-cadastro").value.trim();
-    const cnpj = document.getElementById("cnpj-cadastro").value.trim();
+// --- LOGIN COM E-MAIL E SENHA ---
+const formLogin = document.getElementById('form-login');
 
-    if (senha !== senhaRepetir) return alert("As senhas não conferem.");
-    if (!formCadastro.checkValidity()) {
-        formCadastro.classList.add("was-validated");
+formLogin?.addEventListener("submit", async (e) => {
+    // O e.preventDefault() já está no login.js (UI)
+    // A validação de checkValidity() também
+    
+    if (!formLogin.checkValidity()) {
         return;
     }
 
-    try {
-        const cred = await createUserWithEmailAndPassword(auth, email, senha);
-        await updateProfile(cred.user, { displayName: nome });
-        
-        await setDoc(doc(db, "usuarios", cred.user.uid), {
-            nome, email, status: "ativo", criadoEm: serverTimestamp(),
-            tipoPessoa: categoria,
-            cpf: categoria === 'pf' ? cpf : null,
-            cnpj: categoria === 'pj' ? cnpj : null,
-        });
+    const email = document.getElementById("login-email").value.trim();
+    const senha = document.getElementById("login-senha").value.trim();
+    
+    // Adicionar um spinner/loading no botão
+    const btnSubmit = formLogin.querySelector('button[type="submit"]');
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Entrando...';
 
-        transicaoParaEscolhaDePerfil(cred.user.uid);
+    try {
+        const cred = await signInWithEmailAndPassword(auth, email, senha);
+        // Se o login for sucesso, o resto da mágica acontece no redirecionarUsuario
+        await redirecionarUsuario(cred.user.uid);
     } catch (err) {
-        console.error("Erro no cadastro por e-mail:", err);
-        alert("Erro no cadastro: " + err.message);
+        console.error("Erro no login por e-mail:", err.code);
+        
+        let msgErro = "Ocorreu um erro. Tente novamente.";
+        // Códigos de erro comuns do Firebase Auth
+        if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-email') {
+            msgErro = "E-mail ou senha incorretos.";
+        }
+        
+        alert(msgErro);
+        
+        // Restaura o botão
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = 'Entrar';
     }
 });
 
-// 2. LOGIN/CADASTRO COM GOOGLE
-async function loginComGoogle() {
+
+// --- LOGIN/CADASTRO COM GOOGLE ---
+// (Usamos querySelector para o caso de você ter o mesmo botão em cadastro.html)
+const btnGoogleLogin = document.querySelector('.btn-google'); 
+
+btnGoogleLogin?.addEventListener('click', async () => {
     const provider = new GoogleAuthProvider();
+    
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
@@ -92,85 +122,23 @@ async function loginComGoogle() {
         const userSnap = await getDoc(userRef);
 
         if (!userSnap.exists() || !userSnap.data().tipo) {
+            // Se é a primeira vez ou não tem 'tipo', salva os dados básicos
+            // (fotoFile é opcional, então salvamos a do Google)
             await setDoc(userRef, {
                 nome: user.displayName,
                 email: user.email,
-                fotoUrl: user.photoURL,
+                fotoURL: user.photoURL,
                 criadoEm: serverTimestamp()
             }, { merge: true });
             
-            transicaoParaEscolhaDePerfil(user.uid);
+            // Envia para o cadastro para escolher o perfil (Cliente/Fornecedor)
+            window.location.href = "cadastro.html";
         } else {
-            redirecionarParaDashboard(userSnap.data().tipo);
+            // Se já existe e tem 'tipo', tenta o redirecionamento padrão
+            await redirecionarUsuario(user.uid);
         }
     } catch (error) {
         console.error("Erro no login com Google:", error);
         alert("Ocorreu um erro ao tentar fazer login com o Google.");
-    }
-}
-
-btnGoogleCadastro?.addEventListener('click', loginComGoogle);
-btnGoogleLogin?.addEventListener('click', loginComGoogle);
-
-// 3. LOGIN COM E-MAIL E SENHA
-formLogin?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email-login").value.trim();
-    const senha = document.getElementById("senha-login").value.trim();
-
-    if (!formLogin.checkValidity()) { 
-        formLogin.classList.add("was-validated");
-        return;
-    }
-    try {
-        const cred = await signInWithEmailAndPassword(auth, email, senha);
-        const userDoc = await getDoc(doc(db, "usuarios", cred.user.uid));
-        
-        if (userDoc.exists() && userDoc.data().tipo) {
-            redirecionarParaDashboard(userDoc.data().tipo);
-        } else {
-            transicaoParaEscolhaDePerfil(cred.user.uid);
-        }
-    } catch (err) {
-        console.error("Erro no login por e-mail:", err);
-        alert("E-mail ou senha incorretos.");
-    }
-});
-
-// --- LÓGICA DA TELA DE ESCOLHA DE PERFIL ---
-
-document.getElementById("categoria-pessoa")?.addEventListener("change", () => {
-    const categoria = document.getElementById("categoria-pessoa").value;
-    const cpfGroup = document.getElementById("cpf-group");
-    const cnpjGroup = document.getElementById("cnpj-group");
-
-    cpfGroup.style.display = (categoria === "pf") ? "block" : "none";
-    cnpjGroup.style.display = (categoria === "pj") ? "block" : "none";
-});
-
-document.querySelectorAll(".card-option").forEach(card => {
-    card.addEventListener("click", () => {
-        document.querySelectorAll(".card-option").forEach(c => c.classList.remove("selected"));
-        card.classList.add("selected");
-        tipoSelecionado = card.dataset.role;
-        const btnSelectRole = document.getElementById("select-role");
-        if (btnSelectRole) btnSelectRole.disabled = false;
-    });
-});
-
-document.getElementById("select-role")?.addEventListener("click", async () => {
-    if (!currentUid || !tipoSelecionado) {
-        return alert("Por favor, selecione um tipo de conta.");
-    }
-    try {
-        await setDoc(doc(db, "usuarios", currentUid), { tipo: tipoSelecionado }, { merge: true });
-        extraForm.style.display = "none";
-        finalForm.style.display = "block";
-        setTimeout(() => {
-            redirecionarParaDashboard(tipoSelecionado);
-        }, 1200);
-    } catch (err) {
-        console.error("Erro ao salvar o tipo de conta:", err);
-        alert("Erro ao finalizar o cadastro: " + err.message);
     }
 });

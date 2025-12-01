@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Meu Perfil (Fornecedor) - Apoia Me</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="../css/styles.css"> 
+    <link rel="stylesheet" href="../css/chat.css">
+    <link rel="stylesheet" href="../css/perfil.css"> 
+
+    <link rel="icon" type="image/x-icon" href="../arquivos/favicon.ico" />
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" style="width: 150px; height: auto;">
+        </div>
+        <nav>
+            <ul>
+        <li><a href="../html/dashboardA.html"><i data-lucide="home"></i> Início</a></li>
+        <li><a href="meuservicosA.html"><i data-lucide="package"></i> Meus Serviços</a></li>
+        <li><a href="../html/pedidosA.html"><i data-lucide="check-circle"></i>Meus Pedidos</a></li>
+        <li><a href="../html/carteiraA.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
+        <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
+        <li  class="active"><a href="../html/perfil-fornecedor.html"><i data-lucide="users"></i> Meu Perfil</a></li>
+            </ul>
+        </nav>
+        <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+        
+        <div id="logout-modal" class="modal">
+            <div class="modal-content">
+                <p>Tem certeza que deseja sair?</p>
+                <button id="confirm-yes">Sim</button>
+                <button id="confirm-no">Cancelar</button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="search-container"></div>
+            <div class="topbar-right">
+                <div class="profile-container">
+                    <span id="user-greeting">Olá, <span id="user-name"></span></span>
+                </div>
+            </div>
+        </header>
+
+        <section class="content-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    
+                    <div class="card-form p-3 mb-4 text-center" id="card-status">
+                        <h5 class="mb-0">Status da Conta: <span id="status-fornecedor" class="badge bg-warning text-dark">Carregando...</span></h5>
+                        <p id="status-help-text" class="small text-muted mb-0" style="display: none;">Seu cadastro está em análise. Você não pode aceitar tarefas até ser aprovado.</p>
+                    </div>
+
+                    <div class="card-form p-4 p-sm-5">
+                        <h1 class="h3 mb-4 fw-bold text-center">Meu Perfil de Fornecedor</h1>
+                        
+                        <form id="form-perfil-fornecedor" class="needs-validation" novalidate>
+                            
+                            <p class="text-muted small text-center">Esta foto será exibida para os Clientes.</p>
+                            <div class="profile-pic-container mb-3">
+                                <label for="fornecedor-foto-input" class="profile-pic-label">
+                                    <img id="fornecedor-foto-preview" src="../arquivos/foto-perfil.jpg" alt="Avatar" class="profile-pic-preview">
+                                    <span class="profile-pic-edit"><i class="bi bi-camera-fill"></i></span>
+                                </label>
+                                <input type="file" id="fornecedor-foto-input" accept="image/png, image/jpeg" style="display:none;">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="fornecedor-descricao" class="form-label">Descrição / Sobre mim (Editável)</label>
+                                <textarea class="form-control" id="fornecedor-descricao" rows="4" placeholder="Ex: Sou pontual, cuidadoso(a) e conheço bem o bairro..."></textarea>
+                            </div>
+                            
+                            <h4 class="h5 mt-4 pt-3 border-top">Meus Dados Pessoais (Não Editável)</h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fornecedor-nome" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="fornecedor-nome" readonly disabled>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="fornecedor-email" class="form-label">E-mail</label>
+                                    <input type="email" class="form-control" id="fornecedor-email" readonly disabled>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="fornecedor-cpf" class="form-label">CPF</label>
+                                    <input type="text" class="form-control" id="fornecedor-cpf" readonly disabled>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="fornecedor-telefone" class="form-label">Telefone</label>
+                                    <input type="tel" class="form-control" id="fornecedor-telefone" readonly disabled>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <span class="badge bg-success"><i class="bi bi-patch-check-fill"></i> Verificação de Segurança Concluída</span>
+                            </div>
+
+                            <h4 class="h5 mt-4 pt-3 border-top">Meu Endereço de Atuação (Editável)</h4>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="fornecedor-cep" class="form-label">CEP</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="fornecedor-cep">
+                                        <span class="input-group-text" id="cep-spinner" style="display: none;">
+                                            <span class="spinner-border spinner-border-sm"></span>
+                                        </span>
+                                    </div>
+                                    <div id="cep-error" class="text-danger small mt-1" style="display:none;">CEP não encontrado.</div>
+                                </div>
+                                <div class="col-md-8 mb-3"><label for="fornecedor-rua" class="form-label">Rua</label><input type="text" class="form-control" id="fornecedor-rua" readonly></div>
+                                <div class="col-md-4 mb-3"><label for="fornecedor-numero" class="form-label">Número</label><input type="text" class="form-control" id="fornecedor-numero"></div>
+                                <div class="col-md-8 mb-3"><label for="fornecedor-bairro" class="form-label">Bairro</label><input type="text" class="form-control" id="fornecedor-bairro" readonly></div>
+                                
+                                <div class="col-md-6 mb-3"><label for="fornecedor-cidade" class="form-label">Cidade</label><input type="text" class="form-control" id="fornecedor-cidade" readonly></div>
+                                <div class="col-md-6 mb-3"><label for="fornecedor-estado" class="form-label">Estado</label><input type="text" class="form-control" id="fornecedor-estado" readonly></div>
+
+                                <input type="hidden" id="fornecedor-lat">
+                                <input type="hidden" id="fornecedor-lng">
+                            </div>
+
+                            <h4 class="h5 mt-4 pt-3 border-top">Meu Raio de Atuação (Editável)</h4>
+                            <div class="row align-items-center">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fornecedor-raio" class="form-label">Distância (em Km)</label>
+                                    <select id="fornecedor-raio" class="form-select">
+                                        <option value="1">1 km</option>
+                                        <option value="3">3 km</option>
+                                        <option value="5" selected>5 km</option>
+                                        <option value="10">10 km</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div id="mapa-perfil"></div> 
+                                </div>
+                            </div>
+
+                            <h4 class="h5 mt-4 pt-3 border-top">Minhas Áreas de Atuação (Editável)</h4>
+                            <div id="categorias-checkboxes" class="row gx-3" data-min-selecionado="1">
+                                </div>
+                            <div id="categorias-error" class="text-danger small mt-1" style="display:none;">Selecione pelo menos uma área.</div>
+                            
+                            <button type="submit" id="btn-salvar-perfil" class="btn btn-primary w-100 btn-lg mt-4" disabled>
+                                Salvar Alterações
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card-form p-4 p-sm-5 mt-4">
+                        <h2 class="h4 mb-4 fw-bold text-center">Alterar Senha</h2>
+                        <form id="form-mudar-senha" novalidate>
+                            <div class="mb-3">
+                                <label for="senha-antiga" class="form-label">Senha Antiga</label>
+                                <input type="password" class="form-control" id="senha-antiga" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="senha-nova" class="form-label">Nova Senha (mín. 6 caracteres)</label>
+                                <input type="password" class="form-control" id="senha-nova" required minlength="6">
+                            </div>
+                            <div class="mb-3">
+                                <label for="senha-nova-confirmar" class="form-label">Confirmar Nova Senha</label>
+                                <input type="password" class="form-control" id="senha-nova-confirmar" required>
+                                <div class="invalid-feedback" id="feedback-confirmacao">As senhas não conferem.</div>
+                            </div>
+                            <button type="submit" id="btn-salvar-senha" class="btn btn-primary w-100 btn-lg mt-3" disabled>
+                                Salvar Nova Senha
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+</div>  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        lucide.createIcons(); // Para os ícones do menu
+    </script>
+    
+    
+
+    <script type="module" src="../perfil-fornecedor.firebase.js"></script>
+    <script type="module" src="../js/perfil-fornecedor.js"></script>
+    <script type="module" src="../perfil-fornecedor-mapa.js"></script>
+    <script type="module" src="../firebase-init.js"></script>
+    <script type="module" src="/script-module.js"></script>
+    <script type="module" src="/chat.module.js"></script>
+    <script type="module" src="/chat-init.js"></script>
+    </body>
+</html>

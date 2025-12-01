@@ -1,153 +1,255 @@
+/* ================================================= */
+/* CSS: PÁGINA DE PEDIDOS DO CLIENTE (pedidosC.html) */
+/* ================================================= */
+
+/* 1. Variáveis de Cor (Guia de Marca Oficial - Repetidas aqui para clareza) */
+:root {
+    --cor-primaria: #017643;        /* Verde Principal */
+    --cor-secundaria: #005f36;      /* Verde Escuro (Hover) */
+    --cor-preto: #000000;           /* Preto */
+    --cor-acento: #e3fae3;          /* Verde Claro (Fundo do Header/Hover) */
+    
+    --cor-fundo: #F7F7F7;           /* Fundo da Página */
+    --cor-card: #FFFFFF;            /* Fundo do Card */
+    
+    --cor-texto-principal: #000000; /* Texto Principal */
+    --cor-texto-secundario: #333333; /* Texto Secundário */
+    --cor-cinza-claro: #eceeef;      /* Bordas e divisórias */
+    --cor-borda: #ddd;               /* Borda padrão */
+    
+    /* Status Colors */
+    --status-alerta: #ffc107;         /* Amarelo (Pendente, Revisão) */
+    --status-perigo: #dc3545;         /* Vermelho (Cancelado) */
+    --status-sucesso: #28a745;        /* Verde Esceno (Finalizado) */
+}
+
+/* 2. LAYOUT E CONTEÚDO PRINCIPAL */
+body {
+    background-color: var(--cor-fundo); 
+    color: var(--cor-texto-secundario);
+}
+
+.main-content {
+    /* Garante que o conteúdo tenha espaço horizontal */
+    padding-bottom: 30px; 
+}
+
+/* --- Container Principal do Pedido Ativo --- */
+#pedido-ativo-container {
+    max-width: 800px;
+    margin: 40px auto 20px auto; 
+    padding: 0 15px; /* Padding nas laterais para mobile */
+}
 
 .card-pedido-ativo {
-    background: #fff;
-    border: 2px solid var(--verde); 
+    background: var(--cor-card);
+    border: 1px solid var(--cor-cinza-claro); 
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); 
+    overflow: hidden;
+}
+
+/* --- Cabeçalho do Card ATIVO --- */
+.card-pedido-ativo .card-header {
+    background-color: var(--cor-acento); 
+    padding: 1.2rem 1.5rem; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cor-borda);
+    text-align: left; /* GARANTE ALINHAMENTO À ESQUERDA */
 }
 
 .card-pedido-ativo .card-header h3 {
-    font-size: 24px;
+    font-size: 1.6rem; 
     font-weight: 700;
-    color: var(--verde-escuro);
+    color: var(--cor-primaria); /* Verde de Destaque */
+    margin: 0;
+}
+
+/* --- Corpo do Card ATIVO --- */
+.card-pedido-ativo .card-body {
+    padding: 1.5rem; 
+    text-align: left; /* GARANTE ALINHAMENTO À ESQUERDA */
 }
 
 .card-pedido-ativo .card-body p {
-    margin: 8px 0;
+    margin: 10px 0;
+    line-height: 1.5;
+    font-size: 1rem;
 }
 
+.card-pedido-ativo .card-body p strong {
+    color: var(--cor-texto-principal);
+}
 
+/* --- Badge de Categoria (dentro do header) --- */
+.card-pedido-ativo .badge.tipo {
+    background-color: var(--cor-primaria);
+    color: white;
+    font-size: 0.8rem;
+    padding: 0.3em 0.7em;
+    border-radius: 20px; 
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* --- Botão Principal (Abaixo do corpo) --- */
 .btn-principal-cliente {
-    background-color: var(--verde);
-    color: #fff;
+    display: block;
+    width: calc(100% - 3rem); /* Ocupa 100% da área, subtraindo padding */
+    margin: 0 1.5rem 1.5rem 1.5rem; 
+    padding: 15px 20px;
+    background-color: var(--cor-primaria);
+    color: white;
     border: none;
-    padding: 12px 20px;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: 600;
-    transition: background-color 0.3s;
-    margin-top: 15px;
-    width: 100%;
+    font-size: 1.1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
 }
 
 .btn-principal-cliente:hover {
-    background-color: #339c29;
+    background-color: var(--cor-secundaria);
 }
 
-.btn-chat-cliente {
-    background-color: var(--azul);
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    margin-top: 10px;
-    width: auto;
-}
-
-.barra-progresso-wrapper {
+/* --- SEÇÃO DE HISTÓRICO --- */
+.historico {
+    margin-top: 40px; 
     max-width: 800px; 
     margin-left: auto;
     margin-right: auto;
-    margin-top: 20px;
+    padding: 0 15px; 
+    text-align: left;
 }
 
-
-
-.pending-task {
-    text-align: center;
-    padding: 30px;
-}
-.historico{
-    margin-top: 28px;
-    max-width: 800px; /* Limita a largura para consistência com o card ativo */
-    margin-left: 24px;
-    margin-right: auto;
-}
-.historico h2{
-    margin: 0 0 12px 0; 
-    font-size: 22px; /* Aumenta a fonte do título */
-    color: var(--verde-escuro); /* Usa a cor do seu design */
-}
-.lista-historico{
-    display:flex; 
-    flex-direction:column; 
-    gap: 15px; /* Aumenta o espaçamento entre itens */
+.historico h2 {
+    margin: 0 0 18px 0; 
+    font-size: 1.8rem; 
+    color: var(--cor-primaria); 
+    font-weight: 700;
 }
 
-/* Item Individual do Histórico */
-.item-historico{
-    display:flex; 
-    align-items:center; 
-    justify-content:space-between; 
-    gap:12px;
+/* --- Item Individual do Histórico --- */
+.lista-historico {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item-historico {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     
-    background: var(--branco); 
-    border: 1px solid var(--cinza-3); 
-    border-radius: 10px; /* Borda levemente menor que o card ativo */
-    padding: 15px 20px; /* Mais preenchimento interno */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Sombra suave */
-    transition: transform 0.2s, box-shadow 0.2s;
+    background: var(--cor-card);
+    border: 1px solid var(--cor-borda); 
+    border-radius: 10px; 
+    padding: 15px 20px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .item-historico:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Efeito ao passar o mouse */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
 }
 
-.item-historico .bloco{
-    display:flex; 
-    flex-direction:column;
+.item-historico .bloco {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }
 
-.titulo-item{
+.titulo-item {
     font-weight: 600;
-    font-size: 16px; /* Fonte maior para o título */
-    color: #333;
+    font-size: 1.1rem; 
+    color: var(--cor-texto-principal);
 }
 
-.sub{
-    font-size: 13px; 
-    color: var(--cinza-2);
+.sub {
+    font-size: 0.85rem; 
+    color: var(--cor-texto-secundario);
+    margin-top: 4px;
 }
 
-.valor{
+.valor {
     font-weight: 700;
-    font-size: 18px; /* Destaque para o valor */
-    color: var(--verde-escuro);
+    font-size: 1.25rem; 
+    color: var(--cor-primaria); 
 }
 
-/* Status Tag (mantido seu estilo de sucesso) */
-.status.tag{
-    padding:4px 10px; 
-    border-radius:999px; 
-    font-size:12px; 
-    border:1px solid var(--cinza-3);
+/* --- Tags de Status --- */
+.status.tag {
+    padding: 5px 12px; 
+    border-radius: 20px;
+    font-size: 0.75rem; 
+    font-weight: 600;
     text-transform: uppercase;
-}
-.tag.sucesso{
-    background:rgba(61,190,52,.12); 
-    border-color:rgba(61,190,52,.35); 
-    color:#1a6f15;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
+    display: inline-flex;
+    align-self: flex-end; 
 }
 
-/* Tratamento para telas menores */
-@media (max-width: 600px) {
+.tag.alerta { 
+    background: var(--status-alerta); 
+    border: 1px solid var(--status-alerta);
+    color: #8b6801; 
+}
+
+.tag.ativo { /* Mapeado para status 'aceito', 'em execução', etc. */
+    background: var(--cor-acento); 
+    border: 1px solid var(--cor-primaria);
+    color: var(--cor-primaria);
+}
+
+.tag.sucesso {
+    background: var(--status-sucesso); 
+    border: 1px solid var(--status-sucesso);
+    color: white; 
+}
+
+.tag.perigo { 
+    background: var(--status-perigo); 
+    border: 1px solid var(--status-perigo);
+    color: white; 
+}
+
+
+/* --- 4. RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    #pedido-ativo-container, .historico {
+        padding: 0 15px;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: none;
+    }
+    .card-pedido-ativo .card-body {
+        padding: 1rem;
+    }
+    .btn-principal-cliente {
+        width: calc(100% - 2rem); /* Ajusta a largura do botão com o padding de 1rem do corpo */
+        margin: 0 1rem 1rem 1rem;
+    }
     .item-historico {
         flex-direction: column;
         align-items: flex-start;
     }
     .item-historico .bloco:last-child {
         margin-top: 10px;
-        align-self: flex-end; /* Alinha valor e status à direita/fim */
+        align-self: flex-end; 
         align-items: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-pedido-ativo .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
 }

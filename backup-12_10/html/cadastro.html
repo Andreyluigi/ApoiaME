@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro - Apoia Me</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="../css/cadastro.css" />
+    <link rel="icon" type="image/x-icon" href="../arquivos/favicon.ico" />
+</head>
+<body>
+
+    <main class="container mt-4 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                
+                <div class="text-center mb-4">
+                    <a href="index.html">
+                        <img src="../arquivos/Logo_nova.png" alt="Logo Apoia Me" class="logo-cadastro">
+                    </a>
+                </div>
+
+                <section id="etapa-selecao-perfil" class="etapa">
+                    <div class="text-center p-4 card-form">
+                        <h1 class="h3 mb-3 fw-bold">Primeiro, quem é você?</h1>
+                        <p class="text-muted mb-4">Escolha seu perfil para começar.</p>
+                        
+                        <div class="row g-3 justify-content-center">
+                            <div class="col-md-6">
+                                <div class="card-option h-100" id="btn-escolhe-cliente" role="button" tabindex="0" aria-label="Cadastrar como Cliente">
+                                    <div class="card-body">
+                                        <img src="../arquivos/cliente.png" alt="Ícone de Cliente" class="card-option-icon">
+                                        <h3 class="h5 mt-3">Sou Cliente</h3>
+                                        <span class="text-muted d-block">(Quero solicitar tarefas e ajuda)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-option h-100" id="btn-escolhe-fornecedor" role="button" tabindex="0" aria-label="Cadastrar como Fornecedor">
+                                    <div class="card-body">
+                                        <img src="../arquivos/hero.png" alt="Ícone de Fornecedor" class="card-option-icon">
+                                        <h3 class="h5 mt-3">Sou Fornecedor</h3>
+                                        <span class="text-muted d-block">(Quero realizar tarefas e ganhar renda)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-4">Já tem uma conta? <a href="login.html">Faça Login</a></p>
+                    </div>
+                </section>
+
+                <section id="etapa-form-cliente" class="etapa" style="display:none;">
+                    <div class="p-4 card-form">
+                        <h1 class="h3 mb-3 fw-bold text-center">Cadastro de Cliente</h1>
+                        <form id="form-cadastro-cliente" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label for="cliente-nome" class="form-label">Nome completo</label>
+                                <input type="text" class="form-control" id="cliente-nome" required>
+                                <div class="invalid-feedback">Por favor, informe seu nome.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cliente-email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="cliente-email" required>
+                                <div class="invalid-feedback">Por favor, informe um e-mail válido.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="cliente-senha" class="form-label">Senha (mínimo 6 caracteres)</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="cliente-senha" minlength="6" required>
+                                    <button type="button" class="btn btn-outline-secondary toggle-senha" data-target="cliente-senha" aria-label="Mostrar senha">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <div class="invalid-feedback w-100">A senha deve ter no mínimo 6 caracteres.</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cliente-senha-confirma" class="form-label">Confirmar senha</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="cliente-senha-confirma" minlength="6" required>
+                                    <button type="button" class="btn btn-outline-secondary toggle-senha" data-target="cliente-senha-confirma" aria-label="Mostrar senha">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <div class="invalid-feedback w-100">As senhas precisam ser iguais.</div>
+                                </div>
+                            </div>
+                            <h4 class="h5 mt-2">Foto de Perfil (Opcional)</h4>
+                        <div class="d-flex align-items-center mb-3">
+                            <label for="cliente-foto-input" class="profile-pic-label">
+                                <img id="cliente-foto-preview" src="../arquivos/foto-perfil.jpg" alt="Avatar" class="profile-pic-preview">
+                                <span class="profile-pic-edit">Alterar</span>
+                            </label>
+                            <input type="file" id="cliente-foto-input" accept="image/png, image/jpeg" style="display:none;">
+                            <div class="ms-3">
+                                <label for="cliente-foto-input" class="btn btn-sm btn-outline-primary">Carregar Imagem</label>
+                                <p class="small text-muted mb-0 mt-1">PNG ou JPG (max 2MB).</p>
+                            </div>
+                        </div>
+                            <button type="submit" class="btn btn-primary w-100 btn-lg mt-3">Cadastrar e Entrar</button>
+                            <button type="button" class="btn btn-link w-100 mt-2 btn-voltar" data-target="selecao">Voltar</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="etapa-form-fornecedor" class="etapa" style="display:none;">
+                    <div class="p-4 card-form">
+                        <h1 class="h3 mb-3 fw-bold text-center">Cadastro de Fornecedor</h1>
+                        <p class="text-center text-muted small">Precisamos de detalhes para garantir a segurança de todos.</p>
+                        
+                        <form id="form-cadastro-fornecedor" class="needs-validation" novalidate>
+                            
+                            <h4 class="h5 mt-4 pt-2 border-top">Foto de Perfil</h4>
+                            <p class="text-muted small">Esta foto aparecerá para os clientes. Escolha uma imagem clara do seu rosto.</p>
+                            <div class="profile-pic-container mb-3">
+                                <label for="fornecedor-foto-input" class="profile-pic-label">
+                                    <img id="fornecedor-foto-preview" src="../arquivos/foto-perfil.jpg" alt="Avatar" class="profile-pic-preview">
+                                    <span class="profile-pic-edit">
+                                        <i class="bi bi-camera-fill"></i>
+                                    </span>
+                                </label>
+                                <input type="file" id="fornecedor-foto-input" accept="image/png, image/jpeg" required style="display:none;">
+                            </div>
+                            <div class="text-center">
+                                <div class="invalid-feedback d-block" id="foto-fornecedor-feedback" style="margin-top: -0.5rem; margin-bottom: 1rem;"></div>
+                            </div>
+
+                            
+                            <h4 class="h5 mt-4 pt-2 border-top">Dados de Acesso</h4>
+                            <div class="row">
+                                <div class="col-md-12 mb-3"><label for="fornecedor-nome" class="form-label">Nome completo</label><input type="text" class="form-control" id="fornecedor-nome" required><div class="invalid-feedback">Por favor, informe seu nome.</div></div>
+                                <div class="col-md-12 mb-3"><label for="fornecedor-email" class="form-label">E-mail</label><input type="email" class="form-control" id="fornecedor-email" required><div class="invalid-feedback">Por favor, informe um e-mail válido.</div></div>
+                                <div class="col-md-6 mb-3"><label for="fornecedor-senha" class="form-label">Senha (mínimo 6 caracteres)</label><div class="input-group"><input type="password" class="form-control" id="fornecedor-senha" minlength="6" required><button type="button" class="btn btn-outline-secondary toggle-senha" data-target="fornecedor-senha"><i class="bi bi-eye"></i></button><div class="invalid-feedback w-100">A senha deve ter no mínimo 6 caracteres.</div></div></div>
+                                <div class="col-md-6 mb-3"><label for="fornecedor-senha-confirma" class="form-label">Confirmar Senha</label><div class="input-group"><input type="password" class="form-control" id="fornecedor-senha-confirma" minlength="6" required><button type="button" class="btn btn-outline-secondary toggle-senha" data-target="fornecedor-senha-confirma"><i class="bi bi-eye"></i></button><div class="invalid-feedback w-100">As senhas precisam ser iguais.</div></div></div>
+                            </div>
+
+                            <h4 class="h5 mt-4 pt-2 border-top">Dados Pessoais</h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3"><label for="fornecedor-cpf" class="form-label">CPF</label><input type="text" class="form-control" id="fornecedor-cpf" required><div class="invalid-feedback">Por favor, informe seu CPF.</div></div>
+                                <div class="col-md-6 mb-3"><label for="fornecedor-data-nasc" class="form-label">Data de Nascimento</label><input type="date" class="form-control" id="fornecedor-data-nasc" required><div class="invalid-feedback">Informe sua data de nascimento.</div></div>
+                                <div class="col-md-6 mb-3"><label for="fornecedor-telefone" class="form-label">Celular (WhatsApp)</label><input type="tel" class="form-control" id="fornecedor-telefone" required><div class="invalid-feedback">Informe seu celular.</div></div>
+                            </div>
+
+                            <h4 class="h5 mt-4 pt-2 border-top">Endereço de Atuação</h4>
+                            <p class="text-muted small">Este é o ponto central de onde você irá atuar.</p>
+                            <div class="row">
+                                <div class="col-md-4 mb-3"><label for="fornecedor-cep" class="form-label">CEP</label><input type="text" class="form-control" id="fornecedor-cep" required><div class="invalid-feedback">Informe um CEP.</div><div id="cep-error" class="text-danger small mt-1" style="display:none;">CEP não encontrado.</div></div>
+                                <div class="col-md-8 mb-3"><label for="fornecedor-rua" class="form-label">Rua / Logradouro</label><input type="text" class="form-control" id="fornecedor-rua" readonly required><div class="invalid-feedback">Informe sua rua.</div></div>
+                                <div class="col-md-4 mb-3"><label for="fornecedor-numero" class="form-label">Número</label><input type="text" class="form-control" id="fornecedor-numero" required><div class="invalid-feedback">Informe o número.</div></div>
+                                <div class="col-md-8 mb-3"><label for="fornecedor-bairro" class="form-label">Bairro</label><input type="text" class="form-control" id="fornecedor-bairro" readonly required><div class="invalid-feedback">Informe seu bairro.</div></div>
+                                <div class="col-md-8 mb-3"><label for="fornecedor-cidade" class="form-label">Cidade</label><input type="text" class="form-control" id="fornecedor-cidade" readonly required><div class="invalid-feedback">Informe sua cidade.</div></div>
+                                <div class="col-md-4 mb-3"><label for="fornecedor-estado" class="form-label">Estado (UF)</label><input type="text" class="form-control" id="fornecedor-estado" readonly required><div class="invalid-feedback">Informe seu estado.</div></div>
+                                <div class="col-md-12 mb-3"><label for="fornecedor-raio" class="form-label">Raio de Atuação (em Km)</label><select id="fornecedor-raio" class="form-select" required><option value="" selected disabled>Selecione o alcance</option><option value="1">1 km (apenas meu bairro)</option><option value="3">3 km</option><option value="5">5 km</option><option value="10">10 km</option></select><div class="invalid-feedback">Informe seu raio de atuação.</div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label class="form-label">Visualização do Raio de Atuação</label>
+                                    <div id="mapa-cadastro"></div> <input type="hidden" id="fornecedor-lat" name="fornecedor-lat" />
+                                    <input type="hidden" id="fornecedor-lng" name="fornecedor-lng" />
+                                </div>
+                            </div>
+<h4 class="h5 mt-4 pt-2 border-top">Áreas de Atuação</h4>
+                            <p class="text-muted small">Selecione uma ou mais categorias em que você pode ajudar. (Pelo menos uma é obrigatória).</p>
+                            
+                            <div id="categorias-checkboxes" class="row gx-3" data-min-selecionado="1">
+                                
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-gas">Troca de gás
+                                        <input type="checkbox" value="Troca de gás" id="cat-gas">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-feira">Fazer feira
+                                        <input type="checkbox" value="Fazer feira" id="cat-feira">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-dog">Passear com cachorro
+                                        <input type="checkbox" value="Passear com cachorro" id="cat-dog">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-reparos">Pequenos reparos
+                                        <input type="checkbox" value="Pequenos reparos" id="cat-reparos">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-mercado">Compras no mercado
+                                        <input type="checkbox" value="Compras no mercado" id="cat-mercado">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-documentos">Buscar/Levar documentos
+                                        <input type="checkbox" value="Buscar/Levar documentos" id="cat-documentos">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-moveis">Montagem de móveis
+                                        <input type="checkbox" value="Montagem de móveis" id="cat-moveis">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-jardinagem">Jardinagem e poda
+                                        <input type="checkbox" value="Jardinagem e poda" id="cat-jardinagem">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-tv">Instalação de TV/suporte
+                                        <input type="checkbox" value="Instalação de TV/suporte" id="cat-tv">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-limpeza">Limpeza residencial
+                                        <input type="checkbox" value="Limpeza residencial" id="cat-limpeza">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="container custom-checkbox-label" for="cat-outros">Outros
+                                        <input type="checkbox" value="Outros" id="cat-outros">
+                                        <div class="checkmark"></div>
+                                    </label>
+                                </div>
+                                </div>
+                            <div id="categorias-error" class="text-danger small mt-1" style="display:none;">Selecione pelo menos uma área de atuação.</div>
+                            <h4 class="h5 mt-4 pt-2 border-top">Documentos de Segurança</h4>
+                            <div class="mb-3"><label for="doc-frente" class="form-label">Foto da Frente do RG ou CNH</label><input class="form-control" type="file" id="doc-frente" accept="image/png, image/jpeg" required><div class="invalid-feedback">Por favor, anexe a frente do seu documento.</div></div>
+                            <div class="mb-3"><label for="doc-verso" class="form-label">Foto do Verso do RG ou CNH</label><input class="form-control" type="file" id="doc-verso" accept="image/png, image/jpeg" required><div class="invalid-feedback">Por favor, anexe o verso do seu documento.</div></div>
+                            <div class="mb-3"><label for="doc-selfie" class="form-label">Selfie segurando o Documento</label><input class="form-control" type="file" id="doc-selfie" accept="image/png, image/jpeg" required><div class="invalid-feedback">Por favor, anexe sua selfie com o documento.</div></div>
+                            <div class="mb-3"><label for="doc-antecedentes" class="form-label">Certidão de Antecedentes Criminais (PDF ou Imagem)</label><input class="form-control" type="file" id="doc-antecedentes" accept="image/png, image/jpeg, application/pdf" required><div class="invalid-feedback">Por favor, anexe sua certidão de antecedentes.</div></div>
+                            
+                            <div class="form-check mt-4 mb-3">
+                                <input class="form-check-input" type="checkbox" value="" id="termos-aceite" required>
+                                <label class="form-check-label" for="termos-aceite">
+                                    Li e aceito os <a href="/termos.html" target="_blank">Termos de Uso</a> e a <a href="/privacidade.html" target="_blank">Política de Privacidade</a>.
+                                </label>
+                                <div class="invalid-feedback">Você deve aceitar os termos para continuar.</div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 btn-lg mt-3">Enviar para Análise</button>
+                            <button type="button" class="btn btn-link w-100 mt-2 btn-voltar" data-target="selecao">Voltar</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="etapa-sucesso" class="etapa" style="display:none;">
+                    <div class="text-center p-5 card-form">
+                        
+                        <div id="msg-sucesso-cliente" style="display: none;">
+                            <img src="httpsT://i.imgur.com/gYqg2g4.png" alt="Sucesso" class="card-option-icon mb-3">
+                            <h2 class="h3 fw-bold">Cadastro concluído!</h2>
+                            <p class="fs-5 text-muted">Você será redirecionado para seu painel em instantes...</p>
+                        </div>
+                        
+                        <div id="msg-sucesso-fornecedor" style="display: none;">
+                            <img src="httpsT://i.imgur.com/k6Kx0fP.png" alt="Em Análise" class="card-option-icon mb-3">
+                            <h2 class="h3 fw-bold">Cadastro enviado!</h2>
+                            <p class="fs-5 text-muted">Recebemos seus dados. Nossa equipe irá analisá-los e você receberá um e-mail assim que sua conta for liberada. Obrigado!</p>
+                            <a href="login.html" class="btn btn-primary w-100 mt-4">OK, entendi</a>
+                        </div>
+                        
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../firebase-init.js"></script>
+    <script src="../js/cadastro.js"></script>
+    <script type="module" src="../cadastro-auth.js"></script>
+    <script type="module" src="../mapa.cadastro.firebase.js"></script>
+    <script type="module" src="../mapa.cadastro-init.js"></script>
+    </body>
+</html>

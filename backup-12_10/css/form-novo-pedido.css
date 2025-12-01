@@ -1,0 +1,284 @@
+/* ======================================== */
+/* CSS: PÁGINA "form-novo-pedido.html" */
+/* ======================================== */
+
+/* 1. Variáveis de Cor (Guia de Marca Oficial) */
+:root {
+    --cor-primaria: #017643;
+    --cor-secundaria: #005f36;
+    --cor-preto: #000000;
+    --cor-acento: #e3fae3;
+    --cor-fundo: #F7F7F7;
+    --cor-card: #FFFFFF;
+    --cor-fundo-card-interno: #F7F7F7;
+    --cor-texto-principal: #000000;
+    --cor-texto-secundario: #333333;
+    --cor-cinza-claro: #eceeef;
+    --cor-cinza-medio: #A4A69C;
+    --cor-danger: #dc3545;
+}
+
+/* 2. LAYOUT DE APP (100% ALTURA) */
+.main-content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--cor-fundo);
+}
+.topbar {
+    flex-shrink: 0;
+}
+.content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+/* 3. ESTILOS DO WIZARD (O Card Principal) */
+.wizard-container {
+    background-color: var(--cor-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+.stepper-header {
+    padding: 1.5rem 2.5rem;
+    border-bottom: 1px solid var(--cor-cinza-claro);
+}
+.wizard-body {
+    padding: 2rem 2.5rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.wizard-footer {
+    padding: 1.5rem 2.5rem;
+    border-top: 1px solid var(--cor-cinza-claro);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--cor-fundo-card-interno);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+.wizard-footer .btn-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: white;
+    padding: 10px 24px;
+    font-weight: 600;
+}
+.wizard-footer .btn-primary:hover {
+    background-color: var(--cor-secundaria);
+    border-color: var(--cor-secundaria);
+}
+.wizard-footer .btn-secondary {
+    background-color: var(--cor-cinza-claro);
+    border-color: var(--cor-cinza-claro);
+    color: var(--cor-texto-secundario);
+    padding: 10px 24px;
+    font-weight: 600;
+}
+.wizard-footer .btn-secondary:hover {
+    background-color: #ddd;
+    border-color: #ddd;
+}
+.wizard-footer .btn:disabled {
+    opacity: 0.65;
+}
+
+
+/* 4. ESTILOS DO WIZARD (Componentes) */
+
+/* Panes */
+.wizard-pane { display: none; }
+.wizard-pane.active { display: block; }
+
+/* Stepper */
+.stepper { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 0 1rem; max-width: 600px; margin: 0 auto; }
+.step { display: flex; flex-direction: column; align-items: center; color: var(--cor-cinza-medio); text-align: center; }
+.step-icon { height: 30px; width: 30px; background-color: var(--cor-cinza-claro); color: var(--cor-cinza-medio); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; border: 2px solid var(--cor-cinza-claro); transition: all 0.3s ease; }
+.step-label { font-size: 0.8rem; font-weight: 500; margin-top: 0.5rem; }
+.step-line { flex-grow: 1; height: 2px; background-color: var(--cor-cinza-claro); margin: 0 -1rem; margin-bottom: 20px; }
+.step.active .step-icon { background-color: #fff; color: var(--cor-primaria); border-color: var(--cor-primaria); }
+.step.active .step-label { color: var(--cor-primaria); }
+.step.completed .step-icon { background-color: var(--cor-primaria); color: white; border-color: var(--cor-primaria); }
+.step.completed .step-label { color: var(--cor-texto-secundario); }
+
+/* Category Cards */
+.category-card { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 1.5rem 1rem; 
+    border: 2px solid var(--cor-cinza-claro); 
+    border-radius: 8px; 
+    cursor: pointer; 
+    transition: all 0.2s ease-in-out; 
+    text-align: center; 
+    height: 100%; 
+    background: #fff; 
+}
+.category-card i[data-lucide] { 
+    color: var(--cor-primaria); 
+    width: 32px; 
+    height: 32px; 
+}
+.category-card-title { 
+    font-weight: 600; 
+    color: var(--cor-texto-principal); 
+    margin-top: 0.75rem; 
+}
+.category-card:hover { 
+    border-color: var(--cor-primaria); 
+    background-color: var(--cor-acento); 
+    transform: translateY(-3px); 
+    box-shadow: 0 4px 10px rgba(1, 118, 67, 0.1); 
+}
+.category-card.selected { 
+    border-color: var(--cor-primaria); 
+    background-color: var(--cor-acento); 
+}
+
+/* Dynamic Fields */
+#dynamic-fields-container { 
+    border: 1px solid var(--cor-cinza-claro); 
+    border-radius: 8px; 
+    padding: 1.5rem; 
+    margin-bottom: 1.5rem; 
+    background-color: #F7F7F7; 
+}
+#dynamic-fields-container .form-group { 
+    margin-bottom: 1rem; 
+}
+#dynamic-fields-container .form-group:last-child {
+    margin-bottom: 0;
+}
+.checkbox-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+    gap: 0.5rem; 
+}
+/* Checkbox customizado (seu estilo original) */
+.container.custom-checkbox-label { display: block; position: relative; cursor: pointer; font-size: 0.9rem; user-select: none; padding-left: 30px; margin-bottom: 8px; font-weight: 500; color: var(--cor-texto-principal); }
+.container.custom-checkbox-label input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.checkmark { --clr: var(--cor-primaria); position: absolute; top: 0; left: 0; height: 1.3em; width: 1.3em; background-color: var(--cor-cinza-claro); border-radius: 50%; transition: 300ms; }
+.container.custom-checkbox-label input:checked ~ .checkmark { background-color: var(--clr); border-radius: .4rem; }
+.checkmark:after { content: ""; position: absolute; display: none; }
+.container.custom-checkbox-label input:checked ~ .checkmark:after { display: block; }
+.container.custom-checkbox-label .checkmark:after { left: 0.45em; top: 0.2em; width: 0.3em; height: 0.6em; border: solid var(--cor-card); border-width: 0 0.15em 0.15em 0; transform: rotate(45deg); }
+
+/* Form Validation */
+.form-label { 
+    font-weight: 600; 
+    color: var(--cor-texto-secundario); 
+}
+.form-control:read-only, .form-control:disabled { 
+    background-color: var(--cor-cinza-claro); 
+    opacity: 0.8; 
+}
+.form-control:focus, .form-select:focus { 
+    border-color: var(--cor-primaria); 
+    box-shadow: 0 0 0 0.25rem rgba(1, 118, 67, 0.25); 
+}
+/* Estilos de validação do Bootstrap */
+.form-control.is-invalid, .form-select.is-invalid {
+    border-color: var(--cor-danger);
+    background-position: right calc(0.375em + 0.1875rem) center;
+}
+.form-control.is-invalid:focus, .form-select.is-invalid:focus {
+    border-color: var(--cor-danger);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: var(--cor-danger);
+}
+.was-validated .form-control:invalid, .was-validated .form-select:invalid {
+    border-color: var(--cor-danger);
+}
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-select:invalid ~ .invalid-feedback {
+    display: block;
+}
+.spinner-apoia {
+    color: #017643 !important; /* Sua cor verde principal */
+}
+.btn-voltar-topo {
+    /* Posição */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.5rem; /* Espaço entre o botão e o card do formulário */
+    
+    /* Estilo */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--cor-texto-secundario); /* Cor cinza escura */
+    transition: color 0.2s ease;
+}
+
+.btn-voltar-topo:hover {
+    color: var(--cor-primaria); /* Fica verde no hover */
+}
+
+/* Estilo do Ícone Lucide */
+.btn-voltar-topo i[data-lucide] {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5; /* Deixa o ícone mais grosso */
+    color: inherit; /* Garante que o ícone mude de cor no hover */
+}
+
+/* Ajuste no padding do content-wrapper para dar espaço */
+.content-wrapper {
+    /* O valor de padding-top original era '2rem', vamos mantê-lo ou ajustar se necessário */
+    padding-top: 2rem;
+}
+.resumo-card {
+    border: 1px solid var(--cor-cinza-claro);
+    border-radius: 8px;
+    padding: 1.5rem;
+    background-color: var(--cor-card);
+}
+.resumo-title {
+    color: var(--cor-primaria);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--cor-cinza-claro);
+}
+.resumo-section {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dotted var(--cor-cinza-claro);
+}
+.resumo-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.resumo-list {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+}
+
+/* Estilo para pré-visualização das fotos */
+#fotos-preview-container img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

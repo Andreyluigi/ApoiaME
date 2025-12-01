@@ -1,5 +1,19 @@
 /* Arquivo: css/carteiraA.css */
 
+/* 1. VARIÁVEIS DE COR (PALETA OFICIAL APOIAME) */
+:root {
+  --cor-primaria: #017643;
+  --cor-secundaria: #005f36;
+  --cor-preto: #000000;
+  --cor-branco: #FFFFFF;
+  --cor-acento: #e3fae3;
+  
+  --cor-fundo: #f1f5f9;
+  --cor-borda: #e2e8f0;
+  --cor-texto-principal: #0f172a;
+  --cor-texto-secundario: #475569;
+}
+
 /* Estilos gerais da página */
 .page-title {
     display: flex;
@@ -7,12 +21,12 @@
     gap: 0.75rem;
     font-size: 2rem;
     margin-bottom: 2rem;
-    color: #333;
+    color: var(--cor-texto-principal); /* Atualizado */
 }
 
 /* Card de Saldo */
 .saldo-card {
-    background-color: #fff;
+    background-color: var(--cor-branco); /* Atualizado */
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -20,12 +34,13 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 3rem;
+    border: 1px solid var(--cor-borda); /* Adicionado para consistência */
 }
 
 .saldo-info h2 {
     margin: 0 0 0.5rem 0;
     font-size: 1rem;
-    color: #6c757d;
+    color: var(--cor-texto-secundario); /* Atualizado */
     font-weight: 500;
 }
 
@@ -33,12 +48,12 @@
     margin: 0;
     font-size: 3rem;
     font-weight: 700;
-    color: var(--verde); /* Usando a cor verde da sua marca */
+    color: var(--cor-primaria); /* Atualizado (Verde Oficial) */
 }
 
 .saldo-bloqueado {
     margin-top: 0.5rem;
-    color: #888;
+    color: var(--cor-texto-secundario); /* Atualizado */
 }
 
 .saldo-acoes button {
@@ -53,13 +68,15 @@
 .historico h2 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
+    color: var(--cor-texto-principal); /* Atualizado */
 }
 
 .tabela-wrapper {
-    background-color: #fff;
+    background-color: var(--cor-branco); /* Atualizado */
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     overflow: hidden;
+    border: 1px solid var(--cor-borda); /* Atualizado */
 }
 
 .tabela {
@@ -70,13 +87,13 @@
 .tabela th, .tabela td {
     padding: 1rem 1.25rem;
     text-align: left;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--cor-borda); /* Atualizado */
 }
 
 .tabela thead th {
-    background-color: #f8f9fa;
+    background-color: var(--cor-fundo); /* Atualizado */
     font-weight: 600;
-    color: #495057;
+    color: var(--cor-texto-secundario); /* Atualizado */
 }
 
 .tabela tbody tr:last-child td {
@@ -85,7 +102,7 @@
 
 .tabela td[colspan="4"] {
     text-align: center;
-    color: #888;
+    color: var(--cor-texto-secundario); /* Atualizado */
     padding: 2rem;
 }
 
@@ -97,8 +114,10 @@
     font-weight: 600;
     color: white;
 }
-.status-pill.liberado { background-color: #28a745; }
-.status-pill.pendente { background-color: #ffc107; color: #333; }
+.status-pill.liberado { background-color: var(--cor-primaria); } /* Atualizado para Verde Oficial */
+.status-pill.pendente { background-color: #f59e0b; color: #fff; } /* Amarelo Alerta */
+
+/* Botões de Ação */
 .saldo-acoes .btn {
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
@@ -114,19 +133,19 @@
 }
 
 .saldo-acoes .btn i {
-    width: 1.2em; /* Garante que o ícone tenha um tamanho consistente */
+    width: 1.2em;
 }
 
 /* --- Botão Primário (Adicionar Saldo) --- */
 .saldo-acoes .btn.primario {
-    background-color: var(--verde); /* Cor principal da sua marca */
-    border-color: var(--verde);
-    color: white;
+    background-color: var(--cor-primaria); /* Verde Oficial */
+    border-color: var(--cor-primaria);
+    color: var(--cor-branco);
 }
 
 .saldo-acoes .btn.primario:hover {
-    background-color: #3d8f41; /* Tom de verde um pouco mais escuro */
-    border-color: #3d8f41;
+    background-color: var(--cor-secundaria); /* Verde Escuro */
+    border-color: var(--cor-secundaria);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -136,17 +155,16 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-
-/* --- Botão Secundário (Solicitar Saque) - O FOCO DA MELHORIA --- */
+/* --- Botão Secundário (Solicitar Saque) --- */
 .saldo-acoes .btn.secundario {
-    background-color: #fff;
-    border-color: var(--verde);
-    color: var(--verde);
+    background-color: var(--cor-branco);
+    border-color: var(--cor-preto); /* Preto Oficial */
+    color: var(--cor-preto); /* Preto Oficial */
 }
 
 .saldo-acoes .btn.secundario:hover {
-    background-color: var(--verde); /* Inverte as cores no hover */
-    color: #fff;
+    background-color: var(--cor-preto); /* Preto Oficial */
+    color: var(--cor-branco);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }

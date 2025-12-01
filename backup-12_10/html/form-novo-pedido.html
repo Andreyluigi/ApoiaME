@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Criar Novo Pedido - Apoia Me</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/chat.css">
+    <link rel="stylesheet" href="../css/form-novo-pedido.css"> 
+    
+    <link rel="icon" type="image/x-icon" href="../arquivos/favicon.ico" />
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" style="width: 150px; height: auto;">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
+                <li class="active"><a href="../html/novo-pedido.html"><i data-lucide="plus-circle"></i> Novo Pedido</a></li>
+                <li><a href="../html/pedidosC.html"><i data-lucide="package"></i> Meus Pedidos</a></li>
+                <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
+                <li><a href="../html/perfil-cliente.html"><i data-lucide="users"></i> Meu Perfil</a></li>
+            </ul>
+        </nav>
+        <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="search-container"></div>
+            <div class="topbar-right">
+                <div class="profile-container">
+                    <span id="user-greeting">Olá, <span id="user-name">Carregando...</span></span>
+                </div>
+            </div>
+            
+        </header>
+
+
+        <section class="content-wrapper">
+                    <a href="../html/novo-pedido.html" class="btn-voltar-topo">
+                <i data-lucide="arrow-left"></i> Voltar
+            </a>
+            <div class="card-form wizard-container">
+
+                <div class="stepper-header">
+                    <div class="stepper">
+                        <div class="step active" data-step="1">
+                            <div class="step-icon">1</div>
+                            <div class="step-label">Categoria</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="2">
+                            <div class="step-icon">2</div>
+                            <div class="step-label">Detalhes</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="3">
+                            <div class="step-icon">3</div>
+                            <div class="step-label">Localização</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="4">
+                            <div class="step-icon">4</div>
+                            <div class="step-label">Fotos</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="5">
+                            <div class="step-icon">5</div>
+                            <div class="step-label">Resumo</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wizard-body">
+                    <form id="form-novo-pedido" novalidate>
+
+                        <div class="wizard-pane active" id="step-1">
+                            <h3 class="fw-bold mb-4 text-center">Do que você precisa?</h3>
+                            <div class="row g-3" id="category-selection-grid">
+                                <div class="col-12 text-center">
+                                    <span class="spinner-border spinner-apoia"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-pane" id="step-2">
+                            <h3 class="fw-bold mb-3" id="step-2-title">Detalhes do Pedido</h3>
+                            
+                            <div class="form-group mb-3">
+                                <label for="pedido-titulo" class="form-label">Dê um título para seu pedido</label>
+                                <input type="text" class="form-control" id="pedido-titulo" placeholder="Ex: Conserto da torneira da cozinha" required>
+                                <div class="invalid-feedback">Por favor, dê um título.</div>
+                            </div>
+                            
+                            <div id="dynamic-fields-container">
+                                </div>
+                            
+                            <div class="form-group mb-3 mt-4">
+                                <label for="pedido-orcamento-max" class="form-label">Seu orçamento máximo (opcional)</label>
+                                <input type="text" class="form-control" id="pedido-orcamento-max" placeholder="R$ 0,00">
+                            </div>
+                        </div>
+
+                        <div class="wizard-pane" id="step-3">
+                            <h3 class="fw-bold mb-3">Onde será o serviço?</h3>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pedido-cep" class="form-label">CEP</label>
+                                        <div class="input-group">
+                                            <input type="text" id="pedido-cep" class="form-control" placeholder="00000-000" required maxlength="9" />
+                                            <button class="btn btn-outline-secondary" type="button" id="pedido-buscar-cep">
+                                                <i data-lucide="search" style="width: 16px;"></i>
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback">CEP é obrigatório.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pedido-numero" class="form-label">Número</label>
+                                        <input type="text" id="pedido-numero" class="form-control" required />
+                                        <div class="invalid-feedback">Número é obrigatório.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="pedido-endereco" class="form-label">Endereço</label>
+                                        <input type="text" id="pedido-endereco" class="form-control" readonly required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pedido-bairro" class="form-label">Bairro</label>
+                                        <input type="text" id="pedido-bairro" class="form-control" readonly required />
+                                    </div>
+                                </div>
+                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pedido-complemento" class="form-label">Complemento (opcional)</label>
+                                        <input type="text" id="pedido-complemento" class="form-control" placeholder="Apto, Bloco, etc." />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pedido-cidade" class="form-label">Cidade</label>
+                                        <input type="text" id="pedido-cidade" class="form-control" readonly required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pedido-estado" class="form-label">Estado</label>
+                                        <input type="text" id="pedido-estado" class="form-control" readonly required />
+                                    </div>
+                                </div>
+                                <input type="hidden" id="pedido-lat" name="pedido-lat" required>
+                                <input type="hidden" id="pedido-lng" name="pedido-lng" required>
+                            </div>
+                            
+                        </div>
+                        <div class="wizard-pane" id="step-4">
+                            <h3 class="fw-bold mb-3">Anexar Fotos (Opcional)</h3>
+                            <p class="text-muted">Fotos do local, do objeto quebrado ou do produto que precisa ser entregue ajudam o apoiador a entender melhor o serviço.</p>
+                            
+                            <div class="form-group mb-4">
+                                <label for="pedido-fotos" class="form-label">Selecione até 3 fotos (JPG ou PNG)</label>
+                                <input type="file" id="pedido-fotos" class="form-control" accept="image/png, image/jpeg" multiple>
+                            </div>
+
+                            <div class="row g-3" id="fotos-preview-container">
+                                </div>
+                        </div>
+
+                        <div class="wizard-pane" id="step-5">
+                            <h3 class="fw-bold mb-4">Confirmação Final</h3>
+                            <p class="lead">Verifique se as informações estão corretas antes de enviar para os apoiadores.</p>
+                            
+                            <div class="resumo-card">
+                                <h5 class="resumo-title">Resumo do Serviço: <span id="resumo-titulo" class="fw-normal"></span></h5>
+                                
+                                <div class="resumo-section">
+                                    <h6 class="fw-bold">Categoria: <span id="resumo-categoria" class="fw-normal"></span></h6>
+                                    <h6 class="fw-bold">Orçamento Máximo: <span id="resumo-orcamento" class="fw-normal"></span></h6>
+                                </div>
+                                
+                                <div class="resumo-section">
+                                    <h6 class="fw-bold">Local:</h6>
+                                    <p id="resumo-localizacao" class="text-muted small"></p>
+                                </div>
+                                
+                                <div class="resumo-section">
+                                    <h6 class="fw-bold">Detalhes do Serviço:</h6>
+                                    <ul id="resumo-detalhes" class="resumo-list">
+                                        </ul>
+                                </div>
+                                
+                                <div class="resumo-section" id="resumo-fotos-container">
+                                    <h6 class="fw-bold">Fotos Anexadas: <span id="resumo-fotos-count" class="fw-normal">0</span></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="wizard-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-voltar" style="display: none;">Voltar</button>
+                    <button type="button" class="btn btn-primary" id="btn-avancar">Avançar</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>lucide.createIcons();</script> 
+    
+    <script type="module" src="../firebase-init.js"></script> 
+    <script type="module" src="../script-module.js"></script>
+    <script type="module" src="../chat.module.js"></script>
+    <script type="module" src="../chat-init.js"></script>
+    <script type="module" src="../js/form-novo-pedido.js"></script>
+    <script type="module" src="/form-novo-pedido.firebase.js"></script>
+</body>
+</html>

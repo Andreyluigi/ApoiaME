@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Meu Perfil - Apoia Me</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/perfil.css"> 
+    <link rel="stylesheet" href="../css/chat.css">
+
+    <link rel="icon" type="image/x-icon" href="../arquivos/favicon.ico" />
+</head>
+<body>
+<!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="logo">
+        <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" style="width: 150px; height: auto;">
+    </div>
+    <nav>
+      <ul>
+        <li ><a href="../html/dashboardC.html"><i data-lucide="home"></i> Início</a></li>
+       <li><a href="../html/novo-pedido.html"><i data-lucide="plus-circle"></i> Novo Pedido</a></li>
+        <li><a href="../html/pedidosC.html"><i data-lucide="package"></i> Meus Pedidos</a></li>
+         <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
+      <li class="active"><a href="../html/perfilC"><i data-lucide="users"></i> Meu Perfil</a></li>
+
+      </ul>
+    </nav>
+    <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+   <!-- CONFIRMACAO DE LOGOUT com modal bootstrap-->
+  <div id="logout-modal" class="modal">
+    <div class="modal-content">
+      <p>Tem certeza que deseja sair?</p>
+      <button id="confirm-yes">Sim</button>
+      <button id="confirm-no">Cancelar</button>
+    </div>
+  </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="search-container">
+
+      </div>
+      <div class="topbar-right">
+ 
+        <div class="profile-container">
+          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+        </div>
+      </div>
+    </header>
+    </main>
+
+        <section class="content-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-lg-7 col-md-9">
+                    
+                    <div class="card-form p-4 p-sm-5">
+                        <h1 class="h3 mb-4 fw-bold text-center">Meu Perfil de Cliente</h1>
+                        
+                        <form id="form-perfil-cliente" class="needs-validation" novalidate>
+                            
+                            <p class="text-muted small text-center">Esta foto será exibida para os Fornecedores.</p>
+                            <div class="profile-pic-container mb-3">
+                                <label for="cliente-foto-input" class="profile-pic-label">
+                                    <img id="cliente-foto-preview" src="../arquivos/foto-perfil.jpg" alt="Avatar" class="profile-pic-preview">
+                                    <span class="profile-pic-edit">
+                                        <i class="bi bi-camera-fill"></i>
+                                    </span>
+                                </label>
+                                <input type="file" id="cliente-foto-input" accept="image/png, image/jpeg" style="display:none;">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="cliente-nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="cliente-nome" readonly disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cliente-email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="cliente-email" readonly disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cliente-telefone" class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="cliente-telefone" placeholder="(00) 00000-0000">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cliente-descricao" class="form-label">Sobre mim (Opcional)</label>
+                                <textarea class="form-control" id="cliente-descricao" rows="4" placeholder="Ex: Moro no bairro há 5 anos, tenho um cachorro e peço ajuda com compras..."></textarea>
+                            </div>
+                            
+                            <button type="submit" id="btn-salvar-perfil" class="btn btn-primary w-100 btn-lg mt-3" disabled>
+                                Salvar Alterações
+                            </button>
+                        </form>
+                    </div>
+                    <div class="card-form p-4 p-sm-5 mt-4">
+                      <h2 class="h4 mb-4 fw-bold text-center">Alterar Senha</h2>
+                      
+                      <form id="form-mudar-senha" novalidate>
+                          
+                          <div class="mb-3">
+                              <label for="senha-antiga" class="form-label">Senha Antiga</label>
+                              <input type="password" class="form-control" id="senha-antiga" required>
+                              <div class="invalid-feedback">
+                                  Por favor, insira sua senha antiga.
+                              </div>
+                          </div>
+                          
+                          <div class="mb-3">
+                              <label for="senha-nova" class="form-label">Nova Senha</label>
+                              <input type="password" class="form-control" id="senha-nova" required minlength="6">
+                              <div class="invalid-feedback">
+                                  Sua nova senha deve ter no mínimo 6 caracteres.
+                              </div>
+                          </div>
+                          
+                          <div class="mb-3">
+                              <label for="senha-nova-confirmar" class="form-label">Confirmar Nova Senha</label>
+                              <input type="password" class="form-control" id="senha-nova-confirmar" required>
+                              <div class="invalid-feedback" id="feedback-confirmacao">
+                                  As senhas não conferem.
+                              </div>
+                          </div>
+                          
+                          <button type="submit" id="btn-salvar-senha" class="btn btn-primary w-100 btn-lg mt-3" disabled>
+                              Salvar Nova Senha
+                          </button>
+                          
+                      </form>
+                  </div>
+                </div>
+            </div>
+        </section>
+        </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        lucide.createIcons(); // Para os ícones do menu
+    </script>
+    
+    <script type="module" src="../firebase-init.js"></script>
+    <script type="module" src="../perfil-cliente.firebase.js"></script>
+    <script type="module" src="/script-module.js"></script>
+    <script src="../js/perfil-cliente.js"></script>
+    <script type="module" src="/chat.module.js"></script>
+    <script type="module" src="/chat-init.js"></script>
+    </body>
+</html>

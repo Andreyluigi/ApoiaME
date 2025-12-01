@@ -1,9 +1,38 @@
-/* Estilos específicos para a barra de progresso */
+/* /css/statusA.css — Estilos da página de status do Fornecedor */
+
+/* ================================================= */
+/* 1. VARIÁVEIS DE COR (PALETA OFICIAL APOIAME) */
+/* ================================================= */
+:root {
+  /* Paleta Oficial ApoiaMe */
+  --cor-primaria: #017643; 
+  --cor-secundaria: #005f36; 
+  --cor-preto: #000000;
+  --cor-branco: #FFFFFF;
+  --cor-acento: #e3fae3; 
+  
+  /* Mapeamento de UI */
+  --cor-fundo: #f1f5f9; 
+  --cor-borda: #e2e8f0; 
+  --cor-texto-principal: #0f172a; 
+  --cor-texto-secundario: #475569; 
+
+  /* Status */
+  --cor-ativa: #f59e0b; /* Amarelo/Laranja para "Ativo" */
+  --cor-espera: #DDDDDD; /* Cinza para "Aguardando" */
+
+  --radius: 16px;
+  --shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+
+/* ================================================= */
+/* 2. BARRA DE PROGRESSO */
+/* ================================================= */
 .progress-container {
     margin-top: 80px;
 }
 
-/* Barra de progresso (Dividida em duas linhas) */
 .progress-bar {
     display: flex;
     justify-content: space-between;
@@ -11,7 +40,6 @@
     margin-bottom: 40px;
 }
 
-/* Etapas da barra de progresso */
 .progress-step {
     display: flex;
     flex-direction: column;
@@ -26,41 +54,37 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #DDDDDD; /* Cor padrão cinza */
+    background-color: var(--cor-espera);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--cor-branco);
     font-size: 18px;
     font-weight: bold;
 }
 
-/* Etiqueta das etapas */
 .progress-step .step-label {
     font-size: 12px;
-    color: #333;
+    color: var(--cor-texto-principal);
     margin-top: 10px;
 }
 
-
-/* Etapa Concluída - Verde */
+/* Etapa Concluída - Verde ApoiaMe */
 .progress-step.completed .step-icon {
-    background-color: #3DBE34; /* Aplica VERDE SÓ na etapa COM 'completed' */
+    background-color: var(--cor-primaria);
 }
 
-/* Etapa Ativa - Amarela */
+/* Etapa Ativa - Amarelo (Mantido para status "ativo") */
 .progress-step.active .step-icon { 
-    background-color: #FFA500; 
+    background-color: var(--cor-ativa); 
 }
 
 /* Etapa Aguardando - Cinza */
 .progress-step.waiting .step-icon {
-    background-color: #DDDDDD; 
+    background-color: var(--cor-espera); 
 }
 
-
 /* Barra conectando as etapas */
-/* 2A. Barra de Fundo Cinza (::after) - Garantindo que a linha fina apareça */
 .progress-bar::after {
     content: '';
     position: absolute;
@@ -68,46 +92,39 @@
     left: 0;
     width: 100%;
     height: 5px;
-    background-color: #DDD; 
+    background-color: var(--cor-espera); 
     z-index: -2;
 }
 
-/* 2B. Barra de Preenchimento (::before) - Controla a LARGURA TOTAL e a Cor (Verde/Amarelo) */
 .progress-bar::before {
     content: '';
     position: absolute;
     top: 18px;
     left: 0;
-    /* Largura TOTAL do preenchimento (Amarelo ou Verde). Definida por prog-X. */
     width: var(--active-width, 0%); 
     height: 5px;
     z-index: -1; 
     transition: width 0.6s ease-out;
-    
-    /* Fundo padrão Amarelo, usado quando não há Verde (Prog 1 e 6) */
-    background-color: #FFA500; 
+    background-color: var(--cor-ativa); /* Fundo padrão Amarelo */
 }
 
-/* Regra para o corte Verde/Amarelo (Ativada com a classe 'multi-fill') */
+/* Regra para o corte Verde/Amarelo */
 .progress-bar.multi-fill::before {
-    /* --green-stop é definida pela classe comp-X */
     background: linear-gradient(to right, 
-        #3DBE34 0%, var(--green-stop), /* CORPO VERDE */
-        #FFA500 var(--green-stop), #FFA500 100% /* PONTA AMARELA */
+        var(--cor-primaria) 0%, var(--green-stop), /* CORPO VERDE */
+        var(--cor-ativa) var(--green-stop), var(--cor-ativa) 100% /* PONTA AMARELA */
     );
-    background-color: transparent; /* Remove o background-color simples */
+    background-color: transparent;
 }
 
-/* Ajuste Final: Progresso Completo (100% Verde) */
-/* Quando o preenchimento total é 100%, forçamos a cor Verde para cobrir o Amarelo */
+/* Progresso Completo (100% Verde) */
 .progress-bar.prog-5::before,
 .progress-bar.prog-10::before { 
-    background-color: #3DBE34;
-    background: #3DBE34 !important; 
+    background-color: var(--cor-primaria);
+    background: var(--cor-primaria) !important; 
 }
 
-/* Definições de Largura da BARRA ATIVA (AMARELA - ::after) */
-/* Esta é a largura TOTAL do preenchimento. */
+/* Definições de Largura da BARRA ATIVA */
 .progress-bar.prog-1 { --active-width: 12.5%; } 
 .progress-bar.prog-2 { --active-width: 37.5%; } 
 .progress-bar.prog-3 { --active-width: 62.5%; }
@@ -119,78 +136,60 @@
 .progress-bar.prog-9 { --active-width: 87.5%; } 
 .progress-bar.prog-10 { --active-width: 100%; }
 
+/* Definições de Largura da BARRA CONCLUÍDA (VERDE) */
+.progress-bar.comp-0 { --green-stop: 0%; }
+.progress-bar.comp-1 { --green-stop: 66.7%; } 
+.progress-bar.comp-2 { --green-stop: 80%; }
+.progress-bar.comp-3 { --green-stop: 85.7%; }
+.progress-bar.comp-4 { --green-stop: 100%; } 
+.progress-bar.comp-5 { --green-stop: 0%; }
+.progress-bar.comp-6 { --green-stop: 66.7%; } 
+.progress-bar.comp-7 { --green-stop: 80%; }
+.progress-bar.comp-8 { --green-stop: 85.7%; } 
+.progress-bar.comp-9 { --green-stop: 100%; }
 
-/* Definições de Largura da BARRA CONCLUÍDA (VERDE - ::before) */
-/* Esta é a largura do CORPO concluído que o Amarelo deve COBRIR. */
-/* É sempre menor ou igual ao --active-width, exceto no progresso final. */
-.progress-bar.comp-0 { --green-width: 0%; } /* prog-1 e prog-6 */
-.progress-bar.comp-1 { --green-width: 25%; } /* até o Step 1 */
-.progress-bar.comp-2 { --green-width: 50%; } /* até o Step 2 */
-.progress-bar.comp-3 { --green-width: 75%; } /* até o Step 3 */
-.progress-bar.comp-4 { --green-width: 100%; } /* Fim da 1ª barra (Step 4 para 5) */
-.progress-bar.comp-5 { --green-width: 100%; } /* Fim da 1ª barra (Continuação para 6) */
-.progress-bar.comp-6 { --green-width: 25%; } /* até o Step 6 */
-.progress-bar.comp-7 { --green-width: 50%; } /* até o Step 7 */
-.progress-bar.comp-8 { --green-width: 75%; } /* até o Step 8 */
-.progress-bar.comp-9 { --green-width: 100%; } /* Fim da 2ª barra (Step 9 para 10) */
 
-.progress-bar.comp-0.multi-fill::before { --green-stop: 0%; } 
-.progress-bar.comp-5.multi-fill::before { --green-stop: 0%; }
-
-/* Progresso 2 e 7: 1 etapa concluída (25%) em relação ao preenchimento total (37.5%). 25 / 37.5 = 66.7% */
-.progress-bar.comp-1.multi-fill::before,
-.progress-bar.comp-6.multi-fill::before { --green-stop: 66.7%; } 
-
-/* Progresso 3 e 8: 2 etapas concluídas (50%) em relação ao preenchimento total (62.5%). 50 / 62.5 = 80% */
-.progress-bar.comp-2.multi-fill::before,
-.progress-bar.comp-7.multi-fill::before { --green-stop: 80%; }
-
-/* Progresso 4 e 9: 3 etapas concluídas (75%) em relação ao preenchimento total (87.5%). 75 / 87.5 = 85.7%; */
-.progress-bar.comp-3.multi-fill::before,
-.progress-bar.comp-8.multi-fill::before { --green-stop: 85.7%; }
-
-/* Progresso 5 e 10: 4 etapas concluídas (100%) em relação ao preenchimento total (100%). O prog-5/prog-10 já cobre isso com `background: #3DBE34 !important;` */
-.progress-bar.comp-4.multi-fill::before,
-.progress-bar.comp-9.multi-fill::before { --green-stop: 100%; }
-
-/* Estilos para a tarefa */
+/* ================================================= */
+/* 3. CARD DE TAREFA (TASK CONTAINER) */
+/* ================================================= */
 .task {
-    background-color: #fff;
-    border-radius: 15px;  /* Borda mais arredondada */
+    background-color: var(--cor-branco);
+    border-radius: 15px;
     padding: 30px;
     width: 80%;
-    max-width: 700px;  /* Aumenta a largura da div */
+    max-width: 700px;
     margin: 30px auto;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-family: 'Poppins', sans-serif;
 }
 
-/* Texto dentro da tarefa */
 .task p {
     font-size: 18px;
-    color: #333;
+    color: var(--cor-texto-principal);
     margin-bottom: 10px;
     font-weight: 600;
     text-align: center;
-    
 }
 
-/* Destaque para o status (ex: "Pendente") */
+/* Destaque (ex: "Pendente") */
 .task strong {
     font-weight: 700;
-    color: #3DBE34;  /* Cor Amarela para o status ativo */
+    color: var(--cor-primaria); /* Verde ApoiaMe */
 }
 
-/* Descrição abaixo do status */
 .task-description {
     font-size: 16px;
-    color: #777;
+    color: var(--cor-texto-secundario);
     margin-top: 20px;
     padding: 0 10px;
 }
 
-/* Estilos para o círculo giratório */
+/* ================================================= */
+/* 4. ANIMAÇÕES (ATUALIZADAS COM A PALETA) */
+/* ================================================= */
+
+/* Círculo Giratório */
 .loading-container {
     display: flex;
     justify-content: center;
@@ -199,16 +198,16 @@
 }
 
 .loading-circle {
-    width: 4.25em;  /* Aumenta o tamanho do círculo */
+    width: 4.25em;
     height: 4.25em;
     margin: 0 auto;
     transform-origin: center;
-    animation: rotate4 2s linear infinite;  /* Animação de rotação */
+    animation: rotate4 2s linear infinite;
 }
 
 circle {
     fill: none;
-    stroke: #3DBE34;  /* Amarelo para o círculo */
+    stroke: var(--cor-primaria); /* Verde ApoiaMe */
     stroke-width: 2;
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
@@ -216,32 +215,37 @@ circle {
     animation: dash4 1.5s ease-in-out infinite;
 }
 
-/* Animação para o círculo */
-@keyframes rotate4 {
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
+@keyframes rotate4 { 100% { transform: rotate(360deg); } }
 @keyframes dash4 {
-    0% {
-        stroke-dasharray: 1, 200;
-        stroke-dashoffset: 0;
-    }
-    50% {
-        stroke-dasharray: 90, 200;
-        stroke-dashoffset: -35px;
-    }
-    100% {
-        stroke-dashoffset: -125px;
-    }
+    0% { stroke-dasharray: 1, 200; stroke-dashoffset: 0; }
+    50% { stroke-dasharray: 90, 200; stroke-dashoffset: -35px; }
+    100% { stroke-dashoffset: -125px; }
 }
 
-/* Botão (opcional) para interação */
+/* Ícone de Sucesso */
+.success-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--cor-primaria); /* Verde ApoiaMe */
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1;
+}
+
+/* ================================================= */
+/* 5. BOTÕES DE AÇÃO */
+/* ================================================= */
+
 .action-button {
     margin-top: 30px;
     padding: 12px 24px;
-    background-color: #3DBE34;
+    background-color: var(--cor-primaria); /* Verde ApoiaMe */
     color: white;
     border: none;
     border-radius: 5px;
@@ -251,46 +255,40 @@ circle {
 }
 
 .action-button:hover {
-    background-color: #34a64f;
-}
-.confirmation-header {
-    text-align: center;
-    margin-bottom: 20px;
+    background-color: var(--cor-secundaria); /* Verde Escuro */
 }
 
-.success-icon {
-    display: inline-flex; /* Permite centralização e alinhamento do texto */
-    justify-content: center;
-    align-items: center;
-    width: 60px; /* Tamanho do círculo */
-    height: 60px;
-    border-radius: 50%; /* Faz o círculo */
-    background-color: #4CAF50; /* Verde forte */
-    color: white;
-    font-size: 40px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    line-height: 1;
-}
-
+/* Ação Primária (Verde) */
 .action-button.primary-action {
-    background-color: #3DBE34;
+    background-color: var(--cor-primaria);
     color: white;
     margin-top: 15px;
     width: 100%;
 }
 
+/* Ação Secundária (Preto) */
 .action-button.secondary-action {
-    background-color: #6c757d; /* Cinza para a ação secundária */
+    background-color: var(--cor-preto); /* Preto ApoiaMe */
     color: white;
     margin-top: 10px;
     width: 100%;
 }
+.action-button.secondary-action:hover {
+    background-color: #333; /* Hover do Preto */
+}
+
+/* ================================================= */
+/* 6. RESUMO DO PEDIDO (TASK FINALIZADO) */
+/* ================================================= */
 
 .order-summary {
-    background-color: #f8f9fa;
+    background-color: var(--cor-fundo);
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--cor-borda);
+    text-align: left; 
+}
+.order-summary h2 {
+    text-align: center;
 }
