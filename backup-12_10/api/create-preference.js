@@ -16,6 +16,7 @@ const preference = new Preference(client);
 
 module.exports = async (req, res) => {
   const vercelUrl = process.env.VERCEL_URL;
+  // Ajuste o CORS conforme sua necessidade de segurança
   res.setHeader('Access-Control-Allow-Origin', `https://${vercelUrl}`);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -30,28 +31,55 @@ module.exports = async (req, res) => {
     const pedidoRef = db.collection("pedidos").doc(pedidoId);
     const pedidoSnap = await pedidoRef.get();
 
-    // ==========================================================
-    // --- CORREÇÃO FINAL APLICADA AQUI ---
-    // No backend (Admin SDK), a verificação é .exists (sem parênteses)
     if (!pedidoSnap.exists) { 
       return res.status(404).json({ message: "Pedido não encontrado." });
     }
-    // ==========================================================
     
     const pedidoData = pedidoSnap.data();
+
+    // ==========================================================
+    // --- LÓGICA FINANCEIRA ATUALIZADA (NOVEMBRO 2025) ---
+    // ==========================================================
+    
+    let valorFinal = 0;
+    // O front salva como 'titulo', mas mantemos 'tituloAnuncio' como fallback
+    let tituloItem = pedidoData.titulo || pedidoData.tituloAnuncio || "Serviço ApoiaMe";
+
+    // 1. Verifica se é um PEDIDO NOVO (com objeto financeiro e taxa calculada)
+    if (pedidoData.financeiro && pedidoData.financeiro.valorTotalGateway) {
+        valorFinal = parseFloat(pedidoData.financeiro.valorTotalGateway);
+        tituloItem = `${tituloItem} (c/ taxas)`;
+    } 
+    // 2. Se não, usa o PEDIDO LEGADO (orcamentoMaximo ou precoBase)
+    else {
+        valorFinal = parseFloat(pedidoData.orcamentoMaximo || pedidoData.precoBase || 0);
+    }
+
+    // Validação de segurança para não cobrar zero ou negativo
+    if (!valorFinal || valorFinal <= 0) {
+        console.error("Erro: Valor do pedido inválido ou zero.", valorFinal);
+        return res.status(400).json({ message: "Valor do pedido inválido para pagamento." });
+    }
+
+    // Garante que é um número com 2 casas decimais
+    const unitPrice = parseFloat(valorFinal.toFixed(2));
+
+    // ==========================================================
+
     const preferenceData = {
       items: [{
-        title: pedidoData.tituloAnuncio || "Serviço ApoiaMe",
+        title: tituloItem,
         quantity: 1,
         currency_id: "BRL",
-        unit_price: parseFloat(Number(pedidoData.precoBase).toFixed(2)) || 1.00,
+        unit_price: unitPrice,
       }],
       back_urls: {
         success: `https://${vercelUrl}/html/statusC.html?id=${pedidoId}`,
         failure: `https://${vercelUrl}/html/statusC.html?id=${pedidoId}`,
+        pending: `https://${vercelUrl}/html/statusC.html?id=${pedidoId}`, // Adicionado pending por segurança
       },
       auto_return: "approved",
-      external_reference: pedidoId,
+      external_reference: pedidoId, // Importante para o Webhook saber qual pedido atualizar
     };
 
     const response = await preference.create({ body: preferenceData });

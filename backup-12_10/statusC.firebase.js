@@ -129,12 +129,17 @@ function clearOrientacaoCard() {
 // monta e insere o card ANTES da section .cartao.etapas
 // recebe pedido para possibilitar conteúdo dinâmico (ex: título, valor)
 function renderOrientacao(status, pedido = {}) {
-  
+  let precoFinal = 0;
+  if (pedido.financeiro && pedido.financeiro.valorTotalGateway) {
+      precoFinal = pedido.financeiro.valorTotalGateway;
+  } else {
+      precoFinal = pedido.orcamentoMaximo || 0;
+  }
   // *** ATUALIZADO PARA NOVO MODELO ***
   const base = {
     id: pedido.id || "",
     titulo: pedido.titulo || "—",
-    preco: pedido.orcamentoMaximo || 0, // <- MUDOU de precoBase
+    preco: precoFinal, // <- MUDOU de precoBase
     prestador: pedido.fornecedorNome || "—" // <- MUDOU de nomePrestador
   };
 
@@ -630,9 +635,25 @@ function renderPedidoCliente(pedido) {
   document.getElementById("status-pill").innerText = statusFormatado;
   document.getElementById("status-pill").className = `status-pill status-${pedido.status || 'pendente'}`; // Adiciona classe para CSS
 
-  document.getElementById("valor-servico").innerText = formatCurrency(pedido.orcamentoMaximo || 0); // <- MUDOU
-  document.getElementById("valor-entrega").innerText = formatCurrency(0); // <- MUDOU (Campo não existe mais)
-  document.getElementById("valor-total").innerText = formatCurrency(pedido.orcamentoMaximo || 0); // <- MUDOU
+let valorBase = 0;
+  let valorTaxa = 0;
+  let valorTotal = 0;
+
+  if (pedido.financeiro) {
+      // Pedido NOVO (com objeto financeiro)
+      valorBase = pedido.financeiro.valorOfertaBase || 0;
+      valorTaxa = pedido.financeiro.taxaServicoCliente || 0;
+      valorTotal = pedido.financeiro.valorTotalGateway || 0;
+  } else {
+      // Pedido ANTIGO (fallback para compatibilidade)
+      valorBase = pedido.orcamentoMaximo || 0;
+      valorTaxa = 0;
+      valorTotal = pedido.orcamentoMaximo || 0;
+  }
+
+  document.getElementById("valor-servico").innerText = formatCurrency(valorBase);
+  document.getElementById("valor-entrega").innerText = formatCurrency(valorTaxa);
+  document.getElementById("valor-total").innerText = formatCurrency(valorTotal);
 
   const enderecoFormatado = formatEndereco(pedido.localizacao);
   document.getElementById("retirada-txt").innerText = enderecoFormatado; // <- MUDOU
