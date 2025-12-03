@@ -6,17 +6,22 @@ import { salvarNovoPedido } from '../form-novo-pedido.firebase.js';
 
 // --- 1. LISTA DE CATEGORIAS (Mestre) ---
 const CATEGORIAS = [
-    { id: "troca_gas", nome: "Troca de gás", icon: "flame" },
-    { id: "fazer_feira", nome: "Fazer feira", icon: "shopping-basket" },
-    { id: "passear_cachorro", nome: "Passear com cachorro", icon: "dog" },
-    { id: "pequenos_reparos", nome: "Pequenos reparos", icon: "wrench" },
-    { id: "compras_mercado", nome: "Compras no mercado", icon: "shopping-cart" },
-    { id: "buscar_levar_documentos", nome: "Buscar/Levar docs", icon: "file-text" },
-    { id: "montagem_moveis", nome: "Montagem de móveis", icon: "lamp" },
-    { id: "jardinagem_poda", nome: "Jardinagem e poda", icon: "leaf" },
-    { id: "instalacao_tv", nome: "Instalação de TV", icon: "tv" },
-    { id: "limpeza_residencial", nome: "Limpeza", icon: "sparkles" },
-    { id: "outros", nome: "Outros", icon: "more-horizontal" }
+    // NÍVEL SIMPLES (R$ 15,00)
+    { id: "troca_gas", nome: "Troca de gás", icon: "flame", minValor: 15 },
+    { id: "fazer_feira", nome: "Fazer feira", icon: "shopping-basket", minValor: 15 },
+    { id: "passear_cachorro", nome: "Passear com cachorro", icon: "dog", minValor: 15 },
+    { id: "compras_mercado", nome: "Compras no mercado", icon: "shopping-cart", minValor: 15 },
+    { id: "buscar_levar_documentos", nome: "Buscar/Levar docs", icon: "file-text", minValor: 15 },
+    { id: "outros", nome: "Outros", icon: "more-horizontal", minValor: 15 },
+
+    // NÍVEL INTERMEDIÁRIO (R$ 45,00)
+    { id: "pequenos_reparos", nome: "Pequenos reparos", icon: "wrench", minValor: 45 },
+    { id: "montagem_moveis", nome: "Montagem de móveis", icon: "lamp", minValor: 45 },
+    { id: "jardinagem_poda", nome: "Jardinagem e poda", icon: "leaf", minValor: 45 },
+    { id: "instalacao_tv", nome: "Instalação de TV", icon: "tv", minValor: 45 },
+
+    // NÍVEL COMPLEXO (R$ 90,00)
+    { id: "limpeza_residencial", nome: "Limpeza", icon: "sparkles", minValor: 90 }
 ];
 
 // --- 2. VARIÁVEIS GLOBAIS DE UI ---
@@ -336,26 +341,37 @@ function handleFotoPreview(e) {
 }
 
 function renderResumo() {
+    // 1. Coleta dados básicos
     const data = {};
-    const details = [];
-
     const fields = $$('#form-novo-pedido input, #form-novo-pedido select, #form-novo-pedido textarea');
-    fields.forEach(field => {
-        if (field.id) {
-            data[field.id] = field.value;
-        }
-    });
+    fields.forEach(field => { if (field.id) data[field.id] = field.value; });
 
+    // Preenchimento padrão (Título, Categoria, Endereço)
     $("#resumo-titulo").textContent = data['pedido-titulo'] || 'N/A';
     $("#resumo-categoria").textContent = selectedCategory.nome;
-    $("#resumo-orcamento").textContent = data['pedido-orcamento-max'] || 'Não definido';
     
-    const loc = `${data['pedido-endereco']}, ${data['pedido-numero']} - ${data['pedido-bairro']}, ${data['pedido-cidade']}/${data['pedido-estado']} (CEP: ${data['pedido-cep']})`;
+    // Monta string de endereço
+    const loc = `${data['pedido-endereco']}, ${data['pedido-numero']} - ${data['pedido-bairro']}, ${data['pedido-cidade']}/${data['pedido-estado']}`;
     $("#resumo-localizacao").textContent = loc;
+
+    // --- CÁLCULO FINANCEIRO (NOVO) ---
+    const valorBase = parseFloat(data['pedido-orcamento-max']) || 0;
+    const fin = calcularTaxasApoiaMe(valorBase);
+
+    $("#resumo-valor-base").textContent = `R$ ${fin.base.toFixed(2).replace('.', ',')}`;
+    $("#resumo-valor-taxa").textContent = `+ R$ ${fin.taxa.toFixed(2).replace('.', ',')}`;
+    $("#resumo-taxa-pct").textContent = fin.pctTexto;
+    $("#resumo-valor-total").textContent = `R$ ${fin.total.toFixed(2).replace('.', ',')}`;
     
+    // Salva para envio
+    form.dataset.financeiro = JSON.stringify(fin);
+
+    // --- DETALHES ESPECÍFICOS ---
     const ulDetalhes = $("#resumo-detalhes");
     ulDetalhes.innerHTML = '';
-    const selectedId = selectedCategory.id;
+    const details = [];
+    
+    const selectedId = selectedCategory.id; 
 
     if (selectedId === 'troca_gas') {
         details.push(`Tipo de Botijão: ${data['tipo-botijao']}`);
@@ -372,7 +388,7 @@ function renderResumo() {
         details.push(`Entrega: ${data['cep-entrega']}`);
     } else if (data['lista-compras'] || data['descricao-servico']) {
         const desc = data['lista-compras'] || data['descricao-servico'];
-        details.push(`Descrição/Lista: ${desc.substring(0, 50)}...`);
+        details.push(`Descrição/Lista: ${desc ? desc.substring(0, 50) + '...' : ''}`);
     }
 
     details.forEach(item => {
@@ -457,15 +473,19 @@ function populateCategoryGrid() {
         card.addEventListener('click', () => {
             $$(".category-card").forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
+            
+            // BUSCA A CATEGORIA COMPLETA PARA PEGAR O PREÇO
+            const catData = CATEGORIAS.find(c => c.id === card.dataset.categoryId);
+
             selectedCategory = {
-                id: card.dataset.categoryId,
-                nome: card.dataset.categoryName
+                id: catData.id,
+                nome: catData.nome,
+                minValor: catData.minValor // <--- AQUI ESTÁ O SEGREDO
             };
             btnAvancar.disabled = false;
         });
     });
 }
-
 /** Renderiza os campos de formulário dinâmicos na Etapa 2 */
 function renderDynamicFields() {
     if (!selectedCategory) return;
@@ -514,13 +534,100 @@ function renderDynamicFields() {
     attachDynamicListeners(selectedCategory.id);
 }
 
+function configurarControleDePreco() {
+    const inputValor = $("#pedido-orcamento-max");
+    const btnAumentar = $("#btn-aumentar-valor");
+    const btnDiminuir = $("#btn-diminuir-valor"); // Novo botão
+    const aviso = $("#aviso-preco");
+
+    if (!inputValor || !selectedCategory) return;
+
+    // 1. Define o valor inicial baseado na categoria escolhida
+    const valorMinimo = selectedCategory.minValor;
+    
+    // Configura o input visualmente
+    inputValor.min = valorMinimo;
+    // Se o valor atual for menor que o novo mínimo (ou vazio), reseta para o mínimo
+    if (!inputValor.value || parseFloat(inputValor.value) < valorMinimo) {
+        inputValor.value = valorMinimo;
+    }
+    
+    // Atualiza o texto de aviso
+    if (aviso) {
+        aviso.innerHTML = `O valor mínimo para <strong>${selectedCategory.nome}</strong> é R$ ${valorMinimo},00.`;
+    }
+
+    // 2. RECRIA OS BOTÕES (Para remover listeners antigos e evitar duplicação)
+    // Isso é importante porque essa função roda toda vez que você clica em "Avançar"
+    
+    const novoBtnAumentar = btnAumentar.cloneNode(true);
+    const novoBtnDiminuir = btnDiminuir.cloneNode(true);
+    
+    btnAumentar.parentNode.replaceChild(novoBtnAumentar, btnAumentar);
+    btnDiminuir.parentNode.replaceChild(novoBtnDiminuir, btnDiminuir);
+    
+    // Recarrega os ícones do Lucide nos novos botões
+    lucide.createIcons();
+
+    // 3. Lógica do Botão AUMENTAR (+ R$ 5,00)
+    novoBtnAumentar.addEventListener('click', () => {
+        let atual = parseFloat(inputValor.value) || 0;
+        inputValor.value = (atual + 5).toFixed(2);
+        
+        // Efeito visual rápido
+        inputValor.style.backgroundColor = "#d4edda"; // Verde claro
+        setTimeout(() => inputValor.style.backgroundColor = "#fff", 200);
+    });
+
+    // 4. Lógica do Botão DIMINUIR (- R$ 1,00)
+    novoBtnDiminuir.addEventListener('click', () => {
+        let atual = parseFloat(inputValor.value) || 0;
+        
+        // Só diminui se o resultado for MAIOR ou IGUAL ao mínimo
+        if ((atual - 1) >= valorMinimo) {
+            inputValor.value = (atual - 1).toFixed(2);
+            
+            // Efeito visual rápido
+            inputValor.style.backgroundColor = "#f8d7da"; // Vermelho claro
+            setTimeout(() => inputValor.style.backgroundColor = "#fff", 200);
+        } else {
+            // Se tentar baixar do mínimo, pisca o aviso ou o input
+            inputValor.classList.add("is-invalid"); // Borda vermelha do Bootstrap
+            setTimeout(() => inputValor.classList.remove("is-invalid"), 500);
+            alert(`O valor mínimo para este serviço é R$ ${valorMinimo},00`);
+        }
+    });
+}
+
+function calcularTaxasApoiaMe(valorBase) {
+    let porcentagem = 0;
+    
+    // Regra de Negócio: Taxas regressivas
+    if (valorBase <= 30) {
+        porcentagem = 0.15; // 15% para até R$ 30
+    } else if (valorBase <= 60) {
+        porcentagem = 0.10; // 10% para até R$ 60
+    } else {
+        porcentagem = 0.05; // 5% para acima de R$ 60
+    }
+
+    const valorTaxa = valorBase * porcentagem;
+    const valorTotal = valorBase + valorTaxa;
+
+    return {
+        base: valorBase,
+        taxa: valorTaxa,
+        total: valorTotal,
+        pctTexto: (porcentagem * 100) + '%'
+    };
+}
 
 // --- 9. INICIALIZAÇÃO E EVENT LISTENERS (MAIN) ---
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. Aplica máscaras e listeners de utilidade principal
     $("#pedido-cep").addEventListener('input', mascaraCEP);
-    $("#pedido-orcamento-max").addEventListener('input', mascaraDinheiro);
+    //$("#pedido-orcamento-max").addEventListener('input', mascaraDinheiro);
     $("#pedido-buscar-cep").addEventListener('click', buscarCepPrincipal);
     if(fotosInput) fotosInput.addEventListener('change', handleFotoPreview);
     
@@ -535,6 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (currentStep === 1 && selectedCategory) {
             renderDynamicFields();
+            configurarControleDePreco();
             navigateToStep(2);
         } else if (currentStep === 2 && validateStep(2)) {
             navigateToStep(3);
@@ -555,14 +663,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             try {
                 const formData = coletarDadosDoFormulario();
-                // CHAMA A FUNÇÃO FIREBASE
-                const success = await salvarNovoPedido(newFiles, formData, selectedCategory.nome);
+                
+                // --- NOVO: Recupera os dados financeiros calculados ---
+                const financeiroData = JSON.parse(form.dataset.financeiro || '{}');
+
+                // Passamos o financeiroData como 4º argumento
+                const success = await salvarNovoPedido(newFiles, formData, selectedCategory.nome, financeiroData);
 
                 if (success) {
                     window.location.href = '../html/pedidosC.html';
                 }
             } catch (error) {
-                alert(`Erro ao enviar o pedido: ${error.message}`);
+                console.error(error);
+                alert("Erro ao enviar: " + error.message);
                 btnAvancar.disabled = false;
                 btnAvancar.innerText = btnOriginalText;
             }

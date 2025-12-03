@@ -16,7 +16,7 @@
 <body>
     <aside class="sidebar">
         <div class="logo">
-            <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" style="width: 150px; height: auto;">
+            <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" class="logo-responsiva">
         </div>
         <nav>
             <ul>
@@ -28,6 +28,14 @@
             </ul>
         </nav>
         <button class="logout"><i data-lucide="log-out"></i> Sair</button>
+
+          <div id="logout-modal" class="modal">
+    <div class="modal-content">
+      <p>Tem certeza que deseja sair?</p>
+      <button id="confirm-yes">Sim</button>
+      <button id="confirm-no">Cancelar</button>
+    </div>
+  </div>
         </aside>
 
     <main class="main-content">
@@ -50,7 +58,7 @@
                         <span class="text-highlight">hoje?</span>
                     </h1>
                     <p class="hero-subtitle">
-                        Maneira mais rápida, segura e econômica para conectar você aos melhores fornecedores disponíveis na sua região.
+                        Maneira mais rápida, segura e econômica para conectar você aos melhores prestadores disponíveis na sua região.
                     </p>
                     <div class="hero-buttons">
                         <button class="btn btn-primary" id="btn-iniciar-pedido">Faça um pedido já!</button>

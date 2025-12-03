@@ -286,3 +286,14 @@ padding-left: 0px !important;
   font-size: 16px;
   font-weight: bold;
 }
+.logo-responsiva {
+    width: 100%;
+    height: auto;
+    max-width: 150px; /* Tamanho padrão (Desktop) */
+}
+
+@media (max-width: 768px) {
+    .logo-responsiva {
+        max-width: 100px; /* Tamanho menor para celulares */
+    }
+}

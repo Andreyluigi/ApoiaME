@@ -3,33 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ApoiaMe - Dashboard Fornecedor</title>
+  <title>ApoiaMe - Painel do Fornecedor</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/dashboardA.css">
-  <link rel="stylesheet" href="../css/styles.css">
-   <link rel="stylesheet" href="../css/chat.css">
+  
+  <link rel="stylesheet" href="../css/styles.css">     <link rel="stylesheet" href="../css/dashboardA.css"> <link rel="stylesheet" href="../css/chat.css">
 
-
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
-  <!-- MENU LATERAL -->
+
   <aside class="sidebar">
     <div class="logo">
-        <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" style="width: 150px; height: auto;">
+       <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" class="logo-responsiva">
     </div>
     <nav>
       <ul>
-        <li class="active"><a href="../html/dashboardA.html"><i data-lucide="home"></i> Início</a></li>
-        <li><a href="meuservicosA.html"><i data-lucide="package"></i> Meus Serviços</a></li>
-        <li><a href="../html/pedidosA.html"><i data-lucide="check-circle"></i>Meus Pedidos</a></li>
+       <li class="active"><a href="../html/dashboardA.html"><i data-lucide="home"></i> Início</a></li>
+        <li  ><a href="../html/pedidosA.html"><i data-lucide="check-circle"></i>Meus Pedidos</a></li>
         <li><a href="../html/carteiraA.html"><i data-lucide="wallet"></i> Minha Carteira</a></li>
         <li><a href="#" id="abrir-chat-btn"><i data-lucide="message-circle"></i> Chat</a></li>
         <li><a href="../html/perfil-fornecedor.html"><i data-lucide="users"></i> Meu Perfil</a></li>
-
       </ul>
     </nav>
     <button class="logout"><i data-lucide="log-out"></i> Sair</button>
-    <!-- CONFIRMAÇÃO DE LOGOUT -->
+    
     <div id="logout-modal" class="modal">
       <div class="modal-content">
         <p>Tem certeza que deseja sair?</p>
@@ -39,73 +37,90 @@
     </div>
   </aside>
 
-  <!-- CONTEÚDO PRINCIPAL -->
   <main class="main-content">
+    
     <header class="topbar">
-      <div class="search-container">
-
-      </div>
+      <div class="search-container"></div>
       <div class="topbar-right">
-
         <div class="profile-container">
-          <span id="user-greeting">Olá, <span id="user-name"></span></span>
+          <span id="user-greeting">Olá, <span id="user-name">Parceiro</span></span>
         </div>
       </div>
     </header>
 
-<br>
-   
-      <!--Resumo de Pedidos-->      
-<section class="resumo-pedidos" id="resumo-pedidos-container">
-    <div class="h2">
-        <h2>Resumo de Pedidos</h2>
-    </div>
-    <p>Carregando seus pedidos...</p>
-</section>
+    <section class="content">
 
-<section class="dashboard-vendas">
-    <header class="dashboard-header">
-        <h2>Seus Resultados</h2>
-        <div class="dados-principais">
-            <div class="dados-item">
-                <p>Total de Serviços Finalizados</p>
-                <h3><span id="total-servicos-valor">...</span></h3>
+      <section id="secao-pedido-ativo" style="display: none;">
+         <div class="section-header-row">
+            <h2><span class="live-dot"></span> Serviço em Andamento</h2>
+         </div>
+         <div id="card-pedido-ativo-dashboard">
             </div>
-            <div class="dados-item">
-                <p>Pedidos Ativos / Pendentes</p>
-                <h3><span id="pedidos-pendentes-valor">...</span></h3>
+      </section>
+
+      <section class="stats-section">
+        <h2>Visão Geral</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon-stat green"><i data-lucide="dollar-sign"></i></div>
+                <div class="stat-info">
+                    <span class="label">Ganhos (Mês)</span>
+                    <h3 id="total-ganhos-valor">R$ 0,00</h3>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon-stat blue"><i data-lucide="check-circle"></i></div>
+                <div class="stat-info">
+                    <span class="label">Serviços Finalizados</span>
+                    <h3 id="total-servicos-valor">0</h3>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon-stat yellow"><i data-lucide="star"></i></div>
+                <div class="stat-info">
+                    <span class="label">Sua Nota</span>
+                    <h3 id="avaliacao-media-valor">--</h3>
+                </div>
             </div>
         </div>
-    </header>
+      </section>
 
-    <div class="radio-inputs">
-        <label class="radio">
-            <input type="radio" name="periodo" value="week" checked="" onclick="changePeriod(this.value)">
-            <span class="name">Semana</span>
-        </label>
-        <label class="radio">
-            <input type="radio" name="periodo" value="month" onclick="changePeriod(this.value)">
-            <span class="name">Mês</span>
-        </label>
-        <label class="radio">
-            <input type="radio" name="periodo" value="year" onclick="changePeriod(this.value)">
-            <span class="name">Ano</span>
-        </label>
-    </div>
+      <section class="cta-section">
+        <div class="cta-card">
+            <div class="cta-text">
+                <h3>Procurando novos serviços?</h3>
+                <p>Veja os pedidos disponíveis na sua região agora mesmo.</p>
+            </div>
+            <a href="pedidosA.html" class="btn-cta">Ver Pedidos Disponíveis</a>
+        </div>
+      </section>
 
-    <div class="grafico">
-        <canvas id="graficoVendas"></canvas>
-    </div>
-</section>
+      <section class="recent-history">
+          <div class="section-header-row">
+             <h2>Últimos Serviços</h2>
+             <a href="carteiraA.html" class="link-ver-todos">Ver extrato completo</a>
+          </div>
+          
+          <div id="lista-ultimos-servicos" class="lista-simples">
+             <p class="loading-text">Carregando histórico...</p>
+          </div>
+      </section>
 
+    </section>
+  </main>
 
-    </body>
+  <script defer src="../js/script.js"></script>
   <script type="module" src="/firebase-init.js"></script>
   <script type="module" src="/script-module.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="/dashboardA.firebase.js"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script type="module" src="/dashboardA.firebase.js"></script> 
   <script type="module" src="/chat.module.js"></script>
   <script type="module" src="/chat-init.js"></script>
-  <script>lucide.createIcons();</script>  
-    </html>
+  
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

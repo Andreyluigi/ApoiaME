@@ -3,157 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ApoiaMe - Início</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/welcome.css">
-  <link rel="stylesheet" href="../css/footer.css">
-    <script src="../js/welcome.js"></script>
+  <title>ApoiaMe - Conectando a Comunidade</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../css/index.css">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
-  <header class="cabecalho">
-    <a href="welcome.html">
-      <img src="../arquivos/logovertical.png" alt="ApoiaMe" class="logo">
-    </a>
-    <nav class="menuintro" id="menuintro"></nav>
-    <div class="cadastroarea">
-      <a href="login.html" class="cadastrolink">Cadastre-se</a>
-      <a href="login.html" class="botao-login">Login</a>
+  <header class="navbar">
+    <div class="container navbar-content">
+      <a href="index.html" class="logo-link">
+        <img src="../arquivos/logovertical.png" alt="ApoiaMe Logo" class="logo-img">
+      </a>
+      
+      <nav class="nav-links">
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#fornecedor">Seja Fornecedor</a>
+        <a href="#equipe">Equipe</a>
+      </nav>
+
+      <div class="auth-buttons">
+        <a href="cadastro.html" class="btn-link">Cadastre-se</a>
+        <a href="login.html" class="btn btn-primary btn-sm">Entrar</a>
+      </div>
     </div>
   </header>
 
-  <!-- secao apresentacao -->
-  <section class="apresentacao">
-    <div class="apresentacao-conteudo">
-      <div class="apresentacao-textos">
-        <h1>Conectando quem precisa <br>
-          com quem pode ajudar</h1>
-        <p>O ApoiaMe aproxima vizinhos <br>
-          para realizar pequenas entregas e tarefas,<br>
-           fortalecendo a comunidade e economias locais.</p>
-        <a href="login.html" class="btn btn-primary btn-lg hover-bright">Peça Ajuda Agora!</a>
+  <main>
+    <section class="hero">
+      <div class="container hero-container">
+        <div class="hero-text">
+          <h1>Conectando quem precisa com quem pode ajudar</h1>
+          <p>O ApoiaMe aproxima vizinhos para realizar pequenas entregas e tarefas, fortalecendo a comunidade e as economias locais.</p>
+          <a href="login.html" class="btn btn-primary btn-lg">Peça Ajuda Agora!</a>
+        </div>
+        <div class="hero-image">
+          <img src="../arquivos/hero.png" alt="Ilustração de entrega comunitária">
+        </div>
       </div>
-      <div class="apresentacao-imagem">
-        <img src="../arquivos/hero.png" alt="Fornecedor entregando compras">
+    </section>
+
+    <section class="concept-section">
+      <div class="container concept-container">
+        <div class="concept-img">
+          <img src="../arquivos/clientecirculo.png" alt="Cliente feliz">
+        </div>
+        <div class="concept-text">
+          <h2>Apoio rápido e de confiança</h2>
+          <p>Com a <strong>ApoiaMe</strong>, clientes encontram soluções simples na própria comunidade. Segurança e agilidade para o seu dia a dia.</p>
+          <a href="login.html" class="btn btn-outline">Quero experimentar</a>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-<section class="cliente-section">
-  <div class="cliente-container">
-    
-    <div class="cliente-img">
-      <img src="../arquivos/clientecirculo.png" alt="Cliente satisfeito">
-    </div>
+    <section id="como-funciona" class="how-it-works">
+      <div class="container">
+        <div class="section-header">
+          <h2>Como funciona a ApoiaMe?</h2>
+          <p>Em três passos simples, você pede ou oferece ajuda na sua comunidade.</p>
+        </div>
 
-    <div class="cliente-text">
-      <h2>Conectando quem precisa com quem ajuda</h2>
-      <p>Com a <strong>ApoiaMe</strong>, clientes encontram apoio rápido, simples e de confiança na própria comunidade.</p>
-      <a href="login.html" class="btn-cliente">Quero experimentar</a>
-    </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="icon-wrapper">
+              <img src="../arquivos/icone_pedir_ajuda.png" alt="Pedir Ajuda">
+            </div>
+            <h3>1. Peça ajuda</h3>
+            <p>Crie seu pedido de compra, entrega ou tarefa descrevendo o que precisa.</p>
+          </div>
+          
+          <div class="step-card">
+            <div class="icon-wrapper">
+              <img src="../arquivos/icone_encontrar_ajudante.png" alt="Encontrar Fornecedor">
+            </div>
+            <h3>2. Encontre</h3>
+            <p>Nosso app conecta você automaticamente com vizinhos disponíveis.</p>
+          </div>
 
-  </div>
-</section>
-<!-- Secao Como Funciona -->
-<section class="como-funciona">
-  <div class="como-wrapper">
-    <div class="como-texto">
-      <h2>Como funciona a ApoiaMe?</h2>
-      <p>Em três passos simples, você pede ou oferece ajuda na sua comunidade.</p>
-    </div>
-
-    <div class="passos-container">
-      <div class="passo-item">
-        <img src="../arquivos/icone_pedir_ajuda.png" alt="Ícone Peça Ajuda">
-        <h3>Peça ajuda</h3>
-        <p>Crie seu pedido de compra, entrega ou tarefa.</p>
+          <div class="step-card">
+            <div class="icon-wrapper">
+              <img src="../arquivos/icone_receber_casa.png" alt="Receber">
+            </div>
+            <h3>3. Receba</h3>
+            <p>O serviço é realizado e você avalia o fornecedor ao final.</p>
+          </div>
+        </div>
       </div>
-      <div class="passo-item">
-        <img src="../arquivos/icone_encontrar_ajudante.png" alt="Ícone Encontre Fornecedor">
-        <h3>Encontre um Fornecedor</h3>
-        <p>Nosso app conecta você com vizinhos disponíveis.</p>
+    </section>
+
+    <section id="fornecedor" class="provider-section">
+      <div class="container provider-container">
+        <div class="provider-text">
+          <h2>Seja um Fornecedor!</h2>
+          <p>Quer ganhar uma grana extra? No ApoiaMe você ajuda vizinhos com entregas rápidas, pequenas tarefas e serviços na sua região.</p>
+          <a href="login.html" class="btn btn-white btn-lg">Começar Agora</a>
+        </div>
+        <div class="provider-image">
+          <img src="../arquivos/ajudante.png" alt="Ilustração de fornecedor">
+        </div>
       </div>
-      <div class="passo-item">
-        <img src="../arquivos/icone_receber_casa.png" alt="Ícone Receba em Casa">
-        <h3>Receba em casa</h3>
-        <p>Conclua e avalie o serviço prestado.</p>
+    </section>
+
+    <section id="equipe" class="team-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Nossa Equipe</h2>
+          <p>Quem faz o ApoiaMe acontecer.</p>
+        </div>
+
+        <div class="team-grid">
+          <div class="team-card">
+            <img src="../arquivos/andrey.JPG" alt="Andrey Luigi">
+            <h3>Andrey Luigi</h3>
+            <p>Engenheiro Full-Stack e Gerente Financeiro</p>
+          </div>
+          <div class="team-card">
+            <img src="../arquivos/caio.JPG" alt="Caio Ribeiro">
+            <h3>Caio Ribeiro</h3>
+            <p>Programador Front-End e Engenheiro de Software</p>
+          </div>
+          <div class="team-card">
+            <img src="../arquivos/Kauan.JPG" alt="Kauan Silva">
+            <h3>Kauan Silva</h3>
+            <p>Analista de Dados</p>
+          </div>
+          <div class="team-card">
+            <img src="../arquivos/vitor.JPG" alt="Vitor Moura">
+            <h3>Vitor Moura</h3>
+            <p>Gerente de Marketing 
+e Design</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="como-bg"></div>
-</section>
+    </section>
 
+    <section class="about-us">
+      <div class="container about-container">
+        <div class="about-text">
+          <h2>Sobre Nós</h2>
+          <p>A ApoiaMe nasceu para aproximar pessoas, facilitar conexões e criar impacto social na comunidade. Nossa missão é transformar a forma como moradores interagem, colaborando para um futuro mais solidário.</p>
+        </div>
+      </div>
+    </section>
 
-  <!-- secao Fornecedor -->
-<section class="Fornecedor">
-  <div class="Fornecedor-conteudo">
-    <div class="Fornecedor-imagem">
-      <img src="../arquivos/ajudante.png" alt="Fornecedor prestando serviço">
-    </div>
-    <div class="Fornecedor-textos">
-      <h1>Seja um Fornecedor!</h1>
-      <p>
-        Quer ganhar uma grana extra? <br>
-        No ApoiaMe você ajuda vizinhos com <br>
-        entregas rápidas, pequenas tarefas <br>
-        e serviços na sua região.
-      </p>
-      <a href="login.html" class="btn btn-primary btn-lg hover-bright">Começar como Fornecedor</a>
-    </div>
-  </div>
-</section>
+  </main>
 
-<!-- Seção Equipe -->
-<section class="equipe">
-  <h2>Nossa Equipe</h2>
-  <div class="membros">
-    <div class="membro">
-      <img src="../arquivos/andrey.JPG" alt="Membro 1">
-      <h3>Andrey Luigi</h3>
-      <p>Programador Full Stack (Back-end e Front-end), Dev de Software.</p>
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 ApoiaMe. Todos os direitos reservados.</p>
     </div>
-    <div class="membro">
-      <img src="../arquivos/caio.JPG" alt="Membro 2">
-      <h3>Caio Ribeiro</h3>
-      <p>CEO, Gerente Financeiro, programador Front-end.</p>
-    </div>
-    <div class="membro">
-      <img src="../arquivos/Kauan.JPG" alt="Membro 3">
-      <h3>Kauan Silva</h3>
-      <p>Gerente de Marketing e Design</p>
-    </div>
-    <div class="membro">
-      <img src="../arquivos/vitor.JPG" alt="Membro 4">
-      <h3>Vitor Moura</h3>
-      <p>Marketing e Design.</p>
-    </div>
-  </div>
-</section>
+  </footer>
 
-<!-- Seção Sobre Nós -->
-<section class="sobre-nos">
-  <div class="texto">
-    <h2>Sobre Nós</h2>
-    <p>
-      A ApoiaMe nasceu para aproximar pessoas, facilitar conexões e criar impacto social 
-      na comunidade. Nossa missão é transformar a forma como moradores interagem, 
-      colaborando para um futuro mais solidário.
-    </p>
-  </div>
-  <div class="imagem">
-    
-  </div>
-</section>
-  <script type="module" src="/script-module.js"></script>
+  <script>lucide.createIcons();</script>
+  <script type="module" src="../js/welcome.js"></script> 
 
 </body>
-<footer class="footer">
-  <div class="footer-bottom">
-    <p>&copy; 2025 ApoiaMe. Todos os direitos reservados.</p>
-  </div>
-</footer>
-
 </html>
-
-
- 

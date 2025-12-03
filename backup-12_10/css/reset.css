@@ -1,20 +1,28 @@
-:root{
-  --primaria: #3DBE34;
-  --primaria-escura: #2E8F28;
-  --texto: #1F2937;
-  --texto-suave: #6B7280;
+/* Estilos atualizados para a Identidade Visual Oficial (#017643) */
+
+:root {
+  /* Paleta Oficial */
+  --primaria: #017643;       /* Verde Oficial */
+  --primaria-escura: #005f36; /* Verde Escuro / Hover */
+  --acento: #e3fae3;         /* Verde Claro Suave */
+  
+  /* Neutros */
+  --texto: #0f172a;          /* Preto/Azul Escuro */
+  --texto-suave: #64748b;    /* Cinza Texto */
   --branco: #FFFFFF;
-  --cinza-claro: #EFEFEF;
-  --borda: #E5E7EB;
-  --sombra: 0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.10);
+  --cinza-claro: #f8fafc;    /* Fundo dos inputs */
+  --borda: #e2e8f0;
+  
+  /* Efeitos */
+  --sombra: 0 10px 25px rgba(0, 0, 0, 0.05); /* Sombra mais suave e moderna */
 }
 
-*{ box-sizing: border-box; }
-html, body{ height: 100%; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 
-body{
-  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: linear-gradient(135deg, #f7fff6 0%, #f0fff0 100%);
+body {
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  background-color: #f1f5f9; /* Fundo cinza limpo em vez de gradiente verde */
   color: var(--texto);
   display: grid;
   place-items: center;
@@ -22,40 +30,61 @@ body{
   padding: 24px;
 }
 
-h1{ font-weight: 700; margin: 0; }
-p{ color: var(--texto-suave); margin: 12px 0 20px; line-height: 1.5; }
-a.link-acao{ color: var(--primaria-escura); text-decoration: none; font-size: 14px; }
+h1 { font-weight: 700; margin: 0; color: var(--primaria); }
 
-.btn-primario{
-  border-radius: 24px;
+p { 
+  color: var(--texto-suave); 
+  margin: 12px 0 20px; 
+  line-height: 1.6; 
+  font-size: 0.95rem;
+}
+
+a.link-acao { 
+  color: var(--primaria); 
+  text-decoration: none; 
+  font-size: 14px; 
+  font-weight: 600;
+}
+a.link-acao:hover { text-decoration: underline; }
+
+/* Botão Primário (Verde Oficial) */
+.btn-primario {
+  border-radius: 30px; /* Mais arredondado */
   border: 1px solid var(--primaria);
   background: var(--primaria);
   color: var(--branco);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  padding: 12px 42px;
-  letter-spacing: .5px;
+  padding: 12px 45px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  transition: transform .08s ease-in, filter .2s ease, box-shadow .2s ease;
-  box-shadow: 0 6px 14px rgba(61,190,52,.22);
+  transition: background 0.3s ease, transform 0.1s ease;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(1, 118, 67, 0.2); /* Sombra verde sutil */
 }
-.btn-primario:active{ transform: scale(.97); }
-.btn-primario:focus{ outline: 2px solid rgba(61,190,52,.35); outline-offset: 2px; }
 
-.container-redefinir{
+.btn-primario:hover {
+  background: var(--primaria-escura);
+  border-color: var(--primaria-escura);
+}
+
+.btn-primario:active { transform: scale(0.98); }
+.btn-primario:focus { outline: none; box-shadow: 0 0 0 3px var(--acento); }
+
+/* Container Principal */
+.container-redefinir {
   background: var(--branco);
-  border-radius: 12px;
+  border-radius: 20px; /* Raio maior */
   box-shadow: var(--sombra);
   position: relative;
   overflow: hidden;
-  width: 800px;
+  width: 850px; /* Um pouco mais largo */
   max-width: 100%;
-  min-height: 460px;
+  min-height: 500px; /* Um pouco mais alto */
 }
 
 /* Bloco do formulário */
-.bloco-formulario{
+.bloco-formulario {
   position: absolute;
   top: 0; left: 0;
   height: 100%; width: 50%;
@@ -64,66 +93,68 @@ a.link-acao{ color: var(--primaria-escura); text-decoration: none; font-size: 14
   transition: all .6s ease-in-out;
   z-index: 2;
 }
-.formulario{
+
+.formulario {
   width: 100%;
   max-width: 420px;
   display: flex; flex-direction: column; align-items: center; text-align: center;
-  padding: 0 48px;
-}
-.formulario .campo{
-  background: var(--cinza-claro);
-  border: 1px solid transparent;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-bottom: 22px;
-}
-.formulario .input-group-text{
-margin-bottom: 22px;
-}
-.formulario .campo:focus{
-  outline: none; border-color: rgba(61,190,52,.35); background: #fff;
-  box-shadow: 0 0 0 .25rem rgba(61,190,52,.15);
+  padding: 0 40px;
 }
 
-/* Overlay lateral (direita) */
-.container-overlay{
+/* Inputs */
+.formulario .campo {
+  background: var(--cinza-claro);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  width: 100%;
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: var(--texto);
+}
+
+.formulario .input-group-text {
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.formulario .campo:focus {
+  outline: none; 
+  border-color: var(--primaria); 
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--acento); /* Anel de foco verde claro */
+}
+
+/* Overlay lateral (Direita) */
+.container-overlay {
   position: absolute;
   top: 0;
-  left: 50%;          /* prende à metade direita */
+  left: 50%;
   width: 50%;
   height: 100%;
   overflow: hidden;
   z-index: 100;
-  
 }
 
-/* Fallback */
-.overlay{
+/* Overlay com Gradiente Oficial */
+.overlay {
   background: linear-gradient(135deg, var(--primaria) 0%, var(--primaria-escura) 100%);
   color: #fff;
   position: absolute;
   inset: 0;          
-  transform: none;    
+  transform: none;     
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 0 12px 12px 0;  /* cantos direitos arredondados como o container */
+  border-radius: 0 20px 20px 0; /* Combina com o container */
   display: flex; align-items: center; justify-content: center;
   text-align: center;
   padding: 0 40px;
 }
-/* Moderno */
-@supports (color-mix(in srgb, #000 0%, #000 0%)){
-  .overlay{
-    background: linear-gradient(
-      135deg,
-      var(--primaria) 0%,
-      color-mix(in srgb, var(--primaria) 70%, #000 30%) 100%
-    );
-  }
-}
 
-.painel-overlay{
+.painel-overlay {
   width: 100%;
   max-width: 420px;
   margin: 0 auto;
@@ -132,36 +163,49 @@ margin-bottom: 22px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 24px;
 }
 
-.painel-overlay h1{ color: #fff; margin-bottom: 12px; }
-.painel-overlay p{ color: rgba(255,255,255,.9); margin-bottom: 24px; }
-.painel-overlay .btn-transparente{
+.painel-overlay h1 { color: #fff; margin-bottom: 16px; font-size: 2rem; }
+.painel-overlay p { color: rgba(255,255,255,0.9); margin-bottom: 30px; font-size: 1rem; }
+
+.painel-overlay .btn-transparente {
   border-color: #fff;
   color: #fff;
+  background: transparent;
+  border-radius: 30px;
+  padding: 10px 35px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s;
 }
-.painel-esquerda{ transform: translateX(-20%); }
-.painel-direita{ right: 0; }
+.painel-overlay .btn-transparente:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
 
 /* Sucesso */
-.success-screen .success-icon{
-  font-size: 48px;
-  margin-bottom: 8px;
+.success-screen .success-icon {
+  font-size: 56px;
+  margin-bottom: 15px;
+  color: var(--primaria);
 }
 
 /* Acessibilidade */
-.sr-only{
+.sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
 /* Responsivo */
-@media (max-width: 860px){
-  .container-redefinir{ width: 100%; min-height: 560px; }
+@media (max-width: 860px) {
+  .container-redefinir { width: 100%; min-height: 600px; }
 }
-@media (max-width: 760px){
-  .container-redefinir{ border-radius: 0; height: 100dvh; min-height: 100dvh; }
-  .bloco-formulario, .container-overlay{ width: 100%; left: 0; }
-  .container-overlay{ display: none; } /* mobile: só o formulário */
+
+@media (max-width: 760px) {
+  .container-redefinir { border-radius: 0; height: 100dvh; min-height: 100dvh; box-shadow: none; }
+  .bloco-formulario, .container-overlay { width: 100%; left: 0; }
+  .container-overlay { display: none; } /* Mobile: esconde o lado verde */
+  .formulario { padding: 0 24px; }
+  
+  body { padding: 0; background-color: #fff; }
 }

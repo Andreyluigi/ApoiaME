@@ -1,167 +1,414 @@
+/* Arquivo: css/welcome.css */
+
+/* 1. VARIÁVEIS GLOBAIS */
 :root {
-  --verde: #3DBE34;
-  --verde-medio: #34A72D;
-  --verde-escuro: #2F8F27;
-  --preto: #000000;
+  --verde-principal: #017643;
+  --verde-escuro: #005f36;
+  --verde-claro: #e3fae3;
   --branco: #ffffff;
-  --cinza: #f4f4f4;
+  --preto: #000000;
+  --cinza-texto: #4a4a4a;
+  --cinza-fundo: #f8f9fa;
+  
+  --max-width: 1200px; /* Largura máxima do conteúdo */
+  --radius: 16px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: var(--branco);
+  background-color: var(--branco);
   color: var(--preto);
-  padding-top: 70px;
+  padding-top: 80px; /* Espaço para o header fixo */
+  line-height: 1.6;
 }
 
-.cabecalho {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 40px;
-  background: var(--branco);
-  box-shadow: 0 1px 3px #00000010;
-  height: 80px;
-  position: fixed; /* Torna o cabeçalho fixo na tela */
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
-  background-color: #fff; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-  box-sizing: border-box; /*nao aumenta a largura*/
-}
-
-
-.logo {
-  height: 70px;
-  width: auto;
-  margin-right: 30px;
-}
-
-.menu {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  font-size: 16px;
-}
-
-.menu a {
-  text-decoration: none;
-  color: #4a4a4a;
-  font-weight: 500;
-  transition: color 0.3s, border-bottom 0.3s;
-  padding-bottom: 4px;
-}
-
-.menu a:hover {
-  color: var(--verde);
-}
-
-.menu a.ativo {
-  color: var(--verde);
-  font-weight: 700;
-  border-bottom: 2px solid var(--verde);
-}
-.menuintro {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  font-size: 16px;
-}
-
-.menuintro a {
-  text-decoration: none;
-  color: #4a4a4a;
-  font-weight: 500;
-  transition: color 0.3s, border-bottom 0.3s;
-  padding-bottom: 4px;
-}
-
-.menuintro a:hover {
-  color: var(--verde);
-}
-
-.menuintro a.ativo {
-  color: var(--verde);
-  font-weight: 700;
-  border-bottom: 2px solid var(--verde);
-}
-.botao-login {
-  background: var(--verde);
-  color: white;
-  padding: 10px 24px;
-  border-radius: 25px;
-  font-weight: 600;
-  font-size: 17px;
-  margin-left: 20px;
-  transition: background 0.3s;
-  height: 35px;
-  width: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;/* pra tirar o sublinhado */
-}
-
-.botao-login:hover {
-  background: var(--verde-escuro);
-}
-
-.comercios-container {
-  max-width: 1200px;
-  margin: 40px auto;
+/* Utilitário de Container (Centraliza tudo) */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
   padding: 0 20px;
 }
 
-.comercios-section h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 30px;
-  text-align: center;
+/* ========================================= */
+/* 2. CABEÇALHO (NAVBAR) */
+/* ========================================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: var(--branco);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
 }
 
-.comercios {
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-img {
+  height: 50px;
+  width: auto;
+}
+
+.nav-links {
   display: flex;
   gap: 30px;
-  flex-wrap: wrap;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--cinza-texto);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--verde-principal);
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-link {
+  text-decoration: none;
+  color: var(--verde-principal);
+  font-weight: 600;
+}
+
+/* ========================================= */
+/* 3. BOTÕES GERAIS */
+/* ========================================= */
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.btn-sm { padding: 8px 20px; font-size: 0.9rem; }
+.btn-lg { padding: 16px 40px; font-size: 1.1rem; }
+
+.btn-primary {
+  background-color: var(--verde-principal);
+  color: var(--branco);
+}
+.btn-primary:hover {
+  background-color: var(--verde-escuro);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(1, 118, 67, 0.3);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid var(--verde-principal);
+  color: var(--verde-principal);
+}
+.btn-outline:hover {
+  background-color: var(--verde-principal);
+  color: var(--branco);
+}
+
+.btn-white {
+  background-color: var(--branco);
+  color: var(--verde-principal);
+}
+.btn-white:hover {
+  background-color: var(--verde-claro);
+}
+
+
+/* ========================================= */
+/* 4. HERO SECTION */
+/* ========================================= */
+.hero {
+  background-color: var(--cinza-fundo);
+  padding: 60px 0;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+}
+
+.hero-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap-reverse; /* Mobile: Imagem em baixo */
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.hero-text h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem); /* Responsivo */
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--preto);
+}
+
+.hero-text p {
+  font-size: 1.1rem;
+  color: var(--cinza-texto);
+  margin-bottom: 30px;
+  max-width: 500px;
+}
+
+.hero-image {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
   justify-content: center;
 }
 
-.comercio {
-  background: var(--branco);
-  border: 1px solid #eee;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 2px 8px #00000010;
-  width: 300px;
-  flex-shrink: 0;
+.hero-image img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
 }
 
-.comercio h2 {
-  font-size: 18px;
+
+/* ========================================= */
+/* 5. CONCEITO (CLIENTE) */
+/* ========================================= */
+.concept-section {
+  padding: 100px 0;
+  background-color: var(--branco);
+}
+
+.concept-container {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.concept-img {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 280px;
+}
+
+.concept-img img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 50%; /* Círculo */
+  border: 4px solid var(--verde-claro);
+}
+
+.concept-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.concept-text h2 {
+  font-size: 2.2rem;
+  color: var(--verde-principal);
+  margin-bottom: 20px;
+}
+
+.concept-text p {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  color: var(--cinza-texto);
+}
+
+
+/* ========================================= */
+/* 6. COMO FUNCIONA */
+/* ========================================= */
+.how-it-works {
+  padding: 100px 0;
+  background-color: var(--cinza-fundo);
+  text-align: center;
+}
+
+.section-header {
+  margin-bottom: 60px;
+}
+.section-header h2 {
+  font-size: 2.5rem;
+  color: var(--verde-principal);
   margin-bottom: 10px;
 }
 
-.comercio p {
-  margin: 4px 0;
-  font-size: 14px;
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
 }
 
-.botao-pedido {
-  margin-top: 12px;
-  display: inline-block;
-  background: var(--verde);
-  color: white;
-  padding: 8px 16px;
+.step-card {
+  background: var(--branco);
+  padding: 40px 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s;
+}
+.step-card:hover {
+  transform: translateY(-10px);
+}
+
+.icon-wrapper img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.step-card h3 {
+  font-size: 1.3rem;
+  color: var(--verde-principal);
+  margin-bottom: 10px;
+}
+
+
+/* ========================================= */
+/* 7. FORNECEDOR (CTA) */
+/* ========================================= */
+.provider-section {
+  background-color: var(--verde-principal);
+  color: var(--branco);
+  padding: 80px 0;
+}
+
+.provider-container {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+.provider-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.provider-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+.provider-text p {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.provider-image {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+.provider-image img {
+  max-width: 400px;
+  width: 100%;
+}
+
+
+/* ========================================= */
+/* 8. EQUIPE */
+/* ========================================= */
+.team-section {
+  padding: 100px 0;
+  background: var(--branco);
+  text-align: center;
+}
+
+.team-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.team-card {
+  width: 250px;
+  background: var(--cinza-fundo);
+  padding: 30px 20px;
   border-radius: 20px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  transition: background 0.3s;
+  transition: transform 0.3s;
+}
+.team-card:hover { transform: scale(1.05); }
+
+.team-card img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--verde-principal);
+  margin-bottom: 15px;
 }
 
-.botao-pedido:hover {
-  background: var(--verde-escuro);
+.team-card h3 { font-size: 1.2rem; margin-bottom: 5px; }
+.team-card p { font-size: 0.9rem; color: var(--cinza-texto); }
+
+
+/* ========================================= */
+/* 9. SOBRE NÓS */
+/* ========================================= */
+.about-us {
+  background-color: var(--verde-claro);
+  padding: 80px 0;
+  text-align: center;
+}
+.about-text h2 { font-size: 2.5rem; color: var(--verde-principal); margin-bottom: 20px; }
+.about-text p { max-width: 800px; margin: 0 auto; font-size: 1.1rem; color: var(--cinza-texto); }
+
+
+/* ========================================= */
+/* 10. FOOTER */
+/* ========================================= */
+.footer {
+  background-color: var(--verde-escuro);
+  color: var(--branco);
+  text-align: center;
+  padding: 30px 0;
+  font-size: 0.9rem;
+}
+
+
+/* ========================================= */
+/* 11. RESPONSIVIDADE MOBILE */
+/* ========================================= */
+@media (max-width: 768px) {
+  /* Esconde menu desktop no mobile */
+  .nav-links { display: none; } 
+  
+  /* Ajustes de texto e espaçamento */
+  .hero-text h1 { font-size: 2.2rem; text-align: center; }
+  .hero-text p { text-align: center; margin: 0 auto 30px; }
+  .hero-text { align-items: center; } /* Centraliza botão */
+  
+  .concept-container, .provider-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .provider-image { order: -1; /* Imagem primeiro no mobile */ }
+  
+  .hero-image { display: none; /* Opcional: Esconder imagem hero no mobile se ocupar muito espaço */ }
 }

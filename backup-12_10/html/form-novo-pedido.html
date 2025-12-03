@@ -18,7 +18,7 @@
 <body>
     <aside class="sidebar">
         <div class="logo">
-            <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" style="width: 150px; height: auto;">
+            <img src="../arquivos/ChatGPT Image 30_10_2025, 10_57_56 (1).png" alt="logo" class="logo-responsiva">
         </div>
         <nav>
             <ul>
@@ -40,9 +40,7 @@
                     <span id="user-greeting">Olá, <span id="user-name">Carregando...</span></span>
                 </div>
             </div>
-            
         </header>
-
 
         <section class="content-wrapper">
                     <a href="../html/novo-pedido.html" class="btn-voltar-topo">
@@ -78,6 +76,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="wizard-body">
                     <form id="form-novo-pedido" novalidate>
 
@@ -99,18 +98,33 @@
                                 <div class="invalid-feedback">Por favor, dê um título.</div>
                             </div>
                             
-                            <div id="dynamic-fields-container">
-                                </div>
+                            <div id="dynamic-fields-container"></div>
                             
-                            <div class="form-group mb-3 mt-4">
-                                <label for="pedido-orcamento-max" class="form-label">Seu orçamento máximo (opcional)</label>
-                                <input type="text" class="form-control" id="pedido-orcamento-max" placeholder="R$ 0,00">
+                            <div class="card p-3 mt-4" style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px;">
+                                <div class="form-group">
+                                    <label for="pedido-orcamento-max" class="fw-bold form-label" style="color: var(--cor-primaria);">
+                                        Valor da sua Oferta
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text fw-bold">R$</span>
+                                        <input type="number" class="form-control text-center" id="pedido-orcamento-max" required readonly 
+                                               style="font-size: 1.3rem; font-weight: bold; color: #333; background-color: #fff; max-width: 120px;">
+                                        <button class="btn btn-outline-danger" type="button" id="btn-diminuir-valor" style="font-weight: 600;">
+                                            <i data-lucide="minus"></i> R$ 1
+                                        </button>
+                                        <button class="btn btn-outline-success" type="button" id="btn-aumentar-valor" style="font-weight: 600;">
+                                            <i data-lucide="plus"></i> R$ 5
+                                        </button>
+                                    </div>
+                                    <div class="form-text mt-2" id="aviso-preco">
+                                        Carregando sugestão de preço...
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="wizard-pane" id="step-3">
                             <h3 class="fw-bold mb-3">Onde será o serviço?</h3>
-                            
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -164,19 +178,16 @@
                                 <input type="hidden" id="pedido-lat" name="pedido-lat" required>
                                 <input type="hidden" id="pedido-lng" name="pedido-lng" required>
                             </div>
-                            
                         </div>
+
                         <div class="wizard-pane" id="step-4">
                             <h3 class="fw-bold mb-3">Anexar Fotos (Opcional)</h3>
                             <p class="text-muted">Fotos do local, do objeto quebrado ou do produto que precisa ser entregue ajudam o apoiador a entender melhor o serviço.</p>
-                            
                             <div class="form-group mb-4">
                                 <label for="pedido-fotos" class="form-label">Selecione até 3 fotos (JPG ou PNG)</label>
                                 <input type="file" id="pedido-fotos" class="form-control" accept="image/png, image/jpeg" multiple>
                             </div>
-
-                            <div class="row g-3" id="fotos-preview-container">
-                                </div>
+                            <div class="row g-3" id="fotos-preview-container"></div>
                         </div>
 
                         <div class="wizard-pane" id="step-5">
@@ -188,7 +199,6 @@
                                 
                                 <div class="resumo-section">
                                     <h6 class="fw-bold">Categoria: <span id="resumo-categoria" class="fw-normal"></span></h6>
-                                    <h6 class="fw-bold">Orçamento Máximo: <span id="resumo-orcamento" class="fw-normal"></span></h6>
                                 </div>
                                 
                                 <div class="resumo-section">
@@ -198,15 +208,37 @@
                                 
                                 <div class="resumo-section">
                                     <h6 class="fw-bold">Detalhes do Serviço:</h6>
-                                    <ul id="resumo-detalhes" class="resumo-list">
-                                        </ul>
+                                    <ul id="resumo-detalhes" class="resumo-list"></ul>
                                 </div>
                                 
                                 <div class="resumo-section" id="resumo-fotos-container">
                                     <h6 class="fw-bold">Fotos Anexadas: <span id="resumo-fotos-count" class="fw-normal">0</span></h6>
                                 </div>
+
+                                <div class="resumo-section mt-3 p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                                    <h6 class="fw-bold mb-3" style="color: var(--cor-primaria);">Resumo Financeiro:</h6>
+                                    
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Valor da sua Oferta:</span>
+                                        <span id="resumo-valor-base" class="fw-bold">R$ 0,00</span>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Taxa de Serviço ApoiaMe (<span id="resumo-taxa-pct">0%</span>):</span>
+                                        <span id="resumo-valor-taxa">R$ 0,00</span>
+                                    </div>
+                                    
+                                    <hr class="my-2">
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold" style="font-size: 1.1rem; color: var(--cor-primaria);">Total a Pagar:</span>
+                                        <span id="resumo-valor-total" class="fw-bold" style="font-size: 1.3rem; color: var(--cor-primaria);">R$ 0,00</span>
+                                    </div>
+                                    <small class="text-muted d-block text-end mt-1" style="font-size: 0.8rem;">Este é o valor que será processado no pagamento.</small>
+                                </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
 

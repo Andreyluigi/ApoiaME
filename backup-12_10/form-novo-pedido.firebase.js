@@ -139,7 +139,7 @@ function extrairDetalhesDoFormulario(formData, categoria) {
 
 // --- 7. FUNÇÃO PRINCIPAL DE SUBMISSÃO (EXPORTADA) ---
 
-export async function salvarNovoPedido(files, formData, selectedCategoryName) {
+export async function salvarNovoPedido(files, formData, selectedCategoryName, financeiroData) {
     
     // CORREÇÃO CRÍTICA 1: Checagem de autenticação na hora H
     if (!currentUserId) {
@@ -185,20 +185,27 @@ export async function salvarNovoPedido(files, formData, selectedCategoryName) {
         };
         
         const novoPedido = {
-            // CORRIGIDO: Garantido que currentUserId e categoria estão sendo usados
             clienteId: currentUserId, 
             clienteNome: currentUserName,
-            categoria: selectedCategoryName, // O nome da categoria vem do parâmetro
+            categoria: selectedCategoryName,
             
             localizacao: enderecoServico,
             
             titulo: dataValues['pedido-titulo'],
-            orcamentoMaximo: orcamentoNum,
+            
+            // MANTEMOS O CAMPO ANTIGO COMO REFERÊNCIA RÁPIDA (OPCIONAL, MAS BOM PRA NÃO QUEBRAR LEGADO)
+            orcamentoMaximo: financeiroData.base, 
+
+            // NOVO OBJETO FINANCEIRO DETALHADO
+            financeiro: {
+                valorOfertaBase: financeiroData.base,      // Ex: 15.00 (Valor para o Prestador)
+                taxaServicoCliente: financeiroData.taxa,   // Ex: 2.25 (Sua Receita extra)
+                valorTotalGateway: financeiroData.total,   // Ex: 17.25 (Valor a cobrar no cartão)
+                taxaAplicadaPct: financeiroData.pctTexto   // Ex: "15%"
+            },
             
             detalhes: extrairDetalhesDoFormulario(formData, selectedCategoryName),
-            
             fotoUrls: fotoUrls, 
-            
             status: "pendente", 
             criadoEm: serverTimestamp(),
             fornecedorId: null,

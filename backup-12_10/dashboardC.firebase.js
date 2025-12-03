@@ -1,229 +1,170 @@
-// Arquivo: js/dashboard-status.js (ou dashboardC.firebase.js)
-// Versão final com as duas funcionalidades integradas.
+// Arquivo: dashboardC.firebase.js
+// Responsável pela lógica da Dashboard do Cliente (Home)
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-import { getFirestore, where, doc, onSnapshot, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { auth, db } from './firebase-init.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { 
+    doc, 
+    getDoc, 
+    collection, 
+    query, 
+    where, 
+    orderBy, 
+    limit, 
+    getDocs 
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-// Suas credenciais do Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyA1ps6dSM2EtOkyg-xUeFky3S93j77qmII",
-    authDomain: "apoia-me.firebaseapp.com",
-    projectId: "apoia-me",
-    storageBucket: "apoia-me.firebasestorage.app",
-    messagingSenderId: "719321227710",
-    appId: "1:719321227710:web:74e57959cbc564d09c19ef"
+// --- ELEMENTOS DO DOM ---
+const userGreeting = document.getElementById("user-name");
+const activeOrderSection = document.getElementById("secao-pedido-ativo");
+const activeOrderContainer = document.getElementById("card-pedido-ativo-dashboard");
+const lastOrdersContainer = document.getElementById("lista-ultimos-pedidos");
+
+// --- FUNÇÕES AUXILIARES ---
+const formatarMoeda = (valor) => {
+    const num = parseFloat(valor);
+    return isNaN(num) ? "R$ 0,00" : num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
 
-// Inicialização
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const formatarData = (timestamp) => {
+    if (!timestamp || !timestamp.toDate) return "—";
+    return timestamp.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+};
 
-
-let unsubscribeUser = null;
-let unsubscribePedido = null;
-
-function renderStatusCard(pedido) {
-    const statusSection = document.querySelector('.status-tempo-real');
-    if (!statusSection) return;
-
-    if (!pedido || pedido.status === 'finalizado' || pedido.status === 'cancelado') {
-        statusSection.innerHTML = `
-            <div class="status-header"><h2>Status em Tempo Real</h2></div>
-            <div class="status-card inactive"><p>Nenhum pedido ativo no momento.</p></div>
-        `;
-        return;
-    }
-
-    let mensagemStatus = `Status: ${pedido.status.replace(/_/g, " ")}`;
-    switch (pedido.status) {
-        case "pendente": mensagemStatus = "Aguardando o ajudante aceitar..."; break;
-        case "aceito": mensagemStatus = "Pedido aceito! Efetue o pagamento."; break;
-        case "pago_aguardando_inicio": mensagemStatus = "Pagamento confirmado! Aguardando início."; break;
-        case "em_rota": mensagemStatus = "Seu ajudante está a caminho!"; break;
-        case "no_local": mensagemStatus = "O ajudante chegou ao local."; break;
-        case "em_execucao": mensagemStatus = "Serviço em andamento."; break;
-        case "concluido_prestador": mensagemStatus = "Serviço concluído! Confirme a finalização."; break;
-    }
-
-    statusSection.innerHTML = `
-        <div class="status-header">
-            <span class="live-indicator"></span>
-            <h2>Status em Tempo Real</h2>
-        </div>
-        <a href="../html/statusC.html?id=${pedido.id}" class="status-card active">
-            <p><strong>Pedido #${pedido.id.substring(0, 7)}...</strong></p>
-            <p class="status-grande">${mensagemStatus}</p>
-        </a>
-    `;
-}
-
-function monitorarPedidoAtivo(userId) {
-    if (unsubscribeUser) unsubscribeUser();
-    if (unsubscribePedido) unsubscribePedido();
-
-    const userRef = doc(db, "usuarios", userId);
-
-    unsubscribeUser = onSnapshot(userRef, (userDoc) => {
-        if (!userDoc.exists()) {
-            console.error("Documento do usuário não encontrado.");
-            return renderStatusCard(null);
-        }
+// ============================================================
+// 1. VERIFICAR PEDIDO ATIVO (Status em Tempo Real)
+// ============================================================
+async function checkActiveOrder(uid) {
+    try {
+        // 1. Busca o perfil do usuário para ver se tem 'pedidoAtivo'
+        const userRef = doc(db, "usuarios", uid);
+        const userSnap = await getDoc(userRef);
         
-        const pedidoAtivoId = userDoc.data().pedidoAtivo;
+        let temPedidoAtivo = false;
 
-        if (unsubscribePedido) unsubscribePedido();
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const pedidoAtivoId = userData.pedidoAtivo;
 
-        if (pedidoAtivoId) {
-            const pedidoRef = doc(db, "pedidos", pedidoAtivoId);
-            unsubscribePedido = onSnapshot(pedidoRef, (pedidoDoc) => {
-                if (pedidoDoc.exists()) {
-                    const pedidoData = pedidoDoc.data();
-                    pedidoData.id = pedidoDoc.id;
-                    renderStatusCard(pedidoData);
-                } else {
-                    renderStatusCard(null);
+            if (pedidoAtivoId) {
+                // 2. Se tiver ID, busca os dados do pedido
+                const pedidoRef = doc(db, "pedidos", pedidoAtivoId);
+                const pedidoSnap = await getDoc(pedidoRef);
+                
+                if (pedidoSnap.exists()) {
+                    const pedido = pedidoSnap.data();
+                    // Só exibe se o status não for finalizado/cancelado (segurança extra)
+                    if (pedido.status !== 'finalizado' && pedido.status !== 'cancelado') {
+                        renderActiveOrder(pedido, pedidoAtivoId);
+                        temPedidoAtivo = true;
+                    }
                 }
-            });
-        } else {
-            renderStatusCard(null);
-        }
-    });
-}
-
-// ========================================================
-// --- LÓGICA DOS ÚLTIMOS ANÚNCIOS ---
-// ========================================================
-
-async function carregarUltimosAnuncios() {
-    const container = document.querySelector('.velocidade-lista');
-    if (!container) {
-        console.error("Container '.velocidade-lista' não foi encontrado.");
-        return;
-    }
-
-    // Seletor corrigido para pegar QUALQUER elemento com a classe, seja <div> ou <a>
-    const placeholderCards = container.querySelectorAll('.velocidade-item:not(.destaque)');
-    
-    console.log(`Encontrados ${placeholderCards.length} placeholders para preencher.`);
-
-    try {
-        const anunciosRef = collection(db, 'anuncios');
-        const q = query(anunciosRef, orderBy('criadoEm', 'desc'), limit(6));
-        const querySnapshot = await getDocs(q);
-
-        console.log(`Firebase retornou ${querySnapshot.size} anúncios.`);
-
-        if (querySnapshot.empty) {
-            placeholderCards.forEach(card => card.style.display = 'none');
-            return;
-        }
-
-        let index = 0;
-        querySnapshot.forEach((docSnap) => {
-            if (index < placeholderCards.length) {
-                const placeholder = placeholderCards[index]; // O div/a antigo
-                const data = docSnap.data();
-
-                // --- LÓGICA CORRIGIDA ---
-                // 1. Cria um novo elemento de link <a>
-                const linkCard = document.createElement('a');
-                linkCard.className = 'velocidade-item'; // Aplica a mesma classe de estilo
-                linkCard.href = `../html/anuncioD.html?id=${docSnap.id}`;
-                linkCard.style.backgroundImage = `url(${data.fotos?.[0] || '../arquivos/default.jpg'})`;
-                linkCard.innerHTML = `<h4>${data.titulo || 'Serviço disponível'}</h4>`;
-                
-                // 2. Substitui o placeholder antigo pelo novo linkCard funcional
-                placeholder.replaceWith(linkCard);
-                
-                index++;
             }
-        });
-
-        // Esconde os placeholders que não foram usados
-        for (let i = index; i < placeholderCards.length; i++) {
-            placeholderCards[i].style.display = 'none';
         }
 
-    } catch (error) {
-        console.error("ERRO CRÍTICO ao carregar últimos anúncios:", error);
-        container.innerHTML += `<p style="color: red;">Falha ao carregar. Verifique o console (F12).</p>`;
+        // 3. Controla a visibilidade da seção
+        if (temPedidoAtivo) {
+            activeOrderSection.style.display = 'block';
+        } else {
+            activeOrderSection.style.display = 'none';
+        }
+
+    } catch (e) {
+        console.error("Erro ao buscar pedido ativo:", e);
+        activeOrderSection.style.display = 'none';
     }
 }
 
-function formatarData(timestamp) {
-    if (!timestamp || !timestamp.toDate) {
-        return "Data indisponível";
-    }
-    const data = timestamp.toDate();
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const ano = data.getFullYear();
-    return `${dia}/${mes}/${ano}`;
+function renderActiveOrder(pedido, id) {
+    const statusFormatado = (pedido.status || '').replace(/_/g, ' ').toUpperCase();
+    const titulo = pedido.titulo || "Serviço em Andamento";
+    const categoria = pedido.categoria || "Geral";
+
+    activeOrderContainer.innerHTML = `
+        <div class="card-dashboard-ativo">
+            <div>
+                <h3>${titulo}</h3>
+                <p style="margin-bottom: 4px;">${categoria}</p>
+                <p class="status-badge">Status: <strong>${statusFormatado}</strong></p>
+            </div>
+            <a href="statusC.html?id=${id}" class="btn-acompanhar">
+                Acompanhar <i data-lucide="arrow-right" style="width:18px; margin-left: 5px;"></i>
+            </a>
+        </div>
+    `;
+    lucide.createIcons();
 }
 
-/**
- * Carrega os 3 últimos pedidos do cliente na dashboard.
- * @param {string} userId - O ID do usuário logado.
- */
-async function carregarUltimosPedidos(userId) {
-    const container = document.querySelector('.ultimos-lista');
-    if (!container) return;
 
+// ============================================================
+// 2. BUSCAR ÚLTIMOS PEDIDOS (Histórico Rápido)
+// ============================================================
+async function fetchLastOrders(uid) {
     try {
-        const pedidosRef = collection(db, 'pedidos');
-        // Consulta: busca pedidos ONDE o clienteUid é o do usuário logado,
-        // ordena por data de criação (mais recente primeiro) e limita a 3.
-        const q = query(pedidosRef, where('clienteUid', '==', userId), orderBy('criadoEm', 'desc'), limit(3));
+        // Busca pedidos onde clienteId == uid, ordenados por criação
+        // Nota: Se der erro de índice, o console vai fornecer o link para criar.
+        const q = query(
+            collection(db, "pedidos"),
+            where("clienteId", "==", uid),
+            orderBy("criadoEm", "desc"),
+            limit(3)
+        );
+        
         const querySnapshot = await getDocs(q);
-
+        
         if (querySnapshot.empty) {
-            container.innerHTML = '<p>Você ainda não fez nenhum pedido.</p>';
+            lastOrdersContainer.innerHTML = '<div class="empty-state"><p>Você ainda não fez nenhum pedido.</p></div>';
             return;
         }
 
-        container.innerHTML = ''; // Limpa o "Carregando..."
-
-        querySnapshot.forEach((docSnap) => {
-            const pedido = docSnap.data();
-            const statusClass = pedido.status.replace(/_/g, "-"); // ex: 'em_rota' vira 'em-rota' para o CSS
+        let html = '';
+        querySnapshot.forEach((doc) => {
+            const p = doc.data();
+            const id = doc.id;
             
-            // Cria o HTML para cada item de pedido
-            const pedidoHTML = `
-                <a href="../html/statusC.html?id=${docSnap.id}" class="pedido-item">
-                    <h3>${pedido.tituloAnuncio || 'Serviço Solicitado'}</h3>
-                    <p>Data: ${formatarData(pedido.criadoEm)}</p>
-                    <p>Status: <span class="status ${statusClass}">${pedido.status.replace(/_/g, " ")}</span></p>
+            // Mapeamento (Novo Modelo)
+            const titulo = p.titulo || "Pedido sem título";
+            const data = formatarData(p.criadoEm);
+            const valor = formatarMoeda(p.orcamentoMaximo);
+            const statusClass = (p.status || 'pendente').toLowerCase();
+            const statusTexto = (p.status || 'pendente').replace(/_/g, ' ');
+
+            html += `
+                <a href="statusC.html?id=${id}" class="item-simples">
+                    <div class="info-principal">
+                        <strong>${titulo}</strong>
+                        <span class="meta-info">${data} • <span class="status-text ${statusClass}">${statusTexto}</span></span>
+                    </div>
+                    <div class="info-valor">
+                        ${valor}
+                    </div>
                 </a>
             `;
-            container.insertAdjacentHTML('beforeend', pedidoHTML);
         });
-
-    } catch (error) {
-        console.error("Erro ao carregar últimos pedidos:", error);
-        container.innerHTML = '<p style="color: red;">Erro ao carregar histórico.</p>';
-        // Se o erro for de índice, o console mostrará o link para criá-lo.
+        lastOrdersContainer.innerHTML = html;
+        
+    } catch (e) {
+        console.error("Erro ao buscar histórico:", e);
+        // Fallback simples em caso de erro de índice ou permissão
+        lastOrdersContainer.innerHTML = '<p style="color:#666; font-size: 0.9rem;">Não foi possível carregar o histórico recente.</p>';
     }
 }
 
-// ========================================================
-// --- PONTO DE ENTRADA PRINCIPAL ---
-// ========================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    carregarUltimosAnuncios();
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            monitorarPedidoAtivo(user.uid);
-            // --- A CORREÇÃO ESTÁ AQUI ---
-            carregarUltimosPedidos(user.uid);
-        } else {
-            if (unsubscribeUser) unsubscribeUser();
-            if (unsubscribePedido) unsubscribePedido();
-            renderStatusCard(null);
-            const ultimosPedidosContainer = document.querySelector('.ultimos-lista');
-            if(ultimosPedidosContainer) ultimosPedidosContainer.innerHTML = '<p>Faça login para ver seus últimos pedidos.</p>';
-        }
-    });
+// ============================================================
+// 3. INICIALIZAÇÃO
+// ============================================================
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // Atualiza nome no cabeçalho
+        const nome = user.displayName ? user.displayName.split(' ')[0] : 'Cliente';
+        if (userGreeting) userGreeting.textContent = nome;
+
+        // Carrega os dados
+        checkActiveOrder(user.uid);
+        fetchLastOrders(user.uid);
+    } else {
+        // Se não estiver logado, manda pro login
+        window.location.href = "login.html";
+    }
 });
