@@ -1,2 +1,2 @@
 # ApoiaME
-Projeto PTI - FECAP
+Projeto PTI - FECAP (Ensino Medio Tecnico - Informatica)
